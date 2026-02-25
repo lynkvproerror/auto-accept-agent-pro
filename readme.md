@@ -162,6 +162,12 @@ Extension Host                    CDP / Browser
 
 ## 📝 Changelog
 
+### v1.5.1
+- 🧠 **Smart Auto Scroll** — MutationObserver-based, zero CPU when idle, follow-mode (only scrolls if near bottom)
+- ✅ **Click-to-Approve** — per-tab approval toast for BG mode tab cycling (Approve/Skip/auto-approve 30s)
+- 🔀 **Hybrid Mode** — fallback to VS Code commands when CDP unavailable, auto-retry every 30s
+- ⚡ **4 Performance Fixes**: `hasCompilationErrors` targeted selectors, parallel HTTP port scan, lightweight `isAcceptButton`, targeted scroll selectors
+
 ### v1.4.2
 - 🐛 **8 Bug Fixes**: Async HTTP polling, Safe Click + Diff Protection + HTTP Sync + Auto Scroll in BG mode, configurable click patterns in BG mode, multi-page stats aggregation, interval cleanup, deactivate fix
 - ☕ Fixed Buy Me a Coffee button on GitHub
