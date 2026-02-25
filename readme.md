@@ -2,7 +2,11 @@
 
 > Automatically accept file edits, terminal commands, and agent prompts in **Cursor**, **Antigravity**, and **VS Code** IDEs. Premium protection, live configuration, and full analytics.
 
-[![Buy Me A Coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=☕&slug=lynkv&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff)](https://buymeacoffee.com/lynkv)
+<p>
+  <a href="https://buymeacoffee.com/lynkv" target="_blank"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=☕&slug=lynkv&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Buy Me A Coffee" height="60" /></a>
+  &nbsp;&nbsp;
+  <a href="https://buymeacoffee.com/lynkv" target="_blank"><img src="media/bmc_qr.png" alt="QR Code" height="60" /></a>
+</p>
 
 ---
 
