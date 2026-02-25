@@ -4,7 +4,7 @@ This guide helps you enable Chrome DevTools Protocol (CDP) for Auto Accept Agent
 
 ## Why is this needed?
 
-Auto Accept Agent needs CDP access to automatically click "Accept" buttons in your IDE. This requires launching your IDE with the `--remote-debugging-port=9000` flag.
+Auto Accept Agent needs CDP access to automatically click "Accept" buttons in your IDE. This requires launching your IDE with the `--remote-debugging-port=9222` flag.
 
 ## Setup Instructions by Platform
 
@@ -80,8 +80,8 @@ chmod +x script.sh
 ### IDE not launching
 
 If the IDE won't start after setup:
-1. Check if CDP port 9000 is already in use
-2. Try using a different port (edit the script to use 9001)
+1. Check if CDP port 9222 is already in use
+2. Try using a different port (edit the script to use 9223)
 3. Restore from backup:
    - Windows: Shortcuts have .bak files
    - Mac/Linux: Look for .bak files next to modified files
@@ -93,17 +93,17 @@ If the automated script doesn't work, you can manually add the flag:
 **Windows:**
 1. Right-click your IDE shortcut
 2. Select "Properties"
-3. In the "Target" field, add at the end: ` --remote-debugging-port=9000`
+3. In the "Target" field, add at the end: ` --remote-debugging-port=9222`
 4. Click OK
 
 **Mac:**
 Launch from Terminal:
 ```bash
-open -n -a "Your IDE" --args --remote-debugging-port=9000
+open -n -a "Your IDE" --args --remote-debugging-port=9222
 ```
 
 **Linux:**
-Edit your .desktop file and add `--remote-debugging-port=9000` to the Exec line.
+Edit your .desktop file and add `--remote-debugging-port=9222` to the Exec line.
 
 ## Security Note
 

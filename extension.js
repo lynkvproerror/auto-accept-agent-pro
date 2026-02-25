@@ -26,7 +26,7 @@ const { CdpHandler } = require('./main_scripts/cdp-handler');
 const { Relauncher } = require('./main_scripts/relauncher');
 
 // ─── Constants ───────────────────────────────────────────────────────
-const CDP_PORT = 9000;
+const CDP_PORT = 9222;
 const DEFAULT_POLL_FREQUENCY = 1000;
 const SECONDS_PER_CLICK = 5;
 const SUPPORT_URL = 'https://buymeacoffee.com/lynkv';
@@ -168,6 +168,9 @@ let disabledClickPatterns = [...DEFAULT_DISABLED_PATTERNS];
 let safeClickEnabled = true;
 let diffProtectionEnabled = true;
 
+// CDP Port (configurable)
+let cdpPort = CDP_PORT;
+
 // HTTP Live Sync Server
 let httpServer = null;
 let httpBoundPort = null;  // actual port the server bound to
@@ -237,11 +240,12 @@ function activate(context) {
     scrollIntervalMs = context.globalState.get('auto-accept-scroll-interval', 500);
     safeClickEnabled = context.globalState.get('auto-accept-safe-click', true);
     diffProtectionEnabled = context.globalState.get('auto-accept-diff-protection', true);
+    cdpPort = context.globalState.get('auto-accept-cdp-port', CDP_PORT);
     loadROIStats(context);
     sessionHistory = context.workspaceState.get('auto-accept-session-history', []);
 
     // Initialize CDP handler and Relauncher
-    cdpHandler = new CdpHandler(msg => log(msg));
+    cdpHandler = new CdpHandler(msg => log(msg), cdpPort);
     relauncher = new Relauncher(msg => log(msg));
 
     // ─── Status Bar — right-aligned, grouped together ─────────────
@@ -320,7 +324,8 @@ function activate(context) {
         vscode.commands.registerCommand('auto-accept.updateSmartRules', (rules) => handleSmartRulesUpdate(context, rules)),
         vscode.commands.registerCommand('auto-accept.clearHistory', () => { sessionHistory = []; context.workspaceState.update('auto-accept-session-history', []); }),
         vscode.commands.registerCommand('auto-accept.toggleSafeClick', () => handleSafeClickToggle(context)),
-        vscode.commands.registerCommand('auto-accept.toggleDiffProtection', () => handleDiffProtectionToggle(context))
+        vscode.commands.registerCommand('auto-accept.toggleDiffProtection', () => handleDiffProtectionToggle(context)),
+        vscode.commands.registerCommand('auto-accept.updateCdpPort', (value) => handleCdpPortUpdate(context, value))
     );
 
     // ─── Per-Window State ─────────────────────────────────────────
@@ -545,6 +550,26 @@ async function handleDiffProtectionToggle(context) {
     diffProtectionEnabled = !diffProtectionEnabled;
     await context.globalState.update('auto-accept-diff-protection', diffProtectionEnabled);
     log(`Diff Protection: ${diffProtectionEnabled ? 'ON' : 'OFF'}`);
+}
+
+// ─── CDP Port Update ─────────────────────────────────────────────────
+async function handleCdpPortUpdate(context, value) {
+    const port = parseInt(value, 10);
+    if (isNaN(port) || port < 1024 || port > 65535) {
+        log(`Invalid CDP port: ${value}`);
+        return;
+    }
+    cdpPort = port;
+    await context.globalState.update('auto-accept-cdp-port', cdpPort);
+    if (cdpHandler && cdpHandler.setCdpPort) {
+        cdpHandler.setCdpPort(cdpPort);
+    }
+    log(`CDP port updated to ${cdpPort}`);
+    // Restart CDP if running
+    if (isEnabled) {
+        await stopCDPSession();
+        await startCDPSession(context);
+    }
 }
 
 // ─── HTTP Live Sync Server ───────────────────────────────────────────

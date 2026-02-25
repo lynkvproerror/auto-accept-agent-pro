@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.4.3 — 2026-02-25
+### Improvement
+- **Configurable CDP port**: Default port changed from `9000` → `9222` to avoid conflicts with common services (PHP-FPM, SonarQube, MinIO, Portainer). Port is now configurable at runtime via `Auto Accept: Update CDP Port` command and persisted across sessions.
+- **Dynamic port scanning**: CDP handler now scans ±3 ports around the configured base port (e.g., 9219–9225 for port 9222)
+- **Updated setup guide**: All documentation updated to reflect new default port `9222`
+
 ## v1.4.2 — 2026-02-25
 ### Bug Fixes (8)
 - **Async HTTP polling**: Replaced synchronous XHR (froze UI every 2s) with async `fetch()` + AbortController timeout
