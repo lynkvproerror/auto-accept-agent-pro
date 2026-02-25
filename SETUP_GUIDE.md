@@ -1,1 +1,130 @@
-# CDP Setup Guide — Auto Accept Agent Pro\r\n\r\n## Overview\r\n\r\nAuto Accept Agent Pro uses Chrome DevTools Protocol (CDP) for Background Mode features.\r\n**Each IDE window must be launched with its own unique CDP port for full isolation.**\r\n\r\n## Quick Start\r\n\r\nUse the **Smart Launcher** (recommended):\r\n1. Open the Command Palette → `Auto Accept: Setup CDP`\r\n2. Copy the generated smart launcher script\r\n3. Save it as `launch-ide.ps1` (Windows) or `launch-ide.sh` (Mac/Linux)\r\n4. **Always use this script to launch your IDE** — it auto-assigns a unique port\r\n\r\n> ⚠️ **IMPORTANT**: Do NOT use \"File > New Window\" (Ctrl+Shift+N) — it creates a window in the same process, sharing the CDP port. Always launch from the script.\r\n\r\n## Port Range\r\n\r\n- **Default range**: `19222 – 19242` (20 ports)\r\n- Each launch automatically picks the next available port\r\n- This range is high enough to avoid common service conflicts\r\n\r\n## Manual Setup (per Platform)\r\n\r\n### Windows\r\n\r\n**Option 1 — PowerShell (recommended):**\r\n```powershell\r\n# Find free port and launch\r\nfor ($p = 19222; $p -le 19242; $p++) {\r\n    if (-not (Get-NetTCPConnection -LocalPort $p -EA 0)) {\r\n        Start-Process \"Antigravity.exe\" \"--remote-debugging-port=$p\"\r\n        break\r\n    }\r\n}\r\n```\r\n\r\n**Option 2 — Shortcut (single instance only):**\r\n1. Right-click your IDE shortcut\r\n2. Select \"Properties\"\r\n3. In the \"Target\" field, add at the end: ` --remote-debugging-port=19222`\r\n4. Click OK\r\n\r\n### Mac\r\n```bash\r\n# Auto-assign port\r\nfor p in $(seq 19222 19242); do\r\n    if ! lsof -i :$p > /dev/null 2>&1; then\r\n        open -n -a \"Antigravity\" --args --remote-debugging-port=$p\r\n        break\r\n    fi\r\ndone\r\n```\r\n\r\n### Linux\r\n```bash\r\n# Auto-assign port\r\nfor p in $(seq 19222 19242); do\r\n    if ! ss -tlnp | grep -q \":$p \"; then\r\n        antigravity --remote-debugging-port=$p &\r\n        break\r\n    fi\r\ndone\r\n```\r\n\r\n## Multiple IDE Instances\r\n\r\nThe smart launcher handles this automatically:\r\n- Instance 1 → port 19222\r\n- Instance 2 → port 19223\r\n- Instance 3 → port 19224\r\n- Each instance is **fully isolated** — separate CDP, separate BG mode\r\n\r\n## Troubleshooting\r\n\r\n### CDP Not Connecting\r\n1. Check if CDP port 19222 is already in use: `Get-NetTCPConnection -LocalPort 19222`\r\n2. Try the next port: `--remote-debugging-port=19223`\r\n3. Make sure you launched the IDE **from the script**, not via \"File > New Window\"\r\n\r\n### All Ports In Use\r\nClose some IDE instances. The range supports up to 20 simultaneous instances.\r\n\r\n### IDE Won't Start\r\n1. Check if the port flag is valid: `--remote-debugging-port=19222`\r\n2. Try a different port number within the range\r\n\r\n## Security Note\r\n\r\nCDP provides access to the IDE's internal browser for automation purposes only. The debug port is bound to `127.0.0.1` (localhost only) and cannot be accessed remotely.\r\n
+# CDP Setup Guide — Auto Accept Agent Pro
+
+## Overview
+
+Auto Accept Agent Pro uses **Chrome DevTools Protocol (CDP)** for Background Mode.
+Each IDE window must be launched with its own unique CDP port for full isolation.
+
+---
+
+## Quick Start
+
+Use the **Smart Launcher** (recommended):
+
+1. Open the Command Palette → `Auto Accept: Setup CDP`
+2. Copy the generated smart launcher script
+3. Save it as `launch-ide.ps1` (Windows) or `launch-ide.sh` (Mac/Linux)
+4. **Always use this script to launch your IDE** — it auto-assigns a unique port
+
+> ⚠️ **IMPORTANT**: Do NOT use "File > New Window" (Ctrl+Shift+N).
+> It creates a window in the same process, sharing the CDP port.
+> Always launch from the script for full isolation.
+
+---
+
+## Port Range
+
+| Item             | Value           |
+|------------------|-----------------|
+| Default range    | `19222 – 19242` |
+| Total ports      | 20              |
+| Conflict risk    | Very low — far above common service ports |
+
+Each launch automatically picks the next available port in this range.
+
+---
+
+## Manual Setup (per Platform)
+
+### Windows
+
+**Option 1 — PowerShell (recommended):**
+
+```powershell
+# Find free port and launch
+for ($p = 19222; $p -le 19242; $p++) {
+    if (-not (Get-NetTCPConnection -LocalPort $p -EA 0)) {
+        Start-Process "Antigravity.exe" "--remote-debugging-port=$p"
+        break
+    }
+}
+```
+
+**Option 2 — Shortcut (single instance only):**
+
+1. Right-click your IDE shortcut
+2. Select "Properties"
+3. In the "Target" field, add at the end: ` --remote-debugging-port=19222`
+4. Click OK
+
+---
+
+### Mac
+
+```bash
+# Auto-assign port
+for p in $(seq 19222 19242); do
+    if ! lsof -i :$p > /dev/null 2>&1; then
+        open -n -a "Antigravity" --args --remote-debugging-port=$p
+        break
+    fi
+done
+```
+
+---
+
+### Linux
+
+```bash
+# Auto-assign port
+for p in $(seq 19222 19242); do
+    if ! ss -tlnp | grep -q ":$p "; then
+        antigravity --remote-debugging-port=$p &
+        break
+    fi
+done
+```
+
+---
+
+## Multiple IDE Instances
+
+The smart launcher handles this automatically:
+
+| Instance   | Port    | Status            |
+|------------|---------|-------------------|
+| Instance 1 | `19222` | Fully isolated    |
+| Instance 2 | `19223` | Fully isolated    |
+| Instance 3 | `19224` | Fully isolated    |
+| ...        | ...     | Up to 20 total    |
+
+Each instance has its own CDP connection and BG mode — no sharing.
+
+---
+
+## Troubleshooting
+
+### CDP Not Connecting
+
+1. Check if CDP port is in use:
+   ```powershell
+   Get-NetTCPConnection -LocalPort 19222
+   ```
+2. Try the next port: `--remote-debugging-port=19223`
+3. Make sure you launched the IDE **from the script** — not via "File > New Window"
+
+### All Ports In Use
+
+Close some IDE instances. The range supports up to 20 simultaneous instances.
+
+### IDE Won't Start
+
+1. Verify the port flag format: `--remote-debugging-port=19222`
+2. Try a different port number within the range (19222–19242)
+
+---
+
+## Security Note
+
+CDP provides access to the IDE's internal browser for automation only.
+The debug port is bound to `127.0.0.1` (localhost) and cannot be accessed remotely.

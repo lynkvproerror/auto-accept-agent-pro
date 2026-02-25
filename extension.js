@@ -26,12 +26,17 @@ const { CdpHandler } = require('./main_scripts/cdp-handler');
 const { Relauncher } = require('./main_scripts/relauncher');
 
 // ─── Constants ───────────────────────────────────────────────────────
-const CDP_PORT = 19222;
+const CDP_PORT = 9000;
 const DEFAULT_POLL_FREQUENCY = 1000;
 const SECONDS_PER_CLICK = 5;
 const SUPPORT_URL = 'https://buymeacoffee.com/lynkv';
 const AG_HTTP_PORT_BASE = 48787;
 const AG_HTTP_PORT_RANGE = 10; // try 48787..48796
+
+// BG mode lock file — ensures only ONE window runs background mode at a time
+const BG_LOCK_DIR = path.join(os.tmpdir(), 'auto-accept-pro');
+const BG_LOCK_FILE = path.join(BG_LOCK_DIR, 'bg-mode.lock');
+const WINDOW_ID = `${process.pid}-${Date.now()}`;
 
 // Smart Frequency tiers
 const FREQ_FAST = 500;
@@ -163,12 +168,14 @@ let disabledClickPatterns = [...DEFAULT_DISABLED_PATTERNS];
 let safeClickEnabled = true;
 let diffProtectionEnabled = true;
 
-// CDP Port (configurable)
-let cdpPort = CDP_PORT;
-
 // HTTP Live Sync Server
 let httpServer = null;
 let httpBoundPort = null;  // actual port the server bound to
+
+// Hybrid Mode — CDP status tracking
+let isCDPConnected = false;
+let cdpRetryTimer = null;
+const CDP_RETRY_INTERVAL = 30000; // auto-retry CDP every 30s
 
 // ─── Logging ─────────────────────────────────────────────────────────
 function log(msg) {
@@ -235,12 +242,11 @@ function activate(context) {
     scrollIntervalMs = context.globalState.get('auto-accept-scroll-interval', 500);
     safeClickEnabled = context.globalState.get('auto-accept-safe-click', true);
     diffProtectionEnabled = context.globalState.get('auto-accept-diff-protection', true);
-    cdpPort = context.globalState.get('auto-accept-cdp-port', CDP_PORT);
     loadROIStats(context);
     sessionHistory = context.workspaceState.get('auto-accept-session-history', []);
 
     // Initialize CDP handler and Relauncher
-    cdpHandler = new CdpHandler(msg => log(msg), cdpPort);
+    cdpHandler = new CdpHandler(msg => log(msg));
     relauncher = new Relauncher(msg => log(msg));
 
     // ─── Status Bar — right-aligned, grouped together ─────────────
@@ -319,8 +325,7 @@ function activate(context) {
         vscode.commands.registerCommand('auto-accept.updateSmartRules', (rules) => handleSmartRulesUpdate(context, rules)),
         vscode.commands.registerCommand('auto-accept.clearHistory', () => { sessionHistory = []; context.workspaceState.update('auto-accept-session-history', []); }),
         vscode.commands.registerCommand('auto-accept.toggleSafeClick', () => handleSafeClickToggle(context)),
-        vscode.commands.registerCommand('auto-accept.toggleDiffProtection', () => handleDiffProtectionToggle(context)),
-        vscode.commands.registerCommand('auto-accept.updateCdpPort', (value) => handleCdpPortUpdate(context, value))
+        vscode.commands.registerCommand('auto-accept.toggleDiffProtection', () => handleDiffProtectionToggle(context))
     );
 
     // ─── Per-Window State ─────────────────────────────────────────
@@ -394,6 +399,45 @@ async function handleToggle(context) {
     }
 }
 
+// ─── BG Mode Lock File ───────────────────────────────────────────────
+function acquireBGLock() {
+    try {
+        if (!fs.existsSync(BG_LOCK_DIR)) fs.mkdirSync(BG_LOCK_DIR, { recursive: true });
+        // Check if another window holds the lock
+        if (fs.existsSync(BG_LOCK_FILE)) {
+            const existing = fs.readFileSync(BG_LOCK_FILE, 'utf8').trim();
+            const existingPid = parseInt(existing.split('-')[0], 10);
+            // If the process is still alive, lock is valid
+            try { process.kill(existingPid, 0); return false; } catch (e) { /* process dead, stale lock */ }
+        }
+        fs.writeFileSync(BG_LOCK_FILE, WINDOW_ID, 'utf8');
+        log(`BG lock acquired: ${WINDOW_ID}`);
+        return true;
+    } catch (e) {
+        log(`BG lock error: ${e.message}`);
+        return false;
+    }
+}
+
+function releaseBGLock() {
+    try {
+        if (fs.existsSync(BG_LOCK_FILE)) {
+            const owner = fs.readFileSync(BG_LOCK_FILE, 'utf8').trim();
+            if (owner === WINDOW_ID) {
+                fs.unlinkSync(BG_LOCK_FILE);
+                log('BG lock released');
+            }
+        }
+    } catch (e) { /* ignore */ }
+}
+
+function isBGLockOwner() {
+    try {
+        if (!fs.existsSync(BG_LOCK_FILE)) return false;
+        return fs.readFileSync(BG_LOCK_FILE, 'utf8').trim() === WINDOW_ID;
+    } catch (e) { return false; }
+}
+
 // ─── Background Mode Toggle ─────────────────────────────────────────
 async function handleBackgroundToggle(context) {
     if (!isEnabled) {
@@ -401,9 +445,23 @@ async function handleBackgroundToggle(context) {
         return;
     }
 
-    // No lock needed — each window has its own CDP port via port claim system
+    if (!isBackgroundMode) {
+        // Trying to ENABLE BG mode — check lock
+        if (!acquireBGLock()) {
+            vscode.window.showWarningMessage(
+                'Auto Accept Pro: Background Mode is already running in another window. Only one window can run BG mode at a time.'
+            );
+            return;
+        }
+    }
+
     isBackgroundMode = !isBackgroundMode;
     await context.workspaceState.update('auto-accept-backgroundMode', isBackgroundMode);
+
+    // Release lock when turning OFF
+    if (!isBackgroundMode) {
+        releaseBGLock();
+    }
 
     // Remove overlay BEFORE stopping CDP (need active connection to evaluate JS)
     if (!isBackgroundMode && cdpHandler && cdpHandler.hideBackgroundOverlay) {
@@ -492,26 +550,6 @@ async function handleDiffProtectionToggle(context) {
     diffProtectionEnabled = !diffProtectionEnabled;
     await context.globalState.update('auto-accept-diff-protection', diffProtectionEnabled);
     log(`Diff Protection: ${diffProtectionEnabled ? 'ON' : 'OFF'}`);
-}
-
-// ─── CDP Port Update ─────────────────────────────────────────────────
-async function handleCdpPortUpdate(context, value) {
-    const port = parseInt(value, 10);
-    if (isNaN(port) || port < 1024 || port > 65535) {
-        log(`Invalid CDP port: ${value}`);
-        return;
-    }
-    cdpPort = port;
-    await context.globalState.update('auto-accept-cdp-port', cdpPort);
-    if (cdpHandler && cdpHandler.setCdpPort) {
-        cdpHandler.setCdpPort(cdpPort);
-    }
-    log(`CDP port updated to ${cdpPort}`);
-    // Restart CDP if running
-    if (isEnabled) {
-        await stopCDPSession();
-        await startCDPSession(context);
-    }
 }
 
 // ─── HTTP Live Sync Server ───────────────────────────────────────────
@@ -756,11 +794,12 @@ function startCommandPolling(context) {
     // Fire immediately once
     executeAcceptCommandsForIDE();
 
-    // Native commands are safe to fire from ALL windows (no conflict)
+    // Hybrid mode: poll faster when CDP unavailable for better responsiveness
+    const interval = isCDPConnected ? pollFrequency : Math.max(pollFrequency, 800);
     commandPollTimer = setInterval(() => {
         if (!isEnabled) return;
         executeAcceptCommandsForIDE();
-    }, pollFrequency);
+    }, interval);
 }
 
 function stopCommandPolling() {
@@ -770,6 +809,41 @@ function stopCommandPolling() {
     }
 }
 
+// ─── Hybrid Fallback Commands ────────────────────────────────────────
+// Extended command sets fired when CDP is unavailable
+const HYBRID_FALLBACK_COMMANDS_ANTIGRAVITY = [
+    'antigravity.agent.acceptAgentStep',
+    'antigravity.command.accept',
+    'antigravity.prioritized.agentAcceptAllInFile',
+    'antigravity.prioritized.agentAcceptFocusedHunk',
+    'antigravity.prioritized.supercompleteAccept',
+    'antigravity.terminalCommand.accept',
+    'antigravity.acceptCompletion',
+    'antigravity.prioritized.terminalSuggestion.accept',
+    'antigravity.acceptEdit',
+    'editor.action.acceptInlineSuggestion',
+    // Extra dialog-style commands for fallback
+    'antigravity.prioritized.agentApprove',
+    'antigravity.agent.runCommand',
+    'antigravity.agent.approveAgentStep',
+];
+
+const HYBRID_FALLBACK_COMMANDS_CURSOR = [
+    'cursorai.action.acceptAndRunGenerateInTerminal',
+    'cursorai.action.acceptGenerateInTerminal',
+    'cursorAcceptInlineSuggestion',
+    'editor.action.acceptInlineSuggestion',
+    'aipopup.action.accept',
+    // Extra dialog-style commands for fallback
+    'cursorai.action.acceptEdit',
+    'cursorai.action.acceptAllEdits',
+];
+
+function getHybridFallbackCommands() {
+    if (currentIDE === 'cursor') return HYBRID_FALLBACK_COMMANDS_CURSOR;
+    if (currentIDE === 'windsurf') return ACCEPT_COMMANDS_WINDSURF;
+    return HYBRID_FALLBACK_COMMANDS_ANTIGRAVITY;
+}
 
 // ─── Accept Commands ─────────────────────────────────────────────────
 function executeAcceptCommandsForIDE() {
@@ -778,7 +852,8 @@ function executeAcceptCommandsForIDE() {
     const wantsAccept = activePatterns.some(p => p.toLowerCase().includes('accept'));
     if (!wantsAccept) return;
 
-    const commands = getAcceptCommandsForIDE();
+    // Hybrid mode: use extended command set when CDP is unavailable
+    const commands = isCDPConnected ? getAcceptCommandsForIDE() : getHybridFallbackCommands();
     // Fire all in parallel, silently fail if command doesn't exist
     Promise.allSettled(commands.map(cmd => vscode.commands.executeCommand(cmd))).catch(() => { });
 }
@@ -813,25 +888,84 @@ async function startCDPSession(context) {
         };
 
         await cdpHandler.start(config);
+        isCDPConnected = true;
+        stopCDPRetry(); // Connected — no need to retry
         startCDPSync(context);
-        log('CDP session started');
+        log('CDP session started (full mode)');
+        updateStatusBar();
     } catch (e) {
-        log(`Failed to start CDP session: ${e.message}`);
-        // Show setup panel when CDP is not available
-        const choice = await vscode.window.showErrorMessage(
-            `Auto Accept Pro: Failed to connect to CDP. ${e.message}`,
-            'Show Setup Guide', 'Dismiss'
-        );
-        if (choice === 'Show Setup Guide' && relauncher) {
-            relauncher.showSetupPanel();
+        isCDPConnected = false;
+        log(`CDP unavailable: ${e.message} — running in Hybrid fallback mode`);
+        updateStatusBar();
+
+        // Restart command polling with enhanced fallback commands
+        stopCommandPolling();
+        startCommandPolling(context);
+
+        // Start auto-retry timer to reconnect CDP in background
+        startCDPRetry(context);
+
+        // Only show error on FIRST attempt (not during auto-retry)
+        if (!cdpRetryTimer) {
+            vscode.window.showWarningMessage(
+                'Auto Accept Pro: CDP unavailable — running in Hybrid mode (VS Code commands only). For full button-clicking, enable --remote-debugging-port.',
+                'Show Setup Guide', 'Dismiss'
+            ).then(choice => {
+                if (choice === 'Show Setup Guide' && relauncher) {
+                    relauncher.showSetupPanel();
+                }
+            });
         }
     }
+}
+
+// ─── CDP Auto-Retry ──────────────────────────────────────────────────
+function startCDPRetry(context) {
+    if (cdpRetryTimer) return;
+    cdpRetryTimer = setInterval(async () => {
+        if (!isEnabled || isCDPConnected) { stopCDPRetry(); return; }
+        log('CDP auto-retry: attempting reconnect...');
+        try {
+            const activePatterns = clickPatterns.filter(p => !disabledClickPatterns.includes(p));
+            await cdpHandler.start({
+                ide: currentIDE,
+                isBackgroundMode: isBackgroundMode,
+                pollInterval: pollFrequency,
+                bannedCommands: bannedCommands,
+                smartRules: smartRules,
+                smartAcceptEnabled: smartAcceptEnabled,
+                clickPatterns: activePatterns,
+                scrollEnabled: isScrollEnabled,
+                scrollPauseMs: scrollPauseMs,
+                scrollIntervalMs: scrollIntervalMs,
+                safeClickEnabled: safeClickEnabled,
+                diffProtectionEnabled: diffProtectionEnabled
+            });
+            isCDPConnected = true;
+            stopCDPRetry();
+            startCDPSync(context);
+            // Switch command polling back to normal frequency
+            stopCommandPolling();
+            startCommandPolling(context);
+            log('CDP auto-retry: reconnected successfully! Full mode restored.');
+            vscode.window.showInformationMessage('Auto Accept Pro: CDP reconnected ✅ Full mode restored.');
+            updateStatusBar();
+        } catch (e) {
+            log(`CDP auto-retry: still unavailable — ${e.message}`);
+        }
+    }, CDP_RETRY_INTERVAL);
+}
+
+function stopCDPRetry() {
+    if (cdpRetryTimer) { clearInterval(cdpRetryTimer); cdpRetryTimer = null; }
 }
 
 async function stopCDPSession() {
     try {
         await cdpHandler.stop();
         stopCDPSync();
+        stopCDPRetry();
+        isCDPConnected = false;
         log('CDP session stopped');
     } catch (e) {
         log(`Failed to stop CDP session: ${e.message}`);
@@ -886,11 +1020,14 @@ async function getAwayActions() {
 
 // ─── Status Bar Updates ──────────────────────────────────────────────
 function updateStatusBar() {
-    // Accept item
+    // Accept item — show CDP status
     if (isEnabled) {
-        statusBarToggle.text = '$(check) Accept ON';
-        statusBarToggle.tooltip = 'Auto Accept Pro: ✅ ON\nClick to disable';
-        statusBarToggle.color = '#4EC9B0';
+        const cdpLabel = isCDPConnected ? '' : ' (Hybrid)';
+        statusBarToggle.text = `$(check) Accept ON${cdpLabel}`;
+        statusBarToggle.tooltip = isCDPConnected
+            ? 'Auto Accept Pro: ✅ ON (CDP connected)\nClick to disable'
+            : 'Auto Accept Pro: ✅ ON (Hybrid — CDP unavailable)\nUsing VS Code commands as fallback\nClick to disable';
+        statusBarToggle.color = isCDPConnected ? '#4EC9B0' : '#DCDCAA';
         statusBarToggle.backgroundColor = undefined;
     } else {
         statusBarToggle.text = '$(circle-slash) Accept OFF';
@@ -1015,7 +1152,7 @@ function scheduleWeeklyROI(context) {
 // ─── Deactivation ────────────────────────────────────────────────────
 async function deactivate() {
     log('Deactivating extension...');
-    // CDP handler stop() releases port claim automatically
+    releaseBGLock(); // Release BG lock before shutdown
     stopActivityTracking();
     stopScheduleTimer();
     stopHttpServer();
