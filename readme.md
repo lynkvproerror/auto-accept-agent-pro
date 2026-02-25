@@ -162,6 +162,10 @@ Extension Host                    CDP / Browser
 
 ## 📝 Changelog
 
+### v1.4.2
+- 🐛 **8 Bug Fixes**: Async HTTP polling, Safe Click + Diff Protection + HTTP Sync + Auto Scroll in BG mode, configurable click patterns in BG mode, multi-page stats aggregation, interval cleanup, deactivate fix
+- ☕ Fixed Buy Me a Coffee button on GitHub
+
 ### v1.4.1
 - 🔒 Obfuscated build for all JavaScript files
 - 📦 Published to Open VSX marketplace
