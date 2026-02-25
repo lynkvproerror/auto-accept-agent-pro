@@ -110,11 +110,11 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/AkaCoder404/auto-accept-agent-pro.git"
+        "url": "https://github.com/lynkvproerror/auto-accept-agent-pro.git"
     },
-    "homepage": "https://github.com/AkaCoder404/auto-accept-agent-pro#readme",
+    "homepage": "https://github.com/lynkvproerror/auto-accept-agent-pro#readme",
     "bugs": {
-        "url": "https://github.com/AkaCoder404/auto-accept-agent-pro/issues"
+        "url": "https://github.com/lynkvproerror/auto-accept-agent-pro/issues"
     },
     "scripts": {
         "compile": "node esbuild.config.js",
