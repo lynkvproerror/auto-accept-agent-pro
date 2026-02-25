@@ -2,83 +2,13 @@
 
 > Automatically accept file edits, terminal commands, and agent prompts in **Cursor**, **Antigravity**, and **VS Code** IDEs. Premium protection, live configuration, and full analytics.
 
----
-
-## ✨ Features
-
-### 🎯 Auto Click — Configurable Patterns
-Automatically clicks **Accept**, **Run**, **Allow**, **Continue**, **Retry**, and more — fully configurable from the Settings panel. Each pattern can be individually enabled or disabled via checkboxes.
-
-**Default patterns:** `Run`, `Allow`, `Always Allow`, `Keep Waiting`, `Retry`, `Continue`, `Allow Once`, `Allow This Con`, `Accept all`
-
-### 🔄 Background Mode — Multi-Tab Cycling
-Accepts across **all open conversations** by connecting via Chrome DevTools Protocol (CDP). Cycles through tabs, detects completion badges, and shows a visual progress overlay.
-
-### 📜 Auto Scroll
-Automatically scrolls chat panels to the bottom so you never miss new content.
-- **Manual scroll detection** — pauses scrolling when you scroll up manually
-- **Configurable timing** — Pause duration (1–20s) and scroll interval (200–2000ms)
-- **Editor-safe** — skips `.monaco-editor` containers
-
-### 🔒 Safe Click
-Only clicks buttons that have a sibling **Reject** / **Deny** / **Cancel** button nearby. This prevents accidental clicks on buttons that look like "accept" but aren't part of a real confirmation dialog.
-- Checks **3 DOM levels**: parent → grandparent → great-grandparent
-- Toggleable ON/OFF from Settings
-
-### 🛡️ Diff Protection
-Prevents clicking **"Accept Changes"**, **"Accept All"**, **"Accept Incoming"**, etc. inside diff and merge editors — protecting your git merges and code reviews.
-- **Two-layer check:**
-  1. Text-matching against known editor button labels (`EDITOR_SKIP_WORDS`)
-  2. DOM container detection (`.monaco-diff-editor`, `.merge-editor-view`, `.inline-merge-region`, `.merged-editor`)
-- Toggleable ON/OFF from Settings
-
-### 🧠 Smart Accept — Command Safety
-Blocks dangerous terminal commands before they execute:
-- **Block list:** `rm -rf`, `format c:`, `del /f /s /q`, `dd if=`, `chmod -R 777 /`, etc.
-- **Smart rules:** Pattern-based rules with configurable actions (block, warn, allow)
-- **Regex support:** Use `/pattern/i` syntax in banned commands
-- Fully editable from Settings panel
-
-### 📡 HTTP Live Sync
-All settings changes are pushed to the injected script **in real-time** via an HTTP server on port `48787`. The script polls every 2 seconds — no restart required when toggling features or changing patterns.
-
-### ⏰ Auto-Schedule
-Automatically enable/disable the extension by time of day. Perfect for overnight coding sessions.
-- Supports **cross-midnight** ranges (e.g., 23:00 → 07:00)
-- Auto-enables at start time, auto-disables at end time
-
-### 🔄 Smart Frequency
-Dynamically adjusts poll speed based on agent activity:
-| Tier | Interval | When |
-|------|----------|------|
-| ⚡ FAST | 500ms | Agent actively generating |
-| 🟢 NORMAL | 1,000ms | Recent activity |
-| 🟡 SLOW | 2,000ms | Idle for a while |
-| 🔴 IDLE | 3,000ms | No activity detected |
-
-### 📊 ROI Dashboard
-Track your productivity gains with detailed analytics:
-- **This Week:** Accepts, Blocked, Sessions
-- **Lifetime:** Total Accepts, Total Blocked, Time Saved
-- **Session History:** Live feed with ✅ accepts, 🚫 blocks, ⚠️ warnings
-- **Weekly Notifications:** Automatic summary each week
-- **Config Export/Import:** JSON backup of all settings
-
-### 📊 Dual Status Bar
-Four right-aligned status bar items for instant visibility:
-
-| Item | Function |
-|------|----------|
-| `$(check) Accept ON/OFF` | Toggle auto-accept |
-| `$(arrow-down) Scroll ON/OFF` | Toggle auto-scroll |
-| `BG Mode ON/OFF` | Toggle background mode |
-| `$(gear)` | Open Settings panel |
+[![Buy Me A Coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=☕&slug=lynkv&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff)](https://buymeacoffee.com/lynkv)
 
 ---
 
 ## 🚀 Quick Start
 
-1. **Install the extension** (`.vsix` file)
+1. **Install the extension** (`.vsix` file or from marketplace)
 2. Look for **`Accept OFF`** in the status bar (bottom-right)
 3. **Click to enable** → it starts auto-accepting immediately
 4. Press `$(gear)` to open the Settings dashboard
@@ -96,6 +26,75 @@ Four right-aligned status bar items for instant visibility:
 | `Ctrl+Shift+A` | Toggle Auto Accept ON/OFF |
 | `Alt+Shift+A` | Toggle Background Mode |
 | `Ctrl+Shift+S` | Toggle Auto Scroll |
+
+---
+
+## ✨ Features
+
+### 🎯 Auto Click — Configurable Patterns
+Automatically clicks **Accept**, **Run**, **Allow**, **Continue**, **Retry**, and more — fully configurable from the Settings panel.
+
+**Default patterns:** `Run`, `Allow`, `Always Allow`, `Keep Waiting`, `Retry`, `Continue`, `Allow Once`, `Allow This Con`, `Accept all`
+
+### 🔄 Background Mode — Multi-Tab Cycling
+Accepts across **all open conversations** by connecting via Chrome DevTools Protocol (CDP). Cycles through tabs, detects completion badges, and shows a visual progress overlay.
+
+### 📜 Auto Scroll
+Automatically scrolls chat panels to the bottom so you never miss new content.
+- **Manual scroll detection** — pauses scrolling when you scroll up manually
+- **Configurable timing** — Pause duration (1–20s) and scroll interval (200–2000ms)
+- **Editor-safe** — skips `.monaco-editor` containers
+
+### 🔒 Safe Click
+Only clicks buttons that have a sibling **Reject** / **Deny** / **Cancel** button nearby — prevents accidental clicks on non-confirmation buttons.
+- Checks **3 DOM levels**: parent → grandparent → great-grandparent
+- Toggleable ON/OFF from Settings
+
+### 🛡️ Diff Protection
+Prevents clicking **"Accept Changes"**, **"Accept All"**, **"Accept Incoming"**, etc. inside diff and merge editors.
+- **Two-layer check:**
+  1. Text-matching against known editor button labels
+  2. DOM container detection (`.monaco-diff-editor`, `.merge-editor-view`)
+- Toggleable ON/OFF from Settings
+
+### 🧠 Smart Accept — Command Safety
+Blocks dangerous terminal commands before they execute:
+- **Block list:** `rm -rf`, `format c:`, `del /f /s /q`, `dd if=`, etc.
+- **Smart rules:** Pattern-based rules with configurable actions (block, warn, allow)
+- **Regex support:** Use `/pattern/i` syntax in banned commands
+
+### 📡 HTTP Live Sync
+All settings changes are pushed to the injected script **in real-time** via HTTP. No restart required when toggling features or changing patterns.
+
+### ⏰ Auto-Schedule
+Automatically enable/disable the extension by time of day.
+- Supports **cross-midnight** ranges (e.g., 23:00 → 07:00)
+
+### 🔄 Smart Frequency
+Dynamically adjusts poll speed based on agent activity:
+
+| Tier | Interval | When |
+|------|----------|------|
+| ⚡ FAST | 500ms | Agent actively generating |
+| 🟢 NORMAL | 1,000ms | Recent activity |
+| 🟡 SLOW | 2,000ms | Idle for a while |
+| 🔴 IDLE | 3,000ms | No activity detected |
+
+### 📊 ROI Dashboard
+Track productivity gains with detailed analytics:
+- **This Week / Lifetime** stats with animated counters
+- **Session History** — Live feed with ✅ accepts, 🚫 blocks, ⚠️ warnings
+- **Weekly Notifications** — Automatic summary each week
+- **Config Export/Import** — JSON backup of all settings
+
+### 📊 Dual Status Bar
+
+| Item | Function |
+|------|----------|
+| `$(check) Accept ON/OFF` | Toggle auto-accept |
+| `$(arrow-down) Scroll ON/OFF` | Toggle auto-scroll |
+| `BG Mode ON/OFF` | Toggle background mode |
+| `$(gear)` | Open Settings panel |
 
 ---
 
@@ -127,7 +126,6 @@ Four right-aligned status bar items for instant visibility:
 | `Auto Accept: Get ROI Stats` | Retrieve productivity statistics |
 | `Auto Accept: Get Session History` | View recent accept/block history |
 | `Auto Accept: Clear Session History` | Reset the session log |
-| `Auto Accept: Support` | Open support page |
 
 ---
 
@@ -135,19 +133,7 @@ Four right-aligned status bar items for instant visibility:
 
 Open via the `$(gear)` status bar icon or `Auto Accept: Open Settings` command.
 
-### Dashboard Cards
-- **📊 This Week / Lifetime** — Animated stat counters
-- **🧠 Smart Accept** — Toggle file & system protection
-- **🔒 Safe Click** — Toggle sibling-reject requirement + description
-- **🛡️ Diff Protection** — Toggle diff/merge editor protection + description
-- **📡 HTTP Live Sync** — Info card showing real-time sync status
-- **⏰ Auto-Schedule** — Toggle + time range inputs
-- **🔄 Smart Frequency** — Toggle adaptive polling
-- **⏱️ Poll Frequency** — Manual slider (when Smart Frequency is OFF)
-- **🚫 Banned Commands** — Textarea editor with regex support
-- **📜 Auto Scroll** — Toggle + Pause slider + Interval slider
-- **🎯 Click Patterns** — Checkbox for each pattern
-- **📋 Session History** — Live feed with refresh, clear, export, import
+All features are configurable from the dashboard — no manual JSON editing required.
 
 ---
 
@@ -168,18 +154,13 @@ Extension Host                    CDP / Browser
 └─────────────────┘              └─────────────────┘
 ```
 
-1. **Simple Mode**: Executes IDE accept commands at configured intervals
-2. **Background Mode**: Connects via CDP, injects a sophisticated script that:
-   - Clicks accept buttons across all tabs using configurable patterns
-   - Validates clicks with Safe Click (sibling-reject check)
-   - Skips diff/merge editor buttons (Diff Protection)
-   - Auto-scrolls chat panels with manual scroll detection
-   - Syncs configuration in real-time via HTTP polling
-   - Tracks statistics for the ROI dashboard
-
 ---
 
 ## 📝 Changelog
+
+### v1.4.1
+- 🔒 Obfuscated build for all JavaScript files
+- 📦 Published to Open VSX marketplace
 
 ### v1.4.0
 - ✨ **Auto Scroll** — auto-scroll chat panels with manual scroll detection
@@ -200,18 +181,18 @@ Extension Host                    CDP / Browser
 
 ---
 
-## 📄 License
-
-MIT License — Free and open source.
-
----
-
 ## ☕ Support
 
 If this extension saves you time, consider buying me a coffee!
 
 <p>
-  <a href="https://buymeacoffee.com/lynkv" target="_blank"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=lynkv&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Buy Me A Coffee" height="60" /></a>
+  <a href="https://buymeacoffee.com/lynkv" target="_blank"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=☕&slug=lynkv&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Buy Me A Coffee" height="60" /></a>
   &nbsp;&nbsp;
   <a href="https://buymeacoffee.com/lynkv" target="_blank"><img src="media/bmc_qr.png" alt="QR Code" height="60" /></a>
 </p>
+
+---
+
+## 📄 License
+
+MIT License — Free and open source.
