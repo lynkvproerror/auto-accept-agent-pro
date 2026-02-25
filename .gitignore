@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Build output (obfuscated)
+dist/
+
+# VSIX packages
+*.vsix
+
+# Sourcemaps
+*.map
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.vscode/

@@ -1,0 +1,132 @@
+{
+    "name": "auto-accept-agent-pro",
+    "displayName": "Auto Accept Agent Pro",
+    "description": "Automatically accept file edits, terminal commands, and agent prompts. Smart protection, auto-schedule, session history. Supports background mode with multi-tab cycling.",
+    "version": "1.4.1",
+    "publisher": "LynkV",
+    "engines": {
+        "vscode": "^1.75.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "icon": "media/icon.png",
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "main": "./dist/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "auto-accept.toggle",
+                "title": "Auto Accept: Toggle ON/OFF"
+            },
+            {
+                "command": "auto-accept.toggleBackground",
+                "title": "Auto Accept: Toggle Background Mode"
+            },
+            {
+                "command": "auto-accept.openSettings",
+                "title": "Auto Accept: Open Settings"
+            },
+            {
+                "command": "auto-accept.updateFrequency",
+                "title": "Auto Accept: Update Frequency"
+            },
+            {
+                "command": "auto-accept.updateBannedCommands",
+                "title": "Auto Accept: Update Banned Commands"
+            },
+            {
+                "command": "auto-accept.getROIStats",
+                "title": "Auto Accept: Get ROI Stats"
+            },
+            {
+                "command": "auto-accept.support",
+                "title": "Auto Accept: Support (Buy Me a Coffee)"
+            },
+            {
+                "command": "auto-accept.getSessionHistory",
+                "title": "Auto Accept: Get Session History"
+            },
+            {
+                "command": "auto-accept.updateSchedule",
+                "title": "Auto Accept: Update Schedule"
+            },
+            {
+                "command": "auto-accept.toggleSmartFrequency",
+                "title": "Auto Accept: Toggle Smart Frequency"
+            },
+            {
+                "command": "auto-accept.toggleSmartAccept",
+                "title": "Auto Accept: Toggle Smart Accept"
+            },
+            {
+                "command": "auto-accept.updateSmartRules",
+                "title": "Auto Accept: Update Smart Rules"
+            },
+            {
+                "command": "auto-accept.clearHistory",
+                "title": "Auto Accept: Clear Session History"
+            },
+            {
+                "command": "auto-accept.toggleScroll",
+                "title": "Auto Accept: Toggle Auto Scroll"
+            },
+            {
+                "command": "auto-accept.updateClickPatterns",
+                "title": "Auto Accept: Update Click Patterns"
+            },
+            {
+                "command": "auto-accept.updateScrollConfig",
+                "title": "Auto Accept: Update Scroll Config"
+            },
+            {
+                "command": "auto-accept.toggleSafeClick",
+                "title": "Auto Accept: Toggle Safe Click"
+            },
+            {
+                "command": "auto-accept.toggleDiffProtection",
+                "title": "Auto Accept: Toggle Diff Protection"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "auto-accept.toggle",
+                "key": "ctrl+shift+a",
+                "mac": "cmd+shift+a"
+            },
+            {
+                "command": "auto-accept.toggleBackground",
+                "key": "alt+shift+a",
+                "mac": "alt+shift+a"
+            },
+            {
+                "command": "auto-accept.toggleScroll",
+                "key": "ctrl+shift+s",
+                "mac": "cmd+shift+s"
+            }
+        ]
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/AkaCoder404/auto-accept-agent-pro.git"
+    },
+    "homepage": "https://github.com/AkaCoder404/auto-accept-agent-pro#readme",
+    "bugs": {
+        "url": "https://github.com/AkaCoder404/auto-accept-agent-pro/issues"
+    },
+    "scripts": {
+        "compile": "node esbuild.config.js",
+        "watch": "node esbuild.config.js --watch",
+        "package": "npx @vscode/vsce package --no-dependencies"
+    },
+    "dependencies": {
+        "ws": "^8.18.0"
+    },
+    "devDependencies": {
+        "@vscode/vsce": "^2.22.0",
+        "esbuild": "^0.20.0",
+        "javascript-obfuscator": "^5.3.0"
+    }
+}

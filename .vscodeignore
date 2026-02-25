@@ -1,0 +1,12 @@
+.vscode/**
+node_modules/**
+main_scripts/modules/**
+main_scripts/selector_finder.js
+esbuild.config.js
+*.vsix
+*.map
+dist/*.map
+.gitignore
+extension.js
+settings-panel.js
+setup-panel.js
