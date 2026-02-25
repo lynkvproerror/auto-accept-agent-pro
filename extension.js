@@ -26,17 +26,12 @@ const { CdpHandler } = require('./main_scripts/cdp-handler');
 const { Relauncher } = require('./main_scripts/relauncher');
 
 // ─── Constants ───────────────────────────────────────────────────────
-const CDP_PORT = 9222;
+const CDP_PORT = 19222;
 const DEFAULT_POLL_FREQUENCY = 1000;
 const SECONDS_PER_CLICK = 5;
 const SUPPORT_URL = 'https://buymeacoffee.com/lynkv';
 const AG_HTTP_PORT_BASE = 48787;
 const AG_HTTP_PORT_RANGE = 10; // try 48787..48796
-
-// BG mode lock file — ensures only ONE window runs background mode at a time
-const BG_LOCK_DIR = path.join(os.tmpdir(), 'auto-accept-pro');
-const BG_LOCK_FILE = path.join(BG_LOCK_DIR, 'bg-mode.lock');
-const WINDOW_ID = `${process.pid}-${Date.now()}`;
 
 // Smart Frequency tiers
 const FREQ_FAST = 500;
@@ -399,45 +394,6 @@ async function handleToggle(context) {
     }
 }
 
-// ─── BG Mode Lock File ───────────────────────────────────────────────
-function acquireBGLock() {
-    try {
-        if (!fs.existsSync(BG_LOCK_DIR)) fs.mkdirSync(BG_LOCK_DIR, { recursive: true });
-        // Check if another window holds the lock
-        if (fs.existsSync(BG_LOCK_FILE)) {
-            const existing = fs.readFileSync(BG_LOCK_FILE, 'utf8').trim();
-            const existingPid = parseInt(existing.split('-')[0], 10);
-            // If the process is still alive, lock is valid
-            try { process.kill(existingPid, 0); return false; } catch (e) { /* process dead, stale lock */ }
-        }
-        fs.writeFileSync(BG_LOCK_FILE, WINDOW_ID, 'utf8');
-        log(`BG lock acquired: ${WINDOW_ID}`);
-        return true;
-    } catch (e) {
-        log(`BG lock error: ${e.message}`);
-        return false;
-    }
-}
-
-function releaseBGLock() {
-    try {
-        if (fs.existsSync(BG_LOCK_FILE)) {
-            const owner = fs.readFileSync(BG_LOCK_FILE, 'utf8').trim();
-            if (owner === WINDOW_ID) {
-                fs.unlinkSync(BG_LOCK_FILE);
-                log('BG lock released');
-            }
-        }
-    } catch (e) { /* ignore */ }
-}
-
-function isBGLockOwner() {
-    try {
-        if (!fs.existsSync(BG_LOCK_FILE)) return false;
-        return fs.readFileSync(BG_LOCK_FILE, 'utf8').trim() === WINDOW_ID;
-    } catch (e) { return false; }
-}
-
 // ─── Background Mode Toggle ─────────────────────────────────────────
 async function handleBackgroundToggle(context) {
     if (!isEnabled) {
@@ -445,23 +401,9 @@ async function handleBackgroundToggle(context) {
         return;
     }
 
-    if (!isBackgroundMode) {
-        // Trying to ENABLE BG mode — check lock
-        if (!acquireBGLock()) {
-            vscode.window.showWarningMessage(
-                'Auto Accept Pro: Background Mode is already running in another window. Only one window can run BG mode at a time.'
-            );
-            return;
-        }
-    }
-
+    // No lock needed — each window has its own CDP port via port claim system
     isBackgroundMode = !isBackgroundMode;
     await context.workspaceState.update('auto-accept-backgroundMode', isBackgroundMode);
-
-    // Release lock when turning OFF
-    if (!isBackgroundMode) {
-        releaseBGLock();
-    }
 
     // Remove overlay BEFORE stopping CDP (need active connection to evaluate JS)
     if (!isBackgroundMode && cdpHandler && cdpHandler.hideBackgroundOverlay) {
@@ -1073,7 +1015,7 @@ function scheduleWeeklyROI(context) {
 // ─── Deactivation ────────────────────────────────────────────────────
 async function deactivate() {
     log('Deactivating extension...');
-    releaseBGLock(); // Release BG lock before shutdown
+    // CDP handler stop() releases port claim automatically
     stopActivityTracking();
     stopScheduleTimer();
     stopHttpServer();

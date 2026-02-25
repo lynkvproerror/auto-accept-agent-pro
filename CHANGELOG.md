@@ -1,10 +1,14 @@
 # Changelog
 
-## v1.4.3 — 2026-02-25
-### Improvement
-- **Configurable CDP port**: Default port changed from `9000` → `9222` to avoid conflicts with common services (PHP-FPM, SonarQube, MinIO, Portainer). Port is now configurable at runtime via `Auto Accept: Update CDP Port` command and persisted across sessions.
-- **Dynamic port scanning**: CDP handler now scans ±3 ports around the configured base port (e.g., 9219–9225 for port 9222)
-- **Updated setup guide**: All documentation updated to reflect new default port `9222`
+## v1.5.0 — 2026-02-25
+### Feature — Per-Window CDP Port Isolation
+- **High port range**: CDP ports moved from `9000/9222` → `19222–19242` to avoid conflicts with common services
+- **Smart Launcher**: Auto-assigns the next available port on each IDE launch — no manual port config needed
+- **Port Claim System**: Each extension instance claims its own port via lock files, preventing cross-instance conflicts
+- **BG Lock removed**: Multiple windows can now run BG mode simultaneously (each has its own isolated CDP)
+- **Setup Guide rewritten**: Focused on smart launcher workflow with multi-instance support
+
+> ⚠️ **Breaking**: Users must re-run CDP setup to get the new port range. Old `--remote-debugging-port=9000` or `9222` shortcuts need updating.
 
 ## v1.4.2 — 2026-02-25
 ### Bug Fixes (8)
