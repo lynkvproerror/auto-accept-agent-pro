@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.4.2 — 2026-02-25
+### Bug Fixes (8)
+- **Async HTTP polling**: Replaced synchronous XHR (froze UI every 2s) with async `fetch()` + AbortController timeout
+- **Safe Click in BG mode**: Background mode now checks for sibling Reject button before clicking — prevents clicking non-approval buttons
+- **Diff Protection in BG mode**: Background mode now skips diff/merge editor buttons (Accept Changes, Accept Incoming, etc.)
+- **Configurable click patterns**: Background mode now respects user-configured click patterns instead of using hardcoded list
+- **HTTP Live Sync in BG mode**: Background mode now polls Extension Host for live config updates (was missing entirely)
+- **Auto Scroll in BG mode**: Background mode now supports auto-scroll with manual scroll detection and pause
+- **Duplicate stop**: Removed redundant `cdpHandler.stop()` call in `deactivate()` — was causing errors on closed WebSockets
+- **Weekly ROI interval leak**: Stored interval ID and clear it on deactivate to prevent memory leaks
+- **Multi-page stats**: CDP stats now aggregate from ALL connected pages, not just the first one
+
+### Improvements
+- **Config passthrough**: CDP handler now passes all safety/scroll config fields to injected scripts
+- **Buy Me a Coffee button**: Fixed broken image on GitHub by switching to CDN static image URL
+
 ## v1.4.1 — 2026-02-25
 ### Critical Fix — BG Mode Cross-Window Flickering
 - **Single-Leader Election**: Only ONE window can run Background Mode at a time. Lock file prevents multiple windows from conflicting

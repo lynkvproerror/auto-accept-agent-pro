@@ -132,6 +132,7 @@ let relauncher = null;
 let roiStats = { clicks: 0, blocked: 0, sessions: 0, sessionsThisWeek: 0, clicksThisWeek: 0, blockedThisWeek: 0, weekStart: null };
 let sessionClicksAtStart = 0;
 let sessionBlockedAtStart = 0;
+let weeklyROITimer = null;
 
 // Session History
 const MAX_HISTORY = 500;
@@ -1031,7 +1032,7 @@ function getWeekStart(date) {
 
 function scheduleWeeklyROI(context) {
     // Check every hour for weekly summary
-    setInterval(() => {
+    weeklyROITimer = setInterval(() => {
         const now = new Date();
         if (now.getDay() === 1 && now.getHours() === 9 && now.getMinutes() < 5) {
             if (roiStats.clicksThisWeek > 0) {
@@ -1051,10 +1052,8 @@ async function deactivate() {
     stopActivityTracking();
     stopScheduleTimer();
     stopHttpServer();
-    await stopPolling();
-    if (cdpHandler) {
-        await cdpHandler.stop().catch(() => { });
-    }
+    if (weeklyROITimer) { clearInterval(weeklyROITimer); weeklyROITimer = null; }
+    await stopPolling(); // stopPolling already calls cdpHandler.stop()
     if (statusBarToggle) statusBarToggle.dispose();
     if (statusBarScroll) statusBarScroll.dispose();
     if (statusBarBackground) statusBarBackground.dispose();
