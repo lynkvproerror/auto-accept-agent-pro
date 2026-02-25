@@ -2,7 +2,7 @@
     "name": "auto-accept-agent-pro",
     "displayName": "Auto Accept Agent Pro",
     "description": "Automatically accept file edits, terminal commands, and agent prompts. Smart protection, auto-schedule, session history. Supports background mode with multi-tab cycling.",
-    "version": "1.5.1",
+    "version": "1.5.2",
     "publisher": "LynkV",
     "engines": {
         "vscode": "^1.75.0"
