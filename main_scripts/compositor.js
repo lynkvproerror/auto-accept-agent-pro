@@ -303,7 +303,7 @@ function _getSimplePollScript(config) {
             var check = function() {
                 if (!isElementVisible(el)) { resolve(true); }
                 else if (Date.now() - startTime >= timeout) { resolve(false); }
-                else { requestAnimationFrame(check); }
+                else { setTimeout(check, 50); }  // Use setTimeout instead of rAF — rAF stops when window loses focus
             };
             setTimeout(check, 50);
         });
@@ -469,6 +469,41 @@ function _getSimplePollScript(config) {
 
     setInterval(autoScroll, config.scrollIntervalMs);
 
+    // --- Web Worker Timer (bypasses browser throttling in background tabs) ---
+    var _twCode = 'self.onmessage=function(e){setTimeout(function(){self.postMessage({id:e.data.id});},e.data.ms);};';
+    var _tw = null;
+    var _twCbs = {};
+    var _twId = 0;
+
+    function _getTW() {
+        if (!_tw && typeof Worker !== 'undefined' && typeof Blob !== 'undefined') {
+            try {
+                var blob = new Blob([_twCode], { type: 'application/javascript' });
+                _tw = new Worker(URL.createObjectURL(blob));
+                _tw.onmessage = function(e) {
+                    var cb = _twCbs[e.data.id];
+                    if (cb) { delete _twCbs[e.data.id]; cb(); }
+                };
+                _tw.onerror = function() { _tw = null; };
+                _spLog('[Timer] Web Worker initialized');
+            } catch(e) { _spLog('[Timer] Web Worker not available'); }
+        }
+        return _tw;
+    }
+
+    function workerDelay(ms) {
+        return new Promise(function(resolve) {
+            var worker = _getTW();
+            if (worker) {
+                var id = ++_twId;
+                _twCbs[id] = resolve;
+                worker.postMessage({ id: id, ms: ms });
+            } else {
+                setTimeout(resolve, ms);
+            }
+        });
+    }
+
     // --- Main Poll Loop ---
     var selectors = ${selectors};
     var interval = ${interval};
@@ -503,7 +538,7 @@ function _getSimplePollScript(config) {
                 }
             }
             if (clicked > 0) _spLog('Cycle ' + stats.cycles + ': clicked ' + clicked + ', verified ' + verified);
-            await new Promise(function(r) { setTimeout(r, interval); });
+            await workerDelay(interval);
         }
         _spLog('Stopped');
     };

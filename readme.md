@@ -215,7 +215,7 @@ Extension Host                    CDP (port 9222)
 If this extension saves you time, consider buying me a coffee!
 
 <p>
-  <a href="https://buymeacoffee.com/lynkv" target="_blank"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=☕&slug=lynkv&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Buy Me A Coffee" height="60" /></a>
+  <a href="https://www.buymeacoffee.com/lynkv" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
   &nbsp;&nbsp;
   <a href="https://buymeacoffee.com/lynkv" target="_blank"><img src="media/bmc_qr.png" alt="QR Code" height="60" /></a>
 </p>

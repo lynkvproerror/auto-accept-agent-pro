@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.5.2 — 2026-02-26
+### Bug Fix — Background Operation When Window Loses Focus
+- **Web Worker Timer**: Added Web Worker-based timer that bypasses browser throttling — `setTimeout` gets throttled to ≥1s when tab is in background, Web Worker runs in a separate thread and is NOT affected
+- **`requestAnimationFrame` → `setTimeout`**: Replaced `requestAnimationFrame` in `waitForDisappear()` — `rAF` stops completely when window loses focus, causing click verification to hang indefinitely
+- **Background loop delays**: All `setTimeout` delays in `cursorLoop()` and `antigravityLoop()` now use `workerDelay()` via Web Worker
+- **Simple poll mode**: Same fixes applied to the inline simple poll script in `compositor.js`
+
+### Files Changed
+- `background_mode.js`: Added `workerDelay()` + Web Worker, fixed `waitForDisappear()`, 6 loop delays → `workerDelay()`
+- `compositor.js`: Added `workerDelay()` + Web Worker, fixed `waitForDisappear()`, main loop delay → `workerDelay()`
+
 ## v1.5.1 — 2026-02-26
 ### Critical Fix — Run Button (Alt+Enter) Now Auto-Clicks
 - **CDP Permission Script Cycle**: Added MarcoDeliaBot-style fresh-eval-per-cycle polling (1500ms) — evaluates permission script on ALL CDP pages via new WebSocket each cycle, ensuring it reaches the OOPIF agent panel webview

@@ -35,6 +35,49 @@
 
     log('Script loaded (Pro)');
 
+    // ─── Web Worker Timer — bypasses browser throttling in background tabs ───
+    // When a browser tab loses focus, setTimeout is throttled to ≥1s and
+    // requestAnimationFrame stops completely. A Web Worker runs in its own
+    // thread and is NOT subject to these throttling rules.
+    const _timerWorkerCode = `self.onmessage=function(e){setTimeout(function(){self.postMessage({id:e.data.id});},e.data.ms);};`;
+    let _timerWorker = null;
+    let _timerCallbacks = new Map();
+    let _timerId = 0;
+
+    function _getTimerWorker() {
+        if (!_timerWorker && typeof Worker !== 'undefined' && typeof Blob !== 'undefined') {
+            try {
+                const blob = new Blob([_timerWorkerCode], { type: 'application/javascript' });
+                _timerWorker = new Worker(URL.createObjectURL(blob));
+                _timerWorker.onmessage = function (e) {
+                    const cb = _timerCallbacks.get(e.data.id);
+                    if (cb) { _timerCallbacks.delete(e.data.id); cb(); }
+                };
+                _timerWorker.onerror = function () {
+                    log('[Timer] Web Worker error, falling back to setTimeout');
+                    _timerWorker = null;
+                };
+                log('[Timer] Web Worker initialized for background operation');
+            } catch (e) {
+                log('[Timer] Web Worker not available, using setTimeout fallback');
+            }
+        }
+        return _timerWorker;
+    }
+
+    function workerDelay(ms) {
+        return new Promise(function (resolve) {
+            const worker = _getTimerWorker();
+            if (worker) {
+                const id = ++_timerId;
+                _timerCallbacks.set(id, resolve);
+                worker.postMessage({ id, ms });
+            } else {
+                setTimeout(resolve, ms);
+            }
+        });
+    }
+
     // ─── PRO: Stats ──────────────────────────────────────────────────
     var _stats = { clicks: 0, blocked: 0, fileEdits: 0, terminalCommands: 0 };
     window.__autoAcceptGetStats = function () { return _stats; };
@@ -723,7 +766,7 @@
                 } else if (Date.now() - startTime >= timeout) {
                     resolve(false);
                 } else {
-                    requestAnimationFrame(check);
+                    setTimeout(check, 50);  // Use setTimeout instead of rAF — rAF stops when window loses focus
                 }
             };
             setTimeout(check, 50);
@@ -807,7 +850,7 @@
             const clicked = await performClick(['button', '[class*="button"]', '[class*="anysphere"]']);
             log(`[Loop] Cycle ${cycle}: Clicked ${clicked} buttons`);
 
-            await new Promise(r => setTimeout(r, 800));
+            await workerDelay(800);
 
             const tabSelectors = [
                 '#workbench\\.parts\\.auxiliarybar ul[role="tablist"] li[role="tab"]',
@@ -838,7 +881,7 @@
                 index++;
             }
 
-            await new Promise(r => setTimeout(r, 3000));
+            await workerDelay(3000);
         }
         log('[Loop] cursorLoop STOPPED');
     }
@@ -869,13 +912,13 @@
                 log(`[Loop] Cycle ${cycle}: Skipping clicks - conversation DONE (has badge)`);
             }
 
-            await new Promise(r => setTimeout(r, 800));
+            await workerDelay(800);
 
             const nt = queryAll("[data-tooltip-id='new-conversation-tooltip']")[0];
             if (nt) {
                 nt.click();
             }
-            await new Promise(r => setTimeout(r, 1500));
+            await workerDelay(1500);
 
             const tabsAfter = queryAll('button.grow');
 
@@ -896,7 +939,7 @@
                 index++;
             }
 
-            await new Promise(r => setTimeout(r, 1500));
+            await workerDelay(1500);
 
             const allSpansAfter = queryAll('span');
             const feedbackTexts = allSpansAfter
@@ -919,7 +962,7 @@
                 }
             }
 
-            await new Promise(r => setTimeout(r, 3000));
+            await workerDelay(3000);
         }
         log('[Loop] antigravityLoop STOPPED');
     }
