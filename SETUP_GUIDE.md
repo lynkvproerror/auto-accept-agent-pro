@@ -1,69 +1,81 @@
-# Auto Accept Agent Setup Guide
+# Auto Accept Agent Pro — Setup Guide
 
-This guide helps you enable Chrome DevTools Protocol (CDP) for Auto Accept Agent to work properly.
+This guide helps you enable Chrome DevTools Protocol (CDP) for Auto Accept Agent Pro to work properly.
 
-## Why is this needed?
+## Why is CDP needed?
 
-Auto Accept Agent needs CDP access to automatically click "Accept" buttons in your IDE. This requires launching your IDE with the `--remote-debugging-port=9000` flag.
+Auto Accept Agent Pro uses **two modes**:
+
+| Mode | CDP Required? | Features |
+|------|--------------|----------|
+| **Native** (Auto Accept only) | ❌ No | Fires VS Code accept commands every poll cycle |
+| **Full CDP** (Background Mode + Auto Scroll) | ✅ Yes | DOM-level button clicking, chat-only scroll, multi-tab cycling |
+
+Without CDP, the extension can still auto-accept via native commands, but **Background Mode** and **smart Auto Scroll** (chat-panel-only) require CDP.
+
+## CDP Port
+
+The extension uses **port 9222** (Chrome default debug port).
+
+**Injection scripts** scan range **9219–9225** (7 ports).
+**Permission scripts** scan **9222, 9229, 9000–9014** (17 ports) for broader coverage.
+
+Launch your IDE with:
+```
+--remote-debugging-port=9222
+```
+
+> **Tip:** Use **Auto-Fix CDP** from the Settings panel to automatically patch your Windows shortcut with the CDP flag.
 
 ## Setup Instructions by Platform
 
 ### Windows
 
-1. **Copy the setup script** from the Auto Accept setup panel
+1. **Copy the setup script** from the Auto Accept setup panel (click `$(gear)` → "Show Setup Guide")
 2. **Open PowerShell as Administrator**
-   - Press Windows key
-   - Type "PowerShell"
-   - Right-click "Windows PowerShell"
-   - Select "Run as Administrator"
+   - Press Windows key → type "PowerShell" → right-click → "Run as Administrator"
 3. **Paste and run the script**
 4. **Restart your IDE completely**
 
 The script will:
-- Search for your IDE shortcuts (Desktop, Start Menu, Taskbar)
-- Add the CDP flag to all shortcuts found
+- Search for IDE shortcuts (Desktop, Start Menu, Taskbar)
+- Add `--remote-debugging-port=9222` to all shortcuts found
 - Or create a new shortcut if none exist
 
 ### macOS
 
 1. **Copy the setup script** from the Auto Accept setup panel
-2. **Open Terminal**
-   - Press Cmd+Space
-   - Type "Terminal"
-   - Press Enter
+2. **Open Terminal** (Cmd+Space → "Terminal")
 3. **Paste and run the script**
 4. **Quit and restart your IDE completely**
 
-The script will:
-- Search for your IDE in /Applications
-- Modify Info.plist to add CDP flag
-- Create a backup before making changes
+Alternative — launch from Terminal directly:
+```bash
+open -n -a "Antigravity" --args --remote-debugging-port=9222
+```
 
 ### Linux
 
 1. **Copy the setup script** from the Auto Accept setup panel
-2. **Open Terminal**
-   - Press Ctrl+Alt+T or search for Terminal
+2. **Open Terminal** (Ctrl+Alt+T)
 3. **Paste and run the script**
 4. **Restart your IDE completely**
 
 The script will:
-- Search for .desktop files in all standard locations
-- Add CDP flag to Exec and TryExec lines
+- Search for `.desktop` files in standard locations
+- Add CDP flag to Exec lines
 - Support Snap, Flatpak, and native installations
 
 ## Troubleshooting
 
 ### Windows: Script execution blocked
 
-If you get "execution policy" error:
 ```powershell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
 ### Mac/Linux: Permission denied
 
-Make the script executable:
 ```bash
 chmod +x script.sh
 ```
@@ -71,47 +83,42 @@ chmod +x script.sh
 ### Changes not taking effect
 
 1. **Completely quit the IDE** (not just close windows)
-2. Make sure all IDE processes are terminated
-   - Windows: Check Task Manager
-   - Mac: Use `killall [IDE name]`
-   - Linux: Use `ps aux | grep [IDE name]`
+2. Kill all IDE processes:
+   - Windows: Task Manager → End Task
+   - Mac: `killall Antigravity` (or Cursor)
+   - Linux: `pkill -f antigravity`
 3. **Restart the IDE** using the modified shortcut
 
-### IDE not launching
+### IDE not launching / Port conflict
 
-If the IDE won't start after setup:
-1. Check if CDP port 9000 is already in use
-2. Try using a different port (edit the script to use 9001)
-3. Restore from backup:
-   - Windows: Shortcuts have .bak files
-   - Mac/Linux: Look for .bak files next to modified files
+1. Check if port 9222 is in use: `netstat -an | findstr 9222`
+2. The extension scans ports 9219–9225, so close any conflicting process
+3. Restore from backup (`.bak` files next to modified shortcuts)
 
 ### Manual Setup
 
-If the automated script doesn't work, you can manually add the flag:
-
 **Windows:**
-1. Right-click your IDE shortcut
-2. Select "Properties"
-3. In the "Target" field, add at the end: ` --remote-debugging-port=9000`
-4. Click OK
+1. Right-click IDE shortcut → Properties
+2. In "Target" field, add at the end: ` --remote-debugging-port=9222`
+3. Click OK
 
-**Mac:**
-Launch from Terminal:
+**macOS:**
 ```bash
-open -n -a "Your IDE" --args --remote-debugging-port=9000
+open -n -a "Antigravity" --args --remote-debugging-port=9222
 ```
 
 **Linux:**
-Edit your .desktop file and add `--remote-debugging-port=9000` to the Exec line.
+Edit your `.desktop` file and add `--remote-debugging-port=9222` to the `Exec` line.
 
 ## Security Note
 
-The CDP port is only accessible from localhost (127.0.0.1) by default, so it's safe to run on your local machine. However, be cautious when using this on shared or public networks.
+The CDP port is only accessible from **localhost (127.0.0.1)** by default, so it's safe on your local machine. Avoid exposing it on shared or public networks.
 
 ## Supported IDEs
 
-- Cursor
-- Antigravity
-- VS Code
-- Any Electron-based IDE that supports Chrome DevTools Protocol
+- **Antigravity** (primary)
+- **Cursor**
+- **Windsurf**
+- **Trae**
+- **VS Code** (partial — no Background Mode)
+- Any Electron-based IDE supporting Chrome DevTools Protocol

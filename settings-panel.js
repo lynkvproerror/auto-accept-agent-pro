@@ -84,6 +84,13 @@ class SettingsPanel {
                         await vscode.commands.executeCommand('auto-accept.toggleDiffProtection');
                         this._update(this._context);
                         break;
+                    case 'toggleGodMode':
+                        await vscode.commands.executeCommand('auto-accept.toggleGodMode');
+                        this._update(this._context);
+                        break;
+                    case 'autoFixCDP':
+                        await vscode.commands.executeCommand('auto-accept.autoFixCDP');
+                        break;
                     case 'updateClickPatterns':
                         await vscode.commands.executeCommand('auto-accept.updateClickPatterns', message.value);
                         this._update(this._context);
@@ -181,6 +188,7 @@ class SettingsPanel {
         const scrollInterval = context.globalState.get('auto-accept-scroll-interval', 500);
         const safeClickEnabled = context.globalState.get('auto-accept-safe-click', true);
         const diffProtectionEnabled = context.globalState.get('auto-accept-diff-protection', true);
+        const godModeEnabled = context.globalState.get('auto-accept-god-mode', false);
 
         Promise.all([Promise.resolve(stats), Promise.resolve(history)]).then(([roiStats, historyData]) => {
             this._panel.webview.html = this._getHtml(
@@ -201,12 +209,13 @@ class SettingsPanel {
                 scrollPause,
                 scrollInterval,
                 safeClickEnabled,
-                diffProtectionEnabled
+                diffProtectionEnabled,
+                godModeEnabled
             );
         });
     }
 
-    _getHtml(stats, frequency, bannedCommands, isEnabled, isBackground, smartFreq, smartAccept, schedEnabled, schedStart, schedEnd, history, isScrollEnabled, clickPatterns, disabledPatterns, scrollPause, scrollInterval, safeClickEnabled, diffProtectionEnabled) {
+    _getHtml(stats, frequency, bannedCommands, isEnabled, isBackground, smartFreq, smartAccept, schedEnabled, schedStart, schedEnd, history, isScrollEnabled, clickPatterns, disabledPatterns, scrollPause, scrollInterval, safeClickEnabled, diffProtectionEnabled, godModeEnabled) {
         const bannedStr = (bannedCommands || []).join('\n');
         const allPatterns = clickPatterns || ['Run', 'Allow', 'Always Allow', 'Keep Waiting', 'Retry', 'Continue', 'Allow Once', 'Allow This Con', 'Accept all'];
         const disabledPats = disabledPatterns || ['Accept all'];
@@ -521,19 +530,19 @@ class SettingsPanel {
         <p class="help-text">Blocks dangerous commands: file deletion, system modification, force push. Warns on risky operations.</p>
     </div>
 
-    <!-- Safe Click -->
+    <!-- Conversation Guard (replaces Safe Click) -->
     <div class="card">
-        <h2>🔒 Safe Click</h2>
+        <h2>🔒 Conversation Guard</h2>
         <div class="toggle-row">
-            <span class="toggle-label">Require sibling Reject button</span>
+            <span class="toggle-label">Only click inside agent panel</span>
             <button id="safec-toggle" class="${safeClickEnabled ? '' : 'secondary'}" onclick="toggleSafeClick()">
                 ${safeClickEnabled ? '🔒 ON' : 'OFF'}
             </button>
         </div>
         <p class="help-text">
-            When ON, buttons are only clicked if a sibling “Reject” / “Deny” / “Cancel” button exists nearby.
-            This prevents accidental clicks on buttons that look like accept but aren’t part of a confirmation dialog.
-            <br><strong>Checks:</strong> parent → grandparent → great-grandparent for any button containing reject/deny/cancel text.
+            When ON, buttons are only auto-clicked inside the conversation/agent panel area.
+            Excludes: sidebar, editor, title bar, status bar, explorer, tabs.
+            <br>When OFF, auto-click works on all visible buttons matching patterns (less safe, more coverage).
         </p>
     </div>
 
@@ -547,8 +556,38 @@ class SettingsPanel {
             </button>
         </div>
         <p class="help-text">
-            When ON, ignores “Accept Changes”, “Accept All”, “Accept Incoming”, etc. inside diff and merge editors.
+            When ON, ignores "Accept Changes", "Accept Incoming", "Accept Current", etc. inside diff and merge editors.
+            <br><strong>Note:</strong> "Accept All" in agent panel is NOT blocked — only diff/merge editor buttons.
             <br><strong>Two-layer check:</strong> 1) Text-matching against known editor button labels, 2) DOM container check for <code>.monaco-diff-editor</code>, <code>.merge-editor-view</code>, etc.
+        </p>
+    </div>
+
+    <!-- God Mode -->
+    <div class="card">
+        <h2>🔥 God Mode</h2>
+        <div class="toggle-row">
+            <span class="toggle-label">Auto-accept folder access prompts</span>
+            <button id="godmode-toggle" class="${godModeEnabled ? '' : 'secondary'}" onclick="toggleGodMode()">
+                ${godModeEnabled ? '🔥 ON' : 'OFF'}
+            </button>
+        </div>
+        <p class="help-text">
+            When ON, "Always Allow" and "Allow This Conversation" are auto-accepted.
+            <br><strong>⚠️ Warning:</strong> The agent can access files <strong>outside</strong> your workspace.
+            <br>When OFF, only safe actions (Run, Accept, Allow Once) are auto-accepted.
+        </p>
+    </div>
+
+    <!-- Auto-Fix CDP -->
+    <div class="card">
+        <h2>🔧 Auto-Fix CDP</h2>
+        <div class="toggle-row">
+            <span class="toggle-label">Patch Antigravity shortcut</span>
+            <button class="secondary" onclick="autoFixCDP()">🔧 Fix Shortcut</button>
+        </div>
+        <p class="help-text">
+            Automatically adds <code>--remote-debugging-port=9222</code> to Desktop/Start Menu Antigravity shortcuts.
+            <br>Required for background mode and button clicking.
         </p>
     </div>
 
@@ -749,6 +788,16 @@ ${allPatterns.map(p => {
         // Diff Protection
         function toggleDiffProtection() {
             vscode.postMessage({ command: 'toggleDiffProtection' });
+        }
+
+        // God Mode
+        function toggleGodMode() {
+            vscode.postMessage({ command: 'toggleGodMode' });
+        }
+
+        // Auto-Fix CDP
+        function autoFixCDP() {
+            vscode.postMessage({ command: 'autoFixCDP' });
         }
 
         // History

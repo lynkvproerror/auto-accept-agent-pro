@@ -1,5 +1,67 @@
 # Changelog
 
+## v1.5.1 — 2026-02-26
+### Critical Fix — Run Button (Alt+Enter) Now Auto-Clicks
+- **CDP Permission Script Cycle**: Added MarcoDeliaBot-style fresh-eval-per-cycle polling (1500ms) — evaluates permission script on ALL CDP pages via new WebSocket each cycle, ensuring it reaches the OOPIF agent panel webview
+- **Webview Context Detection**: `isInConversationArea()` now detects `vscode-webview://` protocol — skips sidebar/editor exclusion checks when running inside the agent panel (the ENTIRE page IS the panel)
+- **`textMatches()` with Alt+⏎ support**: Matches `"run alt+⏎"` as target `"run"` using `startsWith(target + ' alt+')` pattern (ported from MarcoDeliaBot)
+- **Shadow DOM TreeWalker**: Permission script uses `document.createTreeWalker` with recursive `shadowRoot` traversal for deep button discovery
+- **Wide Port Scan**: CDP permission script scans 17 ports (9222, 9229, 9000–9014) instead of just 7
+- **Auto Scroll Webview Fallback**: `findAgentPanel()` now falls back to `document.body` in webview context — fixes scroll not working inside OOPIF
+- **God Mode in Permission Script**: Permission script includes God Mode guard for `data-testid` / `data-action` attributes
+
+### Architecture
+- `cdp-handler.js`: Added `evaluateOnAllPages()`, `_evalFresh()`, `_getAllPages()` methods
+- `extension.js`: Added `buildPermissionScript()`, `checkPermissionButtons()`, `startPermissionPolling()` / `stopPermissionPolling()`
+- `compositor.js` + `background_mode.js`: Added `_isWebviewContext` detection and `isInConversationArea()` bypass
+
+## v1.5.0 — 2026-02-26
+### Auto Scroll Consolidation
+- **Removed status bar button**: Auto Scroll no longer has a dedicated `$(check) Auto Scroll` status bar item — managed through Settings panel
+- **Removed keybinding**: `Ctrl+Shift+S` keybinding for scroll removed (was conflicting with common shortcuts)
+- **Scroll state in tooltip**: Auto Scroll status now shown as tag in Auto Accept tooltip (`ON | 📜 Scroll`)
+- **Command palette**: `Auto Accept: Toggle Auto Scroll` still available via command palette
+- **Status bar cleanup**: 4 items → 3 items (Accept, BG Mode, Settings)
+
+## v1.4.9 — 2026-02-26
+### MarcoDeliaBot Feature Integration
+- **🔥 God Mode**: Toggle in Settings panel — auto-accepts "Always Allow", "Always Run", "Allow This Conversation" buttons
+  - Dynamic `rejectPatterns`: God Mode ON removes these from reject list; OFF blocks them (default safe)
+  - HTTP Live Sync: `godModeEnabled` syncs to injection scripts in real-time
+  - State persistence via `globalState`
+- **🔧 Auto-Fix CDP Shortcut**: Settings panel button to auto-patch Windows shortcut with `--remote-debugging-port=9222`
+  - PowerShell script scans Desktop + Start Menu for Antigravity `.lnk` files
+  - Creates backup before modification
+- **Async Lock (`isAccepting`)**: Prevents double-accepts when multiple commands fire rapidly
+- **Shadow DOM Piercing**: `queryAll()` recursively traverses `shadowRoot` in both injection scripts
+- **`antigravity.terminalCommand.run`**: Added to command list for Run button support
+
+### New Commands
+- `auto-accept.toggleGodMode` — Toggle God Mode ON/OFF
+- `auto-accept.autoFixCDP` — Auto-fix CDP shortcut on Windows
+
+## v1.4.8 — 2026-02-26
+### MunKhin Feature Integration
+- **`waitForDisappear` + `isElementVisible`**: Click verification helpers in `compositor.js`
+- **`findNearbyCommandText` + `isCommandBanned`**: Banned command detection near Run/Execute buttons in both injection scripts
+- **`bannedCommands` sync**: HTTP Live Sync server now sends `bannedCommands` to injection scripts
+- **Badge skip logic**: Confirmed and verified — background mode skips completed conversations
+
+## v1.4.7 — 2026-02-26
+### Bug Fixes
+- **Docker error spam**: Removed `run`/`execute` commands from polling — commands like `runTerminalCommand`, `runStep` were firing every second, triggering Docker checks and terminal execution
+- **Unintended scrolling**: Replaced broad CSS selectors with smart heuristic (`findAgentPanel()` + `findDeepestScrollable()`) — auto scroll now targets only the chat message container, not terminal/output/explorer
+- **CDP port mismatch**: Unified all files to port **9222** (was 9000 in extension.js and relauncher.js but 9222 in cdp-handler.js → CDP never connected)
+- **HTTP port mismatch**: CDP injected scripts now receive actual bound HTTP port instead of hardcoded default
+- **Native scroll side effects**: Removed native scroll polling entirely — scroll only works via CDP DOM injection for precision
+- **Cursor Docker trigger**: Removed `cursorai.action.acceptAndRunGenerateInTerminal` from Cursor commands (triggered Docker/terminal execution)
+
+### Improvements
+- **Command discovery**: Only discovers `accept`/`apply`/`confirm` commands (no more `run`/`execute`)
+- **Icon optimization**: Reduced icon.png from 2.4 MB (2048×2048) to 103 KB (256×256)
+- **Dead code cleanup**: Removed 27 lines of unused native scroll code
+- **Guard logic fix**: `Run` pattern now correctly triggers command polling guard
+
 ## v1.4.2 — 2026-02-25
 ### Bug Fixes (8)
 - **Async HTTP polling**: Replaced synchronous XHR (froze UI every 2s) with async `fetch()` + AbortController timeout
@@ -49,27 +111,3 @@
 - Added `workbench.action.files.save` for auto-save after accept
 - No more missing commands — catches every accept/approve/confirm command
 
-## v1.1.0 — 2026-02-25
-### Critical Fixes
-- **Accept commands**: 2 → 10 Antigravity commands (fix Run/Alt+Enter)
-- **CDP auto-reconnect**: Exponential backoff (2s→4s→8s, max 3 retries)
-- **ROI stats**: Delta-based collection, no more double-counting
-- **Banned commands**: Now works in Simple mode (was broken)
-- **Toggle guard**: Prevents race condition on rapid double-click
-
-### New Features
-- **Output Channel**: User-visible `Auto Accept` log with timestamps
-- **Away Mode**: "X actions handled while you were away" notification
-- **Session Summary**: Shows clicks/blocked/time saved on disable
-- **Focus State**: Tracks window focus for away detection
-- **IDE detection**: Added Windsurf + Trae support
-- **Keyboard shortcut**: `Ctrl+Shift+A` toggle
-
-### Cleanup
-- Removed dead files: `background_mode.js`, `simple_poll.js`
-- Added `.vscodeignore` for clean VSIX (112KB vs 600KB+)
-
-## v1.0.0 — 2026-02-25
-- Initial build from scratch (no license/Pro gates)
-- Core: toggle, background mode, CDP injection, ROI stats
-- Supports Cursor + Antigravity IDEs

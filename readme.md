@@ -1,6 +1,6 @@
 # ⚡ Auto Accept Agent Pro
 
-> Automatically accept file edits, terminal commands, and agent prompts in **Cursor**, **Antigravity**, and **VS Code** IDEs. Premium protection, live configuration, and full analytics.
+> Automatically accept file edits, terminal commands, and agent prompts in **Antigravity**, **Cursor**, **Windsurf**, **Trae**, and **VS Code** IDEs. Premium protection, live configuration, and full analytics.
 
 <p>
   <a href="https://www.buymeacoffee.com/lynkv" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
@@ -29,7 +29,6 @@
 |----------|--------|
 | `Ctrl+Shift+A` | Toggle Auto Accept ON/OFF |
 | `Alt+Shift+A` | Toggle Background Mode |
-| `Ctrl+Shift+S` | Toggle Auto Scroll |
 
 ---
 
@@ -44,10 +43,11 @@ Automatically clicks **Accept**, **Run**, **Allow**, **Continue**, **Retry**, an
 Accepts across **all open conversations** by connecting via Chrome DevTools Protocol (CDP). Cycles through tabs, detects completion badges, and shows a visual progress overlay.
 
 ### 📜 Auto Scroll
-Automatically scrolls chat panels to the bottom so you never miss new content.
+Automatically scrolls the **agent chat panel** to the bottom so you never miss new content.
+- **Chat-panel-only** — uses smart heuristic to find the deepest scrollable container inside the agent panel
 - **Manual scroll detection** — pauses scrolling when you scroll up manually
 - **Configurable timing** — Pause duration (1–20s) and scroll interval (200–2000ms)
-- **Editor-safe** — skips `.monaco-editor` containers
+- **Editor-safe** — never scrolls terminal, output, or file explorer panels
 
 ### 🔒 Safe Click
 Only clicks buttons that have a sibling **Reject** / **Deny** / **Cancel** button nearby — prevents accidental clicks on non-confirmation buttons.
@@ -60,6 +60,19 @@ Prevents clicking **"Accept Changes"**, **"Accept All"**, **"Accept Incoming"**,
   1. Text-matching against known editor button labels
   2. DOM container detection (`.monaco-diff-editor`, `.merge-editor-view`)
 - Toggleable ON/OFF from Settings
+
+### 🔥 God Mode
+Auto-accepts **"Always Allow"**, **"Always Run"**, **"Allow This Conversation"** buttons.
+- **OFF** (default): These buttons are on the reject list for safety
+- **ON**: Removes them from reject list — full autonomous access
+- Toggle from Settings panel or command palette
+- State syncs via HTTP to injection scripts in real-time
+
+### 🔧 Auto-Fix CDP Shortcut
+One-click fix for Windows CDP setup:
+- Scans Desktop + Start Menu for Antigravity `.lnk` shortcuts
+- Adds `--remote-debugging-port=9222` to shortcut target
+- Creates `.bak` backup before modification
 
 ### 🧠 Smart Accept — Command Safety
 Blocks dangerous terminal commands before they execute:
@@ -91,12 +104,11 @@ Track productivity gains with detailed analytics:
 - **Weekly Notifications** — Automatic summary each week
 - **Config Export/Import** — JSON backup of all settings
 
-### 📊 Dual Status Bar
+### 📊 Status Bar (3 Items)
 
 | Item | Function |
 |------|----------|
-| `$(check) Accept ON/OFF` | Toggle auto-accept |
-| `$(arrow-down) Scroll ON/OFF` | Toggle auto-scroll |
+| `$(check) Auto Accept` | Toggle auto-accept (tooltip shows scroll state) |
 | `BG Mode ON/OFF` | Toggle background mode |
 | `$(gear)` | Open Settings panel |
 
@@ -104,8 +116,8 @@ Track productivity gains with detailed analytics:
 
 ## 🛠️ Requirements
 
-- **Cursor IDE**, **Antigravity IDE**, or **VS Code** (partial support)
-- For **Background Mode**: Chrome DevTools Protocol enabled (the extension will guide you through setup)
+- **Antigravity IDE** (primary), **Cursor IDE**, **Windsurf IDE**, **Trae IDE**, or **VS Code**
+- For **Background Mode + Auto Scroll**: Chrome DevTools Protocol enabled with `--remote-debugging-port=9222` (the extension will guide you through setup)
 
 ---
 
@@ -121,6 +133,8 @@ Track productivity gains with detailed analytics:
 | `Auto Accept: Toggle Smart Accept` | Enable/disable command safety |
 | `Auto Accept: Toggle Smart Frequency` | Enable/disable adaptive polling |
 | `Auto Accept: Open Settings` | Open the full dashboard |
+| `Auto Accept: Toggle God Mode` | Toggle God Mode ON/OFF |
+| `Auto Accept: Auto-Fix CDP` | Fix CDP shortcut on Windows |
 | `Auto Accept: Update Frequency` | Set poll frequency (200–3000ms) |
 | `Auto Accept: Update Banned Commands` | Edit blocked command patterns |
 | `Auto Accept: Update Click Patterns` | Configure which buttons to auto-click |
@@ -144,7 +158,7 @@ All features are configurable from the dashboard — no manual JSON editing requ
 ## 🔧 Architecture
 
 ```
-Extension Host                    CDP / Browser
+Extension Host                    CDP (port 9222)
 ┌─────────────────┐              ┌─────────────────┐
 │  extension.js   │──── CDP ────▶│  Injected Script │
 │  ┌────────────┐ │              │  (compositor.js)  │
@@ -152,36 +166,47 @@ Extension Host                    CDP / Browser
 │  └────────────┘ │              │  • Auto Click     │
 │  • State Mgmt   │              │  • Safe Click     │
 │  • Status Bar   │              │  • Diff Protection│
-│  • Commands     │              │  • Auto Scroll    │
-│  • ROI Stats    │              │  • HTTP Polling   │
-│  • Scheduling   │              │  • Stats Tracking │
+│  • Commands     │   Fresh WS   │  • Auto Scroll    │
+│  • ROI Stats    │──── 1.5s ───▶│  • HTTP Polling   │
+│  • Scheduling   │  Permission  │  • Stats Tracking │
+│  • God Mode     │   Script     │  • Webview Guard  │
 └─────────────────┘              └─────────────────┘
 ```
+
+**Dual CDP Strategy:**
+1. **Persistent Injection** — `compositor.js` / `background_mode.js` injected once, runs continuous poll loop
+2. **Permission Script Cycle** — Fresh `buildPermissionScript()` evaluated every 1.5s on ALL pages via new WebSocket (MarcoDeliaBot-style), with Webview Guard + `textMatches()` + Shadow DOM TreeWalker
 
 ---
 
 ## 📝 Changelog
 
-### v1.4.1
-- 🔒 Obfuscated build for all JavaScript files
-- 📦 Published to Open VSX marketplace
+### v1.5.1
+- 🔥 **Run button fix** — CDP permission script cycle with Webview Guard + textMatches
+- 🔍 **Webview context** — detects `vscode-webview://` and skips sidebar exclusion
+- 📜 **Auto Scroll fix** — works in OOPIF webview with document.body fallback
+- 🌐 **17-port scan** — CDP permission scans 9222, 9229, 9000–9014
 
-### v1.4.0
-- ✨ **Auto Scroll** — auto-scroll chat panels with manual scroll detection
-- ✨ **Safe Click** — sibling Reject/Deny/Cancel button validation
-- ✨ **Diff Protection** — skip diff/merge editor buttons
-- ✨ **HTTP Live Sync** — real-time config push via port 48787
-- ✨ **Dual Status Bar** — 4 right-aligned items (Accept, Scroll, BG, Settings)
-- ✨ **Click Patterns** — configurable button text patterns with checkboxes
-- 🔧 Comprehensive Settings panel with info cards for all features
+### v1.5.0
+- 📊 **Status bar cleanup** — 4 items → 3 (removed Auto Scroll button)
+- ⌨️ **Removed Ctrl+Shift+S** — scroll managed via Settings panel
 
-### v1.3.0
-- Smart Accept with command safety rules
-- Auto-Schedule for overnight sessions
-- Smart Frequency with adaptive polling
-- ROI Dashboard with weekly notifications
-- Session History with export/import
-- Background Mode with multi-tab cycling
+### v1.4.9
+- 🔥 **God Mode** — auto-accept "Always Allow" / "Always Run" buttons
+- 🔧 **Auto-Fix CDP** — one-click Windows shortcut patching
+- 🔒 **Async lock** — prevents double-accepts
+- 🕳️ **Shadow DOM piercing** — queryAll traverses shadowRoot
+
+### v1.4.8
+- 🔗 **MunKhin integration** — banned command detection near Run buttons
+- 📡 **bannedCommands sync** — HTTP server sends to injection scripts
+
+### v1.4.7
+- 🐛 **Docker error fix** — removed `run`/`execute` commands from polling
+- 🐛 **Chat-only scroll** — smart heuristic targets agent panel only
+- 🐛 **CDP port unified** — all files now use port 9222
+- 🐛 **HTTP port fix** — injected scripts use actual bound port
+- ⚡ **Icon optimized** — 2.4 MB → 103 KB
 
 ---
 

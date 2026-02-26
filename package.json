@@ -2,7 +2,7 @@
     "name": "auto-accept-agent-pro",
     "displayName": "Auto Accept Agent Pro",
     "description": "Automatically accept file edits, terminal commands, and agent prompts. Smart protection, auto-schedule, session history. Supports background mode with multi-tab cycling.",
-    "version": "1.4.2",
+    "version": "1.5.1",
     "publisher": "LynkV",
     "engines": {
         "vscode": "^1.75.0"
@@ -88,6 +88,14 @@
             {
                 "command": "auto-accept.toggleDiffProtection",
                 "title": "Auto Accept: Toggle Diff Protection"
+            },
+            {
+                "command": "auto-accept.toggleGodMode",
+                "title": "Auto Accept: Toggle God Mode"
+            },
+            {
+                "command": "auto-accept.autoFixCDP",
+                "title": "Auto Accept: Auto-Fix CDP Shortcut"
             }
         ],
         "keybindings": [
@@ -100,11 +108,6 @@
                 "command": "auto-accept.toggleBackground",
                 "key": "alt+shift+a",
                 "mac": "alt+shift+a"
-            },
-            {
-                "command": "auto-accept.toggleScroll",
-                "key": "ctrl+shift+s",
-                "mac": "cmd+shift+s"
             }
         ]
     },

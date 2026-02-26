@@ -26,7 +26,7 @@ const { CdpHandler } = require('./main_scripts/cdp-handler');
 const { Relauncher } = require('./main_scripts/relauncher');
 
 // ─── Constants ───────────────────────────────────────────────────────
-const CDP_PORT = 9000;
+// CDP port is configured in cdp-handler.js (BASE_PORT = 9222)
 const DEFAULT_POLL_FREQUENCY = 1000;
 const SECONDS_PER_CLICK = 5;
 const SUPPORT_URL = 'https://buymeacoffee.com/lynkv';
@@ -89,6 +89,7 @@ const ACCEPT_COMMANDS_ANTIGRAVITY = [
     'antigravity.prioritized.agentAcceptFocusedHunk',
     'antigravity.prioritized.supercompleteAccept',
     'antigravity.terminalCommand.accept',
+    'antigravity.terminalCommand.run',          // ← KEY: triggers Run (Alt+Enter) button
     'antigravity.acceptCompletion',
     'antigravity.prioritized.terminalSuggestion.accept',
     'antigravity.acceptEdit',
@@ -96,11 +97,12 @@ const ACCEPT_COMMANDS_ANTIGRAVITY = [
 ];
 
 const ACCEPT_COMMANDS_CURSOR = [
-    'cursorai.action.acceptAndRunGenerateInTerminal',
     'cursorai.action.acceptGenerateInTerminal',
     'cursorAcceptInlineSuggestion',
     'editor.action.acceptInlineSuggestion',
     'aipopup.action.accept'
+    // NOTE: 'cursorai.action.acceptAndRunGenerateInTerminal' removed
+    // — it triggers terminal execution (Docker checks, etc.)
 ];
 
 const ACCEPT_COMMANDS_WINDSURF = [
@@ -129,6 +131,7 @@ let outputChannel = null;
 let currentIDE = 'antigravity';
 let globalContext = null;
 let relauncher = null;
+let discoveredCommands = []; // Auto-discovered accept/run commands
 let roiStats = { clicks: 0, blocked: 0, sessions: 0, sessionsThisWeek: 0, clicksThisWeek: 0, blockedThisWeek: 0, weekStart: null };
 let sessionClicksAtStart = 0;
 let sessionBlockedAtStart = 0;
@@ -167,6 +170,7 @@ let disabledClickPatterns = [...DEFAULT_DISABLED_PATTERNS];
 // Safety Features
 let safeClickEnabled = true;
 let diffProtectionEnabled = true;
+let godModeEnabled = false; // God Mode: auto-accept "Always Allow" / "Allow This Conversation"
 
 // HTTP Live Sync Server
 let httpServer = null;
@@ -200,10 +204,67 @@ function getIDEDisplayName() {
 
 function getAcceptCommandsForIDE() {
     const ide = currentIDE;
-    if (ide === 'antigravity') return ACCEPT_COMMANDS_ANTIGRAVITY;
-    if (ide === 'cursor') return ACCEPT_COMMANDS_CURSOR;
-    if (ide === 'windsurf' || ide === 'trae') return ACCEPT_COMMANDS_WINDSURF;
-    return ACCEPT_COMMANDS_FALLBACK;
+    let commands;
+    if (ide === 'antigravity') commands = ACCEPT_COMMANDS_ANTIGRAVITY;
+    else if (ide === 'cursor') commands = ACCEPT_COMMANDS_CURSOR;
+    else if (ide === 'windsurf' || ide === 'trae') commands = ACCEPT_COMMANDS_WINDSURF;
+    else commands = ACCEPT_COMMANDS_FALLBACK;
+    // Merge discovered commands (deduplicated)
+    const all = [...new Set([...commands, ...discoveredCommands])];
+    return all;
+}
+
+// ─── Auto-Discover Accept Commands ───────────────────────────────────
+async function discoverCommands() {
+    try {
+        const allCommands = await vscode.commands.getCommands(true);
+        const ide = currentIDE;
+
+        // Patterns to match per IDE
+        const searchPatterns = {
+            antigravity: ['antigravity'],
+            cursor: ['cursor', 'aipopup'],
+            windsurf: ['cascade'],
+            trae: ['trae'],
+            code: []
+        };
+        const prefixes = searchPatterns[ide] || [];
+
+        // Log ALL commands matching IDE prefix for diagnostic
+        const allIdeCommands = allCommands.filter(cmd => {
+            const lower = cmd.toLowerCase();
+            return prefixes.some(p => lower.includes(p));
+        });
+        if (allIdeCommands.length > 0) {
+            log(`[Diagnostic] ALL ${ide} commands found (${allIdeCommands.length}):`);
+            allIdeCommands.forEach(cmd => log(`  → ${cmd}`));
+        }
+
+        // Action keywords that indicate SAFE accept commands (can fire repeatedly)
+        // NOTE: 'run' and 'execute' are EXCLUDED — they trigger side effects
+        const actionKeywords = ['accept', 'apply', 'confirm'];
+
+        const found = allCommands.filter(cmd => {
+            const lower = cmd.toLowerCase();
+            // Must match IDE prefix
+            if (!prefixes.some(p => lower.includes(p))) return false;
+            // Must contain an action keyword
+            if (!actionKeywords.some(k => lower.includes(k))) return false;
+            // Skip if already in hardcoded list
+            if (getAcceptCommandsForIDE().includes(cmd)) return false;
+            return true;
+        });
+
+        if (found.length > 0) {
+            discoveredCommands = found;
+            log(`Discovered ${found.length} additional commands: ${found.join(', ')}`);
+        } else {
+            log('No additional commands discovered');
+        }
+
+    } catch (e) {
+        log(`Command discovery failed: ${e.message}`);
+    }
 }
 
 // ─── Activation ──────────────────────────────────────────────────────
@@ -219,6 +280,11 @@ function activate(context) {
     log(`Detected IDE: ${getIDEDisplayName()}`);
     log(`Accept commands: ${getAcceptCommandsForIDE().join(', ')}`);
 
+    // Discover additional accept/run commands available in this IDE
+    discoverCommands().then(() => {
+        const total = getAcceptCommandsForIDE().length;
+        log(`Total accept/run commands: ${total}`);
+    });
     // Load persisted state — workspaceState = per-window independence
     isEnabled = context.workspaceState.get('auto-accept-isEnabled', false);
     isBackgroundMode = context.workspaceState.get('auto-accept-backgroundMode', false);
@@ -237,6 +303,7 @@ function activate(context) {
     scrollIntervalMs = context.globalState.get('auto-accept-scroll-interval', 500);
     safeClickEnabled = context.globalState.get('auto-accept-safe-click', true);
     diffProtectionEnabled = context.globalState.get('auto-accept-diff-protection', true);
+    godModeEnabled = context.globalState.get('auto-accept-god-mode', false);
     loadROIStats(context);
     sessionHistory = context.workspaceState.get('auto-accept-session-history', []);
 
@@ -245,22 +312,19 @@ function activate(context) {
     relauncher = new Relauncher(msg => log(msg));
 
     // ─── Status Bar — right-aligned, grouped together ─────────────
-    statusBarToggle = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, -10000);
+    statusBarToggle = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, -100);
     statusBarToggle.command = 'auto-accept.toggle';
     statusBarToggle.tooltip = 'Click to toggle Auto Accept Pro';
     context.subscriptions.push(statusBarToggle);
 
-    statusBarScroll = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, -10001);
-    statusBarScroll.command = 'auto-accept.toggleScroll';
-    statusBarScroll.tooltip = 'Click to toggle Auto Scroll';
-    context.subscriptions.push(statusBarScroll);
 
-    statusBarBackground = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, -10002);
+
+    statusBarBackground = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, -102);
     statusBarBackground.command = 'auto-accept.toggleBackground';
     statusBarBackground.tooltip = 'Click to toggle Background Mode';
     context.subscriptions.push(statusBarBackground);
 
-    statusBarSettings = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, -10003);
+    statusBarSettings = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, -103);
     statusBarSettings.text = '$(gear)';
     statusBarSettings.command = 'auto-accept.openSettings';
     statusBarSettings.tooltip = 'Auto Accept Pro Settings';
@@ -320,7 +384,9 @@ function activate(context) {
         vscode.commands.registerCommand('auto-accept.updateSmartRules', (rules) => handleSmartRulesUpdate(context, rules)),
         vscode.commands.registerCommand('auto-accept.clearHistory', () => { sessionHistory = []; context.workspaceState.update('auto-accept-session-history', []); }),
         vscode.commands.registerCommand('auto-accept.toggleSafeClick', () => handleSafeClickToggle(context)),
-        vscode.commands.registerCommand('auto-accept.toggleDiffProtection', () => handleDiffProtectionToggle(context))
+        vscode.commands.registerCommand('auto-accept.toggleDiffProtection', () => handleDiffProtectionToggle(context)),
+        vscode.commands.registerCommand('auto-accept.toggleGodMode', () => handleGodModeToggle(context)),
+        vscode.commands.registerCommand('auto-accept.autoFixCDP', () => autoFixCDPShortcut())
     );
 
     // ─── Per-Window State ─────────────────────────────────────────
@@ -490,6 +556,9 @@ async function handleFrequencyUpdate(context, value) {
         stopCommandPolling();
         startCommandPolling(context);
     }
+
+    // Re-inject with updated config
+    if (isEnabled) { await stopCDPSession(); await startCDPSession(context); }
 }
 
 // ─── Banned Commands Update ──────────────────────────────────────────
@@ -515,6 +584,12 @@ async function handleScrollToggle(context) {
     await context.workspaceState.update('auto-accept-scrollEnabled', isScrollEnabled);
     updateStatusBar();
     log(`Scroll: ${isScrollEnabled ? 'ON' : 'OFF'}`);
+
+    // Toggle native scroll — note: scroll only works with CDP (DOM-level).
+    // Native VS Code commands cannot safely target only the chat panel.
+
+    // Re-inject with updated config
+    if (isEnabled) { await stopCDPSession(); await startCDPSession(context); }
 }
 
 // ─── Click Patterns Update ───────────────────────────────────────────
@@ -524,6 +599,9 @@ async function handleClickPatternsUpdate(context, data) {
     await context.globalState.update('auto-accept-click-patterns', clickPatterns);
     await context.globalState.update('auto-accept-disabled-patterns', disabledClickPatterns);
     log(`Click patterns: ${clickPatterns.length} active, ${disabledClickPatterns.length} disabled`);
+
+    // Re-inject with updated config
+    if (isEnabled) { await stopCDPSession(); await startCDPSession(context); }
 }
 
 // ─── Scroll Config Update ────────────────────────────────────────────
@@ -531,13 +609,19 @@ async function handleScrollConfigUpdate(context, cfg) {
     if (cfg.pauseMs !== undefined) { scrollPauseMs = cfg.pauseMs; await context.globalState.update('auto-accept-scroll-pause', scrollPauseMs); }
     if (cfg.intervalMs !== undefined) { scrollIntervalMs = cfg.intervalMs; await context.globalState.update('auto-accept-scroll-interval', scrollIntervalMs); }
     log(`Scroll config: pause=${scrollPauseMs}ms, interval=${scrollIntervalMs}ms`);
+
+    // Re-inject with updated config
+    if (isEnabled) { await stopCDPSession(); await startCDPSession(context); }
 }
 
 // ─── Safe Click Toggle ───────────────────────────────────────────────
 async function handleSafeClickToggle(context) {
     safeClickEnabled = !safeClickEnabled;
     await context.globalState.update('auto-accept-safe-click', safeClickEnabled);
-    log(`Safe Click: ${safeClickEnabled ? 'ON' : 'OFF'}`);
+    log(`Conversation Guard: ${safeClickEnabled ? 'ON' : 'OFF'}`);
+
+    // Re-inject with updated config
+    if (isEnabled) { await stopCDPSession(); await startCDPSession(context); }
 }
 
 // ─── Diff Protection Toggle ──────────────────────────────────────────
@@ -545,6 +629,101 @@ async function handleDiffProtectionToggle(context) {
     diffProtectionEnabled = !diffProtectionEnabled;
     await context.globalState.update('auto-accept-diff-protection', diffProtectionEnabled);
     log(`Diff Protection: ${diffProtectionEnabled ? 'ON' : 'OFF'}`);
+
+    // Re-inject with updated config
+    if (isEnabled) { await stopCDPSession(); await startCDPSession(context); }
+}
+
+// ─── God Mode Toggle ─────────────────────────────────────────────────
+async function handleGodModeToggle(context) {
+    godModeEnabled = !godModeEnabled;
+    await context.globalState.update('auto-accept-god-mode', godModeEnabled);
+    log(`God Mode: ${godModeEnabled ? 'ON ⚠️' : 'OFF'}`);
+
+    if (godModeEnabled) {
+        vscode.window.showWarningMessage(
+            '⚠️ God Mode ENABLED — "Always Allow" and "Allow This Conversation" will be auto-accepted. The agent can access files outside your workspace.'
+        );
+    } else {
+        vscode.window.showInformationMessage('🛡️ God Mode DISABLED — folder access prompts require manual approval.');
+    }
+
+    // Re-inject with updated config
+    if (isEnabled) { await stopCDPSession(); await startCDPSession(context); }
+}
+
+// ─── Auto-Fix CDP Shortcut (Windows) ─────────────────────────────────
+async function autoFixCDPShortcut() {
+    if (process.platform !== 'win32') {
+        vscode.window.showInformationMessage('Auto-patching is Windows-only. Please add --remote-debugging-port=9222 to your launch command manually.');
+        return;
+    }
+
+    const psFile = path.join(os.tmpdir(), 'antigravity_patch_shortcut.ps1');
+    const psContent = `
+$flag = "--remote-debugging-port=9222"
+$WshShell = New-Object -comObject WScript.Shell
+$paths = @(
+    "$env:USERPROFILE\\Desktop",
+    "$env:PUBLIC\\Desktop",
+    "$env:APPDATA\\Microsoft\\Windows\\Start Menu\\Programs",
+    "$env:ALLUSERSPROFILE\\Microsoft\\Windows\\Start Menu\\Programs"
+)
+$patched = $false
+foreach ($dir in $paths) {
+    if (Test-Path $dir) {
+        $files = Get-ChildItem -Path $dir -Filter "*.lnk" -Recurse -ErrorAction SilentlyContinue
+        foreach ($file in $files) {
+            $shortcut = $WshShell.CreateShortcut($file.FullName)
+            if ($shortcut.TargetPath -like "*Antigravity*") {
+                if ($shortcut.Arguments -notlike "*remote-debugging-port*") {
+                    $shortcut.Arguments = ($shortcut.Arguments + " " + $flag).Trim()
+                    $shortcut.Save()
+                    $patched = $true
+                    Write-Output "PATCHED: $($file.FullName)"
+                }
+            }
+        }
+    }
+}
+if ($patched) { Write-Output "SUCCESS" } else { Write-Output "NOT_FOUND" }
+`;
+
+    try {
+        fs.writeFileSync(psFile, psContent, 'utf8');
+    } catch (e) {
+        log(`Auto-Fix CDP: Failed to write script: ${e.message}`);
+        vscode.window.showWarningMessage('Could not create patcher script. Please add the flag manually.');
+        return;
+    }
+
+    log('Auto-Fix CDP: Running shortcut patcher...');
+    const cp = require('child_process');
+    cp.exec(`powershell -NoProfile -ExecutionPolicy Bypass -File "${psFile}"`, (err, stdout, stderr) => {
+        try { fs.unlinkSync(psFile); } catch (e) { }
+
+        if (err) {
+            log(`Auto-Fix CDP: Error: ${err.message}`);
+            vscode.window.showWarningMessage('Shortcut patching failed. Please add --remote-debugging-port=9222 to your shortcut manually.');
+            return;
+        }
+        log(`Auto-Fix CDP: ${stdout.trim()}`);
+        if (stdout.includes('SUCCESS')) {
+            log('Auto-Fix CDP: Shortcut patched!');
+            vscode.window.showInformationMessage(
+                '✅ Shortcut updated with --remote-debugging-port=9222! Restart Antigravity for the fix to take effect.',
+                'Close & Restart'
+            ).then(action => {
+                if (action === 'Close & Restart') {
+                    vscode.commands.executeCommand('workbench.action.quit');
+                }
+            });
+        } else {
+            vscode.window.showWarningMessage(
+                'No Antigravity shortcut found on Desktop or Start Menu. Add --remote-debugging-port=9222 to your shortcut manually.'
+            );
+        }
+    });
 }
 
 // ─── HTTP Live Sync Server ───────────────────────────────────────────
@@ -566,7 +745,9 @@ function startHttpServer() {
             clickIntervalMs: pollFrequency,
             smartAcceptEnabled: smartAcceptEnabled,
             safeClickEnabled: safeClickEnabled,
-            diffProtectionEnabled: diffProtectionEnabled
+            diffProtectionEnabled: diffProtectionEnabled,
+            bannedCommands: bannedCommands,
+            godMode: godModeEnabled
         }));
     };
 
@@ -606,13 +787,15 @@ function stopHttpServer() {
 // ─── Polling System ──────────────────────────────────────────────────
 async function startPolling(context) {
     startCommandPolling(context);
+    startPermissionPolling();
     // Each window independently starts its own CDP session
     await startCDPSession(context);
-    log('Polling started (commands + CDP)');
+    log('Polling started (commands + CDP + permission)');
 }
 
 async function stopPolling() {
     stopCommandPolling();
+    stopPermissionPolling();
     await stopCDPSession();
     log('Polling stopped');
 }
@@ -682,9 +865,12 @@ function adaptFrequency() {
         currentFrequencyTier = newTier;
         pollFrequency = newFreq;
         log(`Smart Frequency: ${newTier} (${newFreq}ms)`);
-        // Restart command polling with new frequency
+        // BUG 5 FIX: Restart command polling with new frequency
+        // Use defensive check: clear first, then verify null before restart
         if (commandPollTimer) {
             stopCommandPolling();
+        }
+        if (!commandPollTimer && globalContext) {
             startCommandPolling(globalContext);
         }
     }
@@ -773,6 +959,9 @@ async function handleSmartAcceptToggle(context) {
     smartAcceptEnabled = !smartAcceptEnabled;
     await context.globalState.update('auto-accept-smart-accept', smartAcceptEnabled);
     log(`Smart Accept: ${smartAcceptEnabled ? 'ON' : 'OFF'}`);
+
+    // Re-inject with updated config
+    if (isEnabled) { await stopCDPSession(); await startCDPSession(context); }
 }
 
 async function handleSmartRulesUpdate(context, rules) {
@@ -803,18 +992,168 @@ function stopCommandPolling() {
     }
 }
 
+// ─── CDP Permission Script Cycle (MarcoDeliaBot-style) ──────────────
+let cdpPermissionTimer = null;
+
+function buildPermissionScript() {
+    // Get active click patterns
+    const activePatterns = clickPatterns
+        .filter(p => !disabledClickPatterns.includes(p))
+        .map(p => p.toLowerCase());
+
+    const SAFE_TEXTS = JSON.stringify(activePatterns);
+    const GOD_MODE = godModeEnabled;
+
+    return `(function() {
+    // ═══ WEBVIEW GUARD ═══
+    // Only run inside the agent panel webview, not the main IDE window
+    var isWebview = window.location.protocol === 'vscode-webview:' ||
+                    !!document.querySelector('.react-app-container') ||
+                    !!document.querySelector('[data-vscode-context]') ||
+                    !!document.querySelector('[class*="agent"]');
+    if (!isWebview) return 'ignored-main-window';
+
+    var SAFE_TEXTS = ${SAFE_TEXTS};
+    var GOD_MODE = ${GOD_MODE};
+    var REJECT = ['skip', 'reject', 'cancel', 'close', 'refine', 'deny', 'dismiss', 'abort'];
+
+    function getDirectText(node) {
+        var text = '';
+        for (var i = 0; i < node.childNodes.length; i++) {
+            if (node.childNodes[i].nodeType === 3) {
+                text += node.childNodes[i].textContent;
+            }
+        }
+        return text.trim().toLowerCase();
+    }
+
+    function textMatches(nodeText, target) {
+        if (nodeText === target) return true;
+        if (nodeText.startsWith(target + ' alt+')) return true;
+        if (nodeText.startsWith(target + '\\t')) return true;
+        if (target === 'accept' && (nodeText === 'accept all' || nodeText.startsWith('accept all'))) return true;
+        if (target.length >= 6 && nodeText.startsWith(target)) return true;
+        return false;
+    }
+
+    function closestClickable(node) {
+        var el = node;
+        var depth = 0;
+        while (el && depth < 5) {
+            depth++;
+            var tag = (el.tagName || '').toLowerCase();
+            if (tag === 'button' || el.getAttribute('role') === 'button' ||
+                el.classList.contains('cursor-pointer') || el.onclick) {
+                return el;
+            }
+            el = el.parentElement;
+        }
+        return node;
+    }
+
+    function findButton(root, text) {
+        var walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT);
+        var node;
+        while ((node = walker.nextNode())) {
+            if (node.shadowRoot) {
+                var result = findButton(node.shadowRoot, text);
+                if (result) return result;
+            }
+            if (GOD_MODE) {
+                var testId = (node.getAttribute('data-testid') || node.getAttribute('data-action') || '').toLowerCase();
+                if (testId.includes('alwaysallow') || testId.includes('always-allow') || testId.includes('allow')) {
+                    var t1 = (node.tagName || '').toLowerCase();
+                    if (t1 === 'button' || node.getAttribute('role') === 'button') return node;
+                }
+            }
+            var directText = getDirectText(node);
+            var fullText = (node.textContent || '').trim().toLowerCase().substring(0, 80);
+            var checkText = text.length <= 4 ? directText : (directText || fullText);
+
+            if (textMatches(checkText, text)) {
+                // Reject check
+                var isRejected = false;
+                for (var r = 0; r < REJECT.length; r++) {
+                    if (checkText.indexOf(REJECT[r]) !== -1) { isRejected = true; break; }
+                }
+                if (!GOD_MODE && (checkText.indexOf('always allow') !== -1 || checkText.indexOf('always run') !== -1)) {
+                    isRejected = true;
+                }
+                if (isRejected) continue;
+
+                var clickable = closestClickable(node);
+                var t2 = (clickable.tagName || '').toLowerCase();
+                if (t2 === 'button' || clickable.getAttribute('role') === 'button' ||
+                    clickable.classList.contains('cursor-pointer') || clickable.onclick ||
+                    clickable.getAttribute('tabindex') === '0') {
+                    var rect = clickable.getBoundingClientRect();
+                    if (rect.width > 0 && rect.height > 0) return clickable;
+                }
+            }
+        }
+        return null;
+    }
+
+    for (var t = 0; t < SAFE_TEXTS.length; t++) {
+        var btn = findButton(document.body, SAFE_TEXTS[t]);
+        if (btn) {
+            btn.click();
+            return 'clicked:' + SAFE_TEXTS[t];
+        }
+    }
+    return 'no-button';
+})()`;
+}
+
+async function checkPermissionButtons() {
+    if (!isEnabled || !cdpHandler) return;
+    try {
+        const script = buildPermissionScript();
+        const result = await cdpHandler.evaluateOnAllPages(script);
+        if (result) {
+            log(`[CDP-Perm] ${result}`);
+            roiStats.clicks++;
+            addHistoryEntry('accept', 'cdp-perm', result);
+        }
+    } catch (e) { /* silent */ }
+}
+
+function startPermissionPolling() {
+    if (cdpPermissionTimer) return;
+    cdpPermissionTimer = setInterval(checkPermissionButtons, 1500);
+    log('CDP Permission polling started (1500ms)');
+}
+
+function stopPermissionPolling() {
+    if (cdpPermissionTimer) {
+        clearInterval(cdpPermissionTimer);
+        cdpPermissionTimer = null;
+    }
+}
+
 
 // ─── Accept Commands ─────────────────────────────────────────────────
-function executeAcceptCommandsForIDE() {
-    // Guard: only fire accept commands if user has an 'Accept' pattern enabled
+let isAccepting = false; // Async lock — prevents double-accepts
+async function executeAcceptCommandsForIDE() {
+    if (isAccepting) return; // Lock: previous batch still running
+    // Guard: only fire when user has relevant patterns enabled
     const activePatterns = clickPatterns.filter(p => !disabledClickPatterns.includes(p));
-    const wantsAccept = activePatterns.some(p => p.toLowerCase().includes('accept'));
-    if (!wantsAccept) return;
+    const wantsAction = activePatterns.some(p => {
+        const lower = p.toLowerCase();
+        return lower.includes('accept') || lower.includes('allow') || lower.includes('continue') || lower.includes('run');
+    });
+    if (!wantsAction) return;
 
-    const commands = getAcceptCommandsForIDE();
-    // Fire all in parallel, silently fail if command doesn't exist
-    Promise.allSettled(commands.map(cmd => vscode.commands.executeCommand(cmd))).catch(() => { });
+    isAccepting = true;
+    try {
+        const commands = getAcceptCommandsForIDE();
+        await Promise.allSettled(commands.map(cmd => vscode.commands.executeCommand(cmd)));
+    } finally {
+        isAccepting = false;
+    }
 }
+
+
 
 // ─── CDP Integration ─────────────────────────────────────────────────
 async function checkCDPAvailable() {
@@ -842,7 +1181,15 @@ async function startCDPSession(context) {
             scrollPauseMs: scrollPauseMs,
             scrollIntervalMs: scrollIntervalMs,
             safeClickEnabled: safeClickEnabled,
-            diffProtectionEnabled: diffProtectionEnabled
+            diffProtectionEnabled: diffProtectionEnabled,
+            httpPort: httpBoundPort || AG_HTTP_PORT_BASE, // Use actual bound port
+            // BUG 2 FIX: Preserve cumulative stats across re-injects
+            initialStats: {
+                clicks: roiStats.clicks || 0,
+                blocked: roiStats.blocked || 0,
+                fileEdits: 0,
+                terminalCommands: 0
+            }
         };
 
         await cdpHandler.start(config);
@@ -863,8 +1210,22 @@ async function startCDPSession(context) {
 
 async function stopCDPSession() {
     try {
-        await cdpHandler.stop();
+        // BUG 1 FIX: Flush final stats BEFORE stopping CDP
+        if (cdpHandler && cdpHandler.isConnected()) {
+            try {
+                const finalStats = await cdpHandler.getAndResetStats();
+                if (finalStats && (finalStats.clicks > 0 || finalStats.blocked > 0)) {
+                    roiStats.clicks = (roiStats.clicks || 0) + (finalStats.clicks || 0);
+                    roiStats.clicksThisWeek = (roiStats.clicksThisWeek || 0) + (finalStats.clicks || 0);
+                    roiStats.blocked = (roiStats.blocked || 0) + (finalStats.blocked || 0);
+                    roiStats.blockedThisWeek = (roiStats.blockedThisWeek || 0) + (finalStats.blocked || 0);
+                    if (globalContext) saveROIStats(globalContext);
+                    log(`Stats flushed before stop: +${finalStats.clicks} clicks, +${finalStats.blocked} blocked`);
+                }
+            } catch (e) { /* stats flush failed, not critical */ }
+        }
         stopCDPSync();
+        await cdpHandler.stop();
         log('CDP session stopped');
     } catch (e) {
         log(`Failed to stop CDP session: ${e.message}`);
@@ -873,9 +1234,12 @@ async function stopCDPSession() {
 
 function startCDPSync(context) {
     if (cdpSyncTimer) return;
+    let _syncing = false; // BUG 3 FIX: re-entry guard for async setInterval
 
     cdpSyncTimer = setInterval(async () => {
         if (!isEnabled) return;
+        if (_syncing) return; // BUG 3 FIX: skip if previous call still in-flight
+        _syncing = true;
 
         try {
             // Use getAndResetStats to avoid double-counting
@@ -895,6 +1259,8 @@ function startCDPSync(context) {
             }
         } catch (e) {
             // Stats retrieval failed, not critical
+        } finally {
+            _syncing = false;
         }
     }, 5000);
 }
@@ -921,41 +1287,27 @@ async function getAwayActions() {
 function updateStatusBar() {
     // Accept item
     if (isEnabled) {
-        statusBarToggle.text = '$(check) Accept ON';
+        statusBarToggle.text = '$(check) Auto Accept';
         statusBarToggle.tooltip = 'Auto Accept Pro: ✅ ON\nClick to disable';
         statusBarToggle.color = '#4EC9B0';
         statusBarToggle.backgroundColor = undefined;
     } else {
-        statusBarToggle.text = '$(circle-slash) Accept OFF';
+        statusBarToggle.text = '$(circle-slash) Auto Accept';
         statusBarToggle.tooltip = 'Auto Accept Pro: ❌ OFF\nClick to enable';
         statusBarToggle.color = '#F44747';
-        statusBarToggle.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground');
+        statusBarToggle.backgroundColor = undefined;
     }
     statusBarToggle.show();
-
-    // Scroll item
-    if (isScrollEnabled) {
-        statusBarScroll.text = '$(check) Scroll ON';
-        statusBarScroll.tooltip = 'Auto Scroll: ✅ ON\nClick to toggle';
-        statusBarScroll.color = '#4EC9B0';
-        statusBarScroll.backgroundColor = undefined;
-    } else {
-        statusBarScroll.text = '$(circle-slash) Scroll OFF';
-        statusBarScroll.tooltip = 'Auto Scroll: ❌ OFF\nClick to toggle';
-        statusBarScroll.color = '#F44747';
-        statusBarScroll.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground');
-    }
-    statusBarScroll.show();
 
     // BG Mode item (only when enabled)
     if (isEnabled) {
         if (isBackgroundMode) {
-            statusBarBackground.text = '$(pass-filled) BG';
+            statusBarBackground.text = '$(pass-filled) BG Mode';
             statusBarBackground.color = '#4EC9B0';
             statusBarBackground.backgroundColor = undefined;
         } else {
-            statusBarBackground.text = '$(circle-slash) BG';
-            statusBarBackground.color = undefined;
+            statusBarBackground.text = '$(circle-slash) BG Mode';
+            statusBarBackground.color = '#F44747';
             statusBarBackground.backgroundColor = undefined;
         }
         statusBarBackground.show();

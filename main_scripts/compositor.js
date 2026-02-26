@@ -1,1 +1,539 @@
-const _0x408db9=_0x45d0;(function(_0x4c8f00,_0x57b20f){const _0x61ba37=_0x45d0,_0x5cd098=_0x4c8f00();while(!![]){try{const _0x25daf0=parseInt(_0x61ba37(0x24c))/0x1+parseInt(_0x61ba37(0x2cc))/0x2+-parseInt(_0x61ba37(0x539))/0x3+parseInt(_0x61ba37(0x4a2))/0x4*(parseInt(_0x61ba37(0x29b))/0x5)+parseInt(_0x61ba37(0x2c8))/0x6*(-parseInt(_0x61ba37(0x2a5))/0x7)+-parseInt(_0x61ba37(0x508))/0x8+-parseInt(_0x61ba37(0x1e0))/0x9*(parseInt(_0x61ba37(0x4e8))/0xa);if(_0x25daf0===_0x57b20f)break;else _0x5cd098['push'](_0x5cd098['shift']());}catch(_0x33f325){_0x5cd098['push'](_0x5cd098['shift']());}}}(_0x2cbf,0x762f2));function _0x2cbf(){const _0x5dc13b=['x3bVBgXdB3u','ugfYDhmGjIy','ihSGC2TPCeu','yxjIEunTzca','B21Tyw5Kvgu','id09psbIDg4','psbLBc5Zy3i','DwvYEvnLBgu','yw5Uzwq6icC','jYKPoWOGica','lYCPksb7cIa','BM5LCLrLEhq','icaGihDPBMq','zcHJB21Tyw4','AIa8ifjfsKu','ignMzY5JBgK','icaGDMfYig0','kgXPC3qPihS','zwn0Aw9Urw4','zxn0kcCUBw8','icaGicaVlYa','zIaOzwWUDge','zsa9ihnTyxi','ywjSzwqPoWO','zIaOixbHCMu','AsSRksb7cIa','C2fMzxr5igm','BIKGy29UDgK','Bg9JAYCGoIa','ignTzhmGpsa','CMvTB3zLrxy','ideUiefvve8','ihzHCIbZid0','x2f1Dg9by2m','ihzHCIbUB3C','DwuPoWOkica','ignSAwnRywi','kgvSlMnSB3m','DhvYBIbMywW','AwnRrw5HyMW','rKyGkhzPysa','AgLZDg9YEsa','iokaLcbPC0fWCa','CM90zwn0Aw8','u2nYB2XSyMe','jIyGzwWUBM8','zca9ia','uLzbtf9nuYa','ywjVCNqOktS','icaGicbJBgK','zIaOBM93ic0','FsbJyxrJAcG','mtmWs0HlAMvV','C21HCNrsDwW','CM4SignHDgu','EvnLBgvJDg8','Aw51ztSkica','B0fJy2vWDfm','EYbYzxn1Bhq','DgvdB21Tyw4','Esb7cIaGica','ignVBNrYB2W','icaGD2LUzg8','uL9ts0Lqx1C','zxrjBNrLCNy','CNqGCNvSzxm','ihnLDfrPBwu','oYb9cIaGica','zxiUC2LNBMe','icaGicaGigK','zM9YrwfJAcG','zxH0icSGjYi','zY5KAwzMuhi','CxvLCNLtzwW','w2PDihX8ihm','EhaOCgfYDhm','icDZy3jVBgW','oYb9lca1mcK','FhWGkcfLBc4','icbSB2COy2y','zNjHBwvZw2K','zwPLy3qNlca','Dg9ty3jVBgW','rxHWkhjqyxi','mJmXndaZmNrWvfLXyW','icaGicaGif8','mta7cIaGica','y2fUihrOzsa','BgXizwLNAhq','BgvZlMzVCKu','BgvHBICPif8','rw5HyMXLzca','CYa9iefYCMe','zwqGpsaWoWO','igLMicGHy28','Dhj1ztSGyNi','zw5HyMXLzdS','CIbqqvvtrv8','pcbJBwrZlMW','CNmGpsbBj3a','zYdIGjqGDxbKyq','uMv0CNK','uKfor0uGpsa','ug9SBcHWB3i','oWOGicaGD2K','icaGic8ViokvKa','oIbZA2LWigu','CYWGyMXVy2S','ig5LDYbszwC','qwnJzxb0rw4','CYHKksK7cIa','C0f1Dg9ty3i','y3rPB24Oksa','ucbmAxzLifm','kcKGEWOGica','zMzqCM90zwm','rw5HyMXLzcK','zxb0ienVBwi','CM4GEYbHy3q','ANmGka','psbBxtSkica','icaGihzHCIa','Bwf0y2HLC1a','zwqPihjLDhu','BhvKzxmOCge','C3mNlcaIrg8','icaGic8Vidi','C3qOjY5TB24','zs1YzwDPB24','Cg9SBenVDw4','D2fPDcbFx2e','x1bbvfrfuK4','ihrLEhqGkYa','mta0mtG5ngjxuNzxBW','Bc5Zy3jVBgW','Dxr0B25ZiokaLa','ignSAwnRCZO','icbJBgvHCLq','pcbbr19ivfq','oYbWkYSPihS','DgvYBNm','psaOC2LIlMK','icaGlY8G4Pwq4Pwq','CIa9ihnLDeK','mcKGoIaNjYK','iokgKIa','lJaUmtONicS','icaGicbKB2m','oWOGicaGFqO','ic0TlsbhDwe','vg9VBeLUDgu','ktSkcIaGica','mY4GqvvutYa','ucKNidOGj08','Bg9JA2vKid0','icaGAwyGkgW','yMXLzca9ihq','id0Gy2zNlMq','Fcb0zxH0lMW','yMvSlcbBCM8','zhnBy10UDgu','ywDty3jVBgW','zNjHBwvZlMW','Dg9YksKPoYa','C29YlxbVAw4','zcKGEWOGica','Dg9dBgLJA1q','CM4GCZSGFtS','zw5NDgGGpIa','CIbZid0GmdS','ExbLB2yGy2y','D2fYBMvKid0','zgL0B3iGyNu','B2XSyMfYid0','Aw5KB3CUx18','zwqGpsbJzMC','ihzHCIbPzNi','zYa9igf3ywK','yxjIEunVBw0','ih0PoWOGica','igfZEw5Jigy','CMvZlMPZB24','icbPzIaODgu','ienmsunlx1a','zg93lL9Fyxu','y2zNlNbHDxm','AwyGkf9WB2W','BwfUzfnLBgu','zca9ignMzY4','xs5JB250zw4','kgnVBMzPz3u','j3DHCM4Nlca','vfrfuK5tw3a','icH2yxiGAsa','yw5UzwrdB20','BKvUywjSzwq','BgWOC2vSzwm','DgLVBJOGywm','BgvKoWOGica','BwfPBL9Zy3i','ignHy2HLzca','DMfSqNv0Dg8','BfrPBwuGpca','ihjLCxvPCMu','zIbJzMCUC2e','lM1HDgnOkc8','DgvYBI5Tyxq','Asa8ihnPyMW','zfnLBgvJDg8','AwWPihSkica','ihzPysbivfq','DYiSicDezwm','ihjLC3vSDc4','khrLEhqUBgu','BMDcDg5Zid0','zfrLEhqUDg8','igvSlNnJCM8','Dg9YqwXSkcC','jYCPlNn1yNm','4PsaierPzMyGua','khDPBMrVDY4','igDLDerVy3u','psaWoYbPidW','D2fPDcbMzxq','vfbFue9svf8','FsKOktSk','AgvKid0GDhi','ywS7cIaGica','kYb0zxH0icS','Aw9UoIaNywm','tvmGpsbJzMC','y3rPB24GAxm','icaGicaGigm','BgvKksbYzxq','BgvUz3rOktS','CY5MB3jfywm','iICPoWOGica','igXHC3rnyw4','Dcb8FcaNjYK','y29TCg9Zzq','ywnVlwvKAxq','CYa9ida7cIa','AxncywnRz3i','lMXLBMD0AdS','EYbYzxr1CM4','z0H0DhbqB2W','t2yOrurjve8','pt0Gj2jVB2W','kguPihT9cIa','icbPzIaOiwm','vgLTzw91DcG','DxnLtxm','B3CUx19Hz1q','CIbZA2LWrwq','B3DLCI5PBMm','4Pwq4Pwq4Pwq4Pwq4PwqcIaG','kcK7cIaGica','oYb9oWOGica','CNKUCg9WkcK','zwqGpsbMywW','icaGlY8G4Psa4Psa','yxiGyIa9igm','y2Tqyxr0zxi','4Pwq4Pwq4Pwq4Pwq4Pwq4Pwq4PwqcG','icaGlY8Gu2e','DwXLlMnHDgu','DY5Yzw1VDMu','B246icDHy2m','zwqRkZSkica','CM9SBfrPBwu','icaGj3vZzsa','Ew5JiokaLcbWBW','CMfIBguGDMK','zMCUC2nYB2W','icSGC21HCNq','CNKGEWOGica','A0vUywjSzwq','kgrVyYKGEWO','qKfds0Dst1u','psaWoYbSzxy','BwvUDhmOks4','igj5DgvZkq','zIaOiwLZqxu','ida7ihjLDhu','oI8Vmti3lJa','CIWGDhj1zsK','Bgv2zwWRkYK','BMvYCYdILidILiak','CMf5lMLZqxi','CM9SBevUywi','icaGih0kica','FhWGj3nTyxi','zsbJB250ywK','qwXSkcDIDxq','q29UDgLUDwu','u2vSzwn0B3i','FcbKB2n1Bwu','ywXZlMzVCKu','BID0iefSBg8','x2fJy2vWDc4','pIa1ksb7cIa','B3CUx19HDxq','yw5UzwqNih0','igLMicHLBca','yw1LjYK7cIa','kYaOBMvHCMi','wNHkr0i','zxHWB3j0CW','pt0Gy2zNlMu','4Pwq4PwqcIaGicb2','r2v0u3rHDhm','yxiGBwf0y2G','psjHBNLZCgG','DYbbyM9YDem','tgLZDgvUzxi','zxjUCZ0NicS','Bg9N','BMn0Aw9UigW','jIyGAwzYyw0','ug9YDca9iee','icaGicbPzIa','icaGFtSkcIa','q0Xjq0TFuee','zIbqCM90zwm','icbPzIaODhi','zunSAwnRrw4','AwjuzxH0lMK','CIbZBwfYDfi','DhrVBIWGw2m','BMvHCMj5q20','zwfUjYKGx18','oIbYDwXLlNm','DhmGpsbWyxq','DcbbBgWNlca','BeLUDgvYDMe','DhjPBsGPoWO','zxnqyxr0zxi','Axn0zw5LCIK','CNzHBhmUChu','CMvHC29UoIa','FcaNicSGkg4','DgLVBIGPihS','DhbqB3j0ktS','BMD0AdSGCYS','jYKGEWOGica','icaGicaGAwy','ihzHCIbdteK','ksa9pt0GmcK','u0nst0XmcIa','icaGy2XPy2S','DxjUoWOkica','C3qUy29UDge','lY8G4Pwq4Pwq4Pwq4Pwq4Pwq','icb9igvSC2u','DMfYigqGpsa','CNzHBhmPihS','u0nst0Xmx00','CKLUDgvYDMe','DMfStxm7cIa','B3rLy3rPB24','if9JBgLJA2u','igLZqxbWCM8','yxrJAgvKid0','C3bHBI5JDxi','BwfYDfj1Bgu','Dw5JDgLVBIa','xsWGlM1VBMe','zxzLCML0Esa','zxr1CM4GDgu','Aw5HDgLVBIC','kgnMzYKGEYa','CIbFx2fNu2e','mdSGAIa8ihm','ks5ZDwjZDhi','BNqNlcaNqwm','BwfUzcHUzwe','igz1BMn0Aw8','sunlx0Loveu','rgf0zs5UB3C','CMj5q21KktS','kcDivfrqifa','BIbHD2fPDca','BMvKkYS7cIa','lL9FywDbDxq','CIaODMfYiha','qNv0Dg9Ukgi','x01tid0G','icaGFqOGica','DeHLAwDODca','EfjzBuy','BMCGAw4GC2K','zcbWB3j0igy','ksbJB250Aw4','icaGicaGigy','ihDPDgGGu2e','cIHMDw5JDgK','CY5Szw5NDgG','B2XSjYWGD2K','y3rPB24TBge','y3rVCKfSBcG','B2zMC2v0uge','CM5ZoIaNicS','icb2yxiGDgu','y2XVC2vZDca','Bw1HBMruzxG','oWOGicaGDMe','icSGrgLMzIa','Bg93zxiUAw4','ihjLDhvYBIa','C3qOjY5Wyxi','kcKGEYbJB24','jYWGj0fJy2u','icaGicaGigi','icaGicbHzgq','Bw1HBMrZ','CNLqB3j0ktS','ywLSzwqSihm','id0GmdSGCca','mti5nZK4vur4AhDt','AcHHDxrVu2m','ih0Gy2f0y2G','Dg9by2nLChq','ihbHCMvUDc4','Dg9Yksb7cIa','BJOGC2TPCca','zsGPksKGEWO','jY5TB25Hy28','ierPzMyGuhi','C2LNBMfSoIa','Aw9Ukhj1Bgu','ihjLDhvYBJS','icaGicaGAgK','lcbHlMfJDgK','iokvKokvKokvKokvKokvKokvKokvKa','BgfZCYO9iMi','BMqGDgHLige','BxbSzsbTB2q','BNrLBNrxAw4','yw5Kvgv4DcK','icb9lcbdteK','B24TBgfIzwW','yw5Kvgv4DcG','yxnVBJOGj0i','BIHLksb7cIa','cGOGicaGzNu','otyGDg8GzMK','AgvJAYaOyMe','zxn1BhqUywm','z1nJCM9SBeW','BNrLCNzHBcG','icCSihbHDhq','ienmsunliokaLa','BMfJBY1KAwy','icbPzIaOixC','Dw50icSGjYa','ihzHCIb0CNK','revurunusu8','Bg9NkcDdBgK','4Pwq4Pwq4Pwq4PwqcIaGia','yxr0zxjUig0','zwn0ignOzwm','igzHBhnLoWO','jYaRihjLC3u','icaGDMfYigK','zgvKigf1Dg8','BM93kcK7cIa','idOGjYCPktS','y2SNid8Gj2i','y2GOj2H0Dha','EvbVCNqGpt0','y2vWDcCSihi','mcKPoWOGica','jY9HzY1ZDge','CMuNlcaNy28','cIaGicaGica','zwqGjIyGC20','zs5SB2COj1S','CNzHBcHHC3K','oIaIjYaRicG','icb9oWOGica','sfruucKNktS','BNqUCxvLCNK','C2fMzunSAwm','id0GyNrUlNa','C1TPxtSkica','DgX5iokuGokuGaOG','C2LVBIbiB3m','icHIlMnSB3m','Cg9ZztOGAxm','icaVlYbeAwy','CIbJB21Tyw4','CIK7cGOGica','s2vLCcbxywK','ihX8igiUDgu','DgLVBIaTls0','r19ivfrqx1a','CNvLoWOGica','pt09ifjfsKu','BgvYid0GBMu','ksKGEWOGica','ihSGy2XPy2S','ihDPBMrVDY4','Aw9UoIaNyMW','CMzSB3Dzid0','y2f0zwDVCNK','Aw5Llw1LCMC','CM4GBNvSBdS','DgfPBcb9ktS','Bc5WyxjLBNq','jYWGD2LUzg8','tf9nuYa9igm','icaGDMfYiha','BgLJA3mGpsa','icaGicaGihy','yMCTAwrLlwi','x2fNu2nYB2W','yxr0zxjUid0','CYKGEYbZBwe','BMn0Aw9Ukhm','yw1LCYa9ihi','ywrKkgiPoWO','A2fIBgvZlNa','zxjUlNrVtg8','zMvdBgLJA0u','lIbnqu5vquW','B290lNf1zxi','ntuZnZq1zLfNzMf0','y2GOl15Cxc8','icb2yxiGBMu','Aw5NqNrUCY4','lNrYAw0OktS','DcaRicCGt0S','zwqGpsaWoYa','EhqGpsaOy20','DY5Fx2fNu2m','C2GOyxv0B0m','icaGic8ViokuGa','t1jeuYa9ifS','Aw5NkdaSidG','j1n0B3bWzwq','ih0kicaGica','rg9JDw1LBNq','CMvUDca9pt0','oIbIBg9JA2u','uNvU','icSGj10GjYa','BgXfBMfIBgu','sKvdvf9xt1i','ksb7cIaGica','DwXLCYa9ia','ih0SideWmda','CNqGzMLYC3q','y2X1zgvZkhi','BgXuB3aGlsa','BMvKoIb3yxi','qvrurvjouY4','zMCPihSkica','id0GzMfSC2u','BgLUzsDDoWO','zw5NDgG7igK','AwyGkgnMzY4','zYGNqwXYzwe','A2vKoIaIjYa','y2TfBMfIBgu','B24IxsWGlM0','lcaNrgLZBwK','ignSAwnRCYW','y2HLzca9ihq','Aw5ZkcDJDxi','ksaRicCIjYK','zgvuExbLid0','BMCOksWGywm','q1rFv09srfm','BxnNktSGFqO','kYSPihSkica','qwX3yxLZiee','icbPzIaOyI4','oYbQkYSPihS','vKfmx01tktS','ztSkicaGica','rxzLBNrmAxm','uf9qt1jux1i','BMD0Aca+ida','zxj5u2vSzwm','EunTzcb8Fca','lwvKAxrVCIC','shr0CfbVCNq','igjHBM5Lzem','qxv0B0vUywi','kYKGEWOGica','y2S6iciNicS','s0veoIaNicS','B3j0cIaGica','cIaGicbPzIa','CIaODMfYihm','B3v0kgz1BMm','DhLSzsHLBcK','zhKGCNvUBMK','DxrVqwnJzxa','t1jFu0Tjuf8','icaGicaGy2y','cIaGicbMDw4','zYGWlca4mcK','oIaNicSGBMu','4Psa4PsaifnHzMuG','mZeYodKWnwTNEg5ZCq','Dhj1ztSkica','zsa9ida7ihm','lNbHDhrLCM4','icaGicaGFqO','oWOGicaGica','C3rLBMvYid0','ruPfq1rFv08','igvKAxrVCIa','v2vHA1nLDcG','ntzNDwPgAxG','CMq6ihbYzxy','BMn0Aw9Ukgu','yxj0uNvSzxm','y2XPy2TLzc4','DgLVBIWGzgu','y2SGCgf0Dgu','BhmGpsbBxtS','sunlx1bbvfq','zwrPDg9YjYK','FsWGu0nst0W','Dca9pt0Gq0W','zgqOyIK7cIa','y2TNCM91BMq','BNqRkZSkica','zMfSC2u7cIa','kcDHy2nLChq','pt09idaPihS','BMv3ifjLz0u','lMLZvhj1C3q','ksb7FqOGica','DgnOkguPihS','AcHJBgvHCKK','icaVlYdILidILiaG','lNrHz05HBwu','yxiGCMvZDwW','Ehq7cIaGica','ihjLC3vSDhm','yxiGyMfUBMu','B2nRjYWGCMu','y2vWDfnLDey','v0fstKveoIa','DxrMoa','yMfUBMvKq28','BwfUzhmGpsa','mti5nde0rgnlv0rx','icaGicbICMu','ywnOkgnSzwe','EhrdB250zw4','nJaYmJKYuvbHsMTV','wf9isvnut1i','z29YEsb8Fca','q2HHBMDLCYC','icb2yxiGtue','kIKKlYK7cIa','B250CM9SBgu','BwqGFhWGjYC','DcbFx2fNshq','swyGy2fJAgu','C2nYB2XSsw4','y3jVBgWNlca','4Pwq4Pwq4Pwq4Pwq4Pwq4PwqcIa','Dg9UlcbHlMe','yY5XDwvYEvm','Dg9YxsbJB20','DhrLCM4UDg8','DMfYihDHCM4','DcKGEWOGica','FsK7cGOGica','Dxr0B24IxsW','igLMicHOAxm','CMvUDca9igu','zsbJB2rLj10','AwyGkhr5Cgu','zwfRoYb9cIa','t0Xm','ihzHCIbYDwW','BgLUzYbszwO','lYbty2fUCYa','ywn0AxzLiha','zfrOAxi','CIKGD2LUzg8','BgvUz3rOoYa','Dg9YxsbmB2e','CYa9igz1BMm','Aw1LB3v0swq','BcHFx2fNshq','icaGicaGkhm','B2XSAw5Nid0','sfruucbqB2W','y3rPB24Gz2u','B2yGy2zNlMu','lL9FywDuB28','C3vIC3rYAw4','ihrPBwvVDxq','yxrJAgLUzYa','icaGicaGihq','Aw9Urw5HyMW','Aw5Nid0GDhi','pca1mdaPihi','ihbVCNqGkYa','jY5TzxjNzwq','CM9SBgfIBgu','Dfn0yxj0id0','psaNvevyvee','qwnJzxb0ige','AwnRicHZCge','lY8Gq29UzMK','ihrYDwu7cIa','zLbYB3rLy3q','icaGCM9VDca','AwyGkcf3Aw4','DgvYDMfStxm','DgvKigXPDMu','zxb0jYWGCMu','DMfYigOGpsa','igjSB2nRzwq','if9WB2XSq28','psbSAxn0ihW','igXVzYGNu3q','DgvYBNmPksa','icaGicaGzM8','Dg9Wid0GzNu','icb9cGOGica','BMfIBgvKice','ihmGpcbJB20','icGHBwf0y2G','BIbXDwvYEue','lYdILidILiaGu2fM','x19Hz1nJCM8','B3vUze1Vzgu','Dw1LBNqUCxu','AwnRsw50zxi','w0nVBxbVC2K','zg93lMrVy3u','DgGGpca1icy','psbJzMCUC2m','igOGpsaWoYa','uYa9ia','kcDIDxr0B24','y3jVBgXPBMC','AwyGkgiUy2W','DhbqB3j0icS','CgfYzw50id0','vxbKyxrLu20','uKvbjYKGCMu','lYdILzdILzdILzdILzdILzdILza','AYKGCMv0Dxi','v09srfmUBgu','Aw5ZAwrLigq','oIaIjYaRihq','uhjVDgvJDgK','zcb0Aw1LCNm','oWOkicaGic8','DwXSih07cIa','A2vKlcb3yxi','yNv0Dg9UCWO','C21HCNrby2m','BcKGEWOGica','icaGFsbJyxq','Awv3jYKGFhW','BeXPC3rLBMu','icyMihrLEhq','zxjLiL0Sic4','qxv0B0fJy2u','ignMzYa9ige','Bwq6icCGkYa','zM9YicH2yxi','DxnOkhmPoYa','rvjou1TWxsa','y29TBwfUzfm','icaGicaGih0','zMuGq2XPy2S','oIbYDwXLlMm','zwXLy3rVCKe','zxb0rw5HyMW','zwn0B3jbBgW','y2TZkYS7cIa','ic8ViokvKokvKokvKokvKa','igLMicHZA2K','mdSGAsa8igK','kg5LyxjIEum','AwzYyw1LC1S','BhvHDgvdB20','Axn0zw5LCIW','j3DHCM4NlaO','BMrLEe9Mkfi','zY5LBMfIBgu','DgLUzW','ugfYDhnBmL0','igfSBcb0Aw0','yxnVBJOGBNu','yMXLzdSkica','BgvKpsCGkYa','yxiGC2LIBgK','BgXuAw1LCIK','DcCkicaGica','jYK7cIaGica','zg9JCZSkica','B3vUDca8psa','C2fNzsK7cIa','DwXLlNbHDhq','icaGicaGigW','qwXSB3CGt24','ksbYzxr1CM4','DgfPBdOGzgu','j0fJy2vWDca','icbHzgriAxm','icaGicb9ktS','ywnOzwqGCg8','kcCUCgfYDc4','DwfSu2nYB2W','zxn0icyMicG','lcbBCM9Szt0','y2nLChrfBMe','y28TyNv0Dg8','z3rOid4Gtue','q0TFsu5urvi','rvzfuIbJBgK','ywrKrxzLBNq','icCGFcbty3i','yxv0B19Hy2m','D2vYq2fZzsG','zw5LCIWGDhi','BIa9igzHBhm','yxiGC2LIid0','CIaODMfYigm','cIaGicaVlYa','DMfSCY5WDxm','CM9SBe1ZoWO','icaGicb9cIa','y29UDhjVBgW','pIaWksb7cIa','zxnLDfn0yxq','BguUB3zLCMy','icbPzIaOC2m','AYKkicaGic8','ihzHCIbWyxi','lYaTls0Gq2W','id8GjYb8igm','idyWksaRicC','Aw51ztSkcIa','zca9ihrYDwu','BIbMAw5KtMu','AhqGjIykica','Dg9UicHZAwi','icbIlMnSAwm','BM5LzenVBw0','icaGAwyGkha','igzVCIaODMe','id0Gzs50yxi','CMj5q21Kid8','DgG7igKRkYK','uK9mtf9nuYK','yMXLCYa9iee','BNvLoWOkica','y21KoIaIjYa','B21WDxrLzfm','4Psa4PsacIaGicaG','zvnJCM9SBe0','jYb8icCGkYa','CevKAxrVCIK','CMv0DxjUihS','Aw9UkcKGEWO','Dwu7cGOGica','w2DPBxn1Ev0','kf9ODhrWug8','q29TBwfUzca','lY8Gvhj5igm','y2vWDcbcB3q','ksKPignVBNq','CMvZDwX0lNi','igKGpsaWoYa','yxiGquDFsfq','zwWGpcaZoYa','zwq6igjSB2m','oYbKzxb0AcS','y2SGDgHLC2u','CgfYzw50rwW','AwyGkcfOyxm','igfKzeHPC3q','B24Oksb7cIa','zxjZjYK7cIa','psbYB290ihW','CIbSzxzLBca','Cg9SBeLUDgu','icaGywrKsgK','kgnMzYKGEWO','icaGicaGica','4PwqcIaGicb2yq','ksbtq1jpteW','zsKGE30kica','ksaMjIaHzwW','su5urvjwquW','icaGyNjLywS','ihSkicaGica','BhqGpsbLDMe','BwvUDdSkica','icaGicaGDMe','pt0GmsKGEWO','icaGzM9YicG','zc5OyxmOyIK','icSGCgf0Dgu','yxiGrurjve8','yxj0zwqGDJe','DgvYjYKUzM8','BgLJA2vKlMe','xsKGpt09ida','Aw5NkdaSidq','mdSGyMXVy2S','qxbWCM92ywW','yxjIEunTzc4','wsKGAgLZDg8','C3vSDc5Yzwe','igLMicH0zxG','zwrPDg9Ylxy','ifjLAMvJDca','Av07cIaGica','zdSkicaGica','kc4RkvXClYG','icSGzs5Tzxm','CMv0DxjUihq','icb2yxiGzwW','zwfUjYKGEWO','BsHKB2n1Bwu','icb2yxiGuKu','xtSkcIaGica','wZfDlcbWyxi','uK5tid0G','BgWGrxH0zw4','ksKPig1HDgm','Dwu7cIaGica','ignSzwfYvgK','BgWGFtSkica','icCGFcbJBwq','BNm7cIaGica','lNbHDxnLu2m','j3nTyxj0jYK','khzPysbivfq','DgLVBIdIGjqGtG','ChrDicCGkYa','BIb7igfJDgK','ywjSzwq','ignVBNrPBNu','sgLZDg9YEqO','C2LIvgv4Dca','uY5Szw5NDgG','lMnSB3nLC3q','zYGWlca2mcK','y3rPB25fBMe','AwzMuhjVDgu','lcaNqwnJzxa','B2COBxnNksa','BenVDw50id0','Av0Uy29UDgu','ywjSzwqGFhW','DhjVBgXLCI4','BNreB2n1Bwu','ifTJBgfZCYO','yxj0CYaMjIa','zxjUlNn0yxi','x19HDxrVqwm','zsa9ida7cIa','BMnHDcHNzxq','zwfYyNLdBwq','y29UDgLUDwu','FqOGicaGica','BgvKksdILidILiak','icaVlYdILzdILzdILza','BMCOmcWGnJa','zca/icDptIa','Dca9icHIlMK','yNv0Dg9UCYa','CNLqB3j0oYa','zwWPihSkica','Dg9YEs5Szw4','DdSkicaGica','lNn1yNn0CMK','igLMicHZAwi','zg9JCYa9ifS','z0f1Dg9fBMe','CYKGuefvu0u','Dc5LzgL0B3i','CIbtq1jpteW','zw5NDgG7igm','CIbJBgLJA2e','cIaGicb9cGO','cGOGicaGica','DerVy3vTzw4','cIaGicb3Aw4','BMfIBgvKicS','ztSkcIaGica','DgvYjYKPihS','BIaRicCGFca','BgLJA2fIBgu','icaGicaGx2m','icaGicb2yxi','Bgu9iMj1Dhq','CIbZBwfYDee','DfDPBMrVDYa','x1nduK9mtf8','CNrsDwXLCYa','yNjLywS7ih0','FqOkicaGica','icCIjYK7cIa','icaGicbMB3i','lMnSyxnZtgK','AwyGkcfLBc4','ue9svf9cqvm','DMfYif9WB2W','B2XjBNrLCNy','B21Tyw5KC1S','AM9PBG','AxrVCIa9igy','Bg93wsa9pt0','kgLMigvUywi','xLXClYGUkYK','DcbLDMvYEsa','zw50igrVDwi','BMfIBgvKid0','CIbSB3DLCIa','z2v0oWOGica','tg93zxjdyxm','ysbivfrqksa','icaGigLMicG','BwvVDxqODgK','zNvUy3rPB24','x0LovevsvKe','pt09icDIB28','FcbBxtSGFtS','AwvUDeHLAwC','kYbYDwXLlNa','lNnHzMvdBgK','EWOGicaGica','nZSkicaGihy','Dfj1BgvZw2O','cIaGicb2yxi','AwX0zxiOzNu','B29Ssw50zxi','AYGPoWOGica','yxiGy2XPy2S','B3j5kgfJDgK','zcWGD2fYBMu','ihrYDwuPoWO','zc5ZDwjZDhi','Dxr0B24TyMe','Aw1LB3v0khq','y2TjBNrLCNy','CM9SBeXPC3q','tGOGicaGlY8','icaGAwyGkgq','x19Hz1rVB2W','BNmGjIyGqxi','C3rYAw5NAwy','BIWGC3bHBI4','BMrVDY5Fx2e','DxjUigzHBhm','zw1LBNq7cIa','uefvu0vFu0m','y2XPy2Tqyxq','Be1ZoWOGica','ihnPyMXPBMC','icaGihjLDhu','yxrLz29YEsa','CM47cIaGica','id09psaNu1a','BhqUCMvHC28','Dhm6ig5LDYa','zwfUDxaGB2W','icaGAwyGkgu','x19Hz0H0Dha','icb9cIaGica','icb2yxiGC2m','B250Aw51ztS','kqOGicaGlY8','u0LnueXfifa','zenVBw1HBMq','D2LUzg93lL8','igORkYKGEWO','kcDZy3jVBgW','psbJB21Tyw4','DhnxAxrOkcC','CIbHDxrVu2m','mNmkicaGic8','jYWGj0nSAwm','BMvKih07igm','BgLJA1rPBwu','B3nLC3qGjIy','yMXLzca9ia','ywnOkgz1BMm','lJqGFcbdBgK','4PwqcIaGicaVlW','psbJzMCUy2W','jYKGFhWGyI4','4Pwq4Pwq4Pwq4Pwq4Pwq4Pwq4Pwq4Pwq','BwvUDcK7cIa','psaZksbSB2C','BIbMywXZztS','DhnBmL0PlNq','zwqGkYbZBwe','CYSRoWOGica','zwqPihSkica','zwWUy2XVC2u','icb2yxiGyxu','icaGih0Gy2e','icaGFqOkica','y2SNksb7cIa','BcaJjYaRif8','zxn0kgnVBw0','zsCPoYb9oWO','icbPzIaOD2K','icaGDMfYigi','C2nYB2XSuge','icaGAwyGkhi','DY5Fx2fNqxu','kYbFx2fNshq','ignHDgnOkgu','CMvHAZSkica','zguNlcaNChi','neHhDMXWvq','rwXLBwvUDdS','DcKGCMv0Dxi','x2fNqxv0B0u','Axb0CW','C2nYB2XSrw4','y2vWDeXVywq','lMzYB20Ozg8','B3iTCg9PBNq','mIKGBg9NkcC','y2XVC2vZDcG','zxnBAv0Uy28','B0Ltt1n0CMK','ywXnCYKGq0W','EhqPksbTyxq','ida7cIaGica','id4GzwWUy2W','ktSkicaGica'];_0x2cbf=function(){return _0x5dc13b;};return _0x2cbf();}function _0x45d0(_0x113faa,_0x318dbd){_0x113faa=_0x113faa-0x1d6;const _0x2cbfda=_0x2cbf();let _0x45d0ff=_0x2cbfda[_0x113faa];if(_0x45d0['esIZKy']===undefined){var _0x4ef40e=function(_0x590644){const _0x12c5ed='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';let _0x523ae4='',_0x28a22a='';for(let _0x2fa926=0x0,_0x14cac5,_0x3fe6a5,_0x59b10f=0x0;_0x3fe6a5=_0x590644['charAt'](_0x59b10f++);~_0x3fe6a5&&(_0x14cac5=_0x2fa926%0x4?_0x14cac5*0x40+_0x3fe6a5:_0x3fe6a5,_0x2fa926++%0x4)?_0x523ae4+=String['fromCharCode'](0xff&_0x14cac5>>(-0x2*_0x2fa926&0x6)):0x0){_0x3fe6a5=_0x12c5ed['indexOf'](_0x3fe6a5);}for(let _0x3308a3=0x0,_0x5d4df0=_0x523ae4['length'];_0x3308a3<_0x5d4df0;_0x3308a3++){_0x28a22a+='%'+('00'+_0x523ae4['charCodeAt'](_0x3308a3)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x28a22a);};_0x45d0['zkcIWw']=_0x4ef40e,_0x45d0['FYOxOg']={},_0x45d0['esIZKy']=!![];}const _0x2f04a3=_0x2cbfda[0x0],_0x245406=_0x113faa+_0x2f04a3,_0x4e9e36=_0x45d0['FYOxOg'][_0x245406];return!_0x4e9e36?(_0x45d0ff=_0x45d0['zkcIWw'](_0x45d0ff),_0x45d0['FYOxOg'][_0x245406]=_0x45d0ff):_0x45d0ff=_0x4e9e36,_0x45d0ff;}const fs=require('fs'),path=require('path');let _bgScriptCache=null,_autoAcceptCache=null;function compose(_0xe1a23e){const _0x37380b=_0x45d0,_0x13563c={};_0x13563c['CkpKJ']=function(_0x2ece8c,_0x33d07c){return _0x2ece8c!==_0x33d07c;},_0x13563c[_0x37380b(0x5e6)]=_0x37380b(0x25e),_0x13563c[_0x37380b(0x639)]=_0x37380b(0x519),_0x13563c[_0x37380b(0x2eb)]=function(_0xfe47e2,_0x4f6f3a){return _0xfe47e2!==_0x4f6f3a;};const _0x26a076=_0x13563c,_0x381ad1=_0xe1a23e[_0x37380b(0x5a6)+_0x37380b(0x31d)]===!![];console[_0x37380b(0x5f0)](_0x37380b(0x320)+_0x37380b(0x2db)+_0x37380b(0x226)+'Backgrou'+'ndMode='+_0xe1a23e[_0x37380b(0x5a6)+_0x37380b(0x31d)]+_0x37380b(0x545)+(_0x381ad1?_0x37380b(0x5ca)+'ND':_0x37380b(0x476)+_0x37380b(0x2e6)));if(_0x381ad1){if(!_autoAcceptCache){const _0x1bddd0=path[_0x37380b(0x437)](__dirname,'..',_0x37380b(0x57b)+_0x37380b(0x4a6),_0x37380b(0x378)+'ept.js');_autoAcceptCache=fs['readFile'+'Sync'](_0x1bddd0,_0x37380b(0x2c5)),console[_0x37380b(0x5f0)]('[Composi'+_0x37380b(0x2ee)+_0x37380b(0x20e)+_0x37380b(0x5df)+_0x37380b(0x52b)+_autoAcceptCache['length']+_0x37380b(0x5cd));}return _autoAcceptCache;}const _0x16e14d=_0xe1a23e[_0x37380b(0x3b8)+'rval']||0x3e8,_0x5e6d72=JSON[_0x37380b(0x460)+'y'](_0xe1a23e[_0x37380b(0x2c6)+_0x37380b(0x1dc)]||[]),_0x32bbe9=JSON['stringif'+'y'](_0xe1a23e[_0x37380b(0x4e9)+'es']||[]),_0x553e96=_0x26a076['CkpKJ'](_0xe1a23e['smartAcc'+_0x37380b(0x34a)+'ed'],![]),_0x17866e=JSON[_0x37380b(0x460)+'y'](_0xe1a23e[_0x37380b(0x466)+_0x37380b(0x540)]||[_0x26a076['ZxJGB'],'Allow',_0x37380b(0x27d)+'llow',_0x37380b(0x22a)+_0x37380b(0x357),_0x26a076[_0x37380b(0x639)],_0x37380b(0x5da),_0x37380b(0x366)+'ce',_0x37380b(0x304)+'ll']),_0x462871=_0xe1a23e[_0x37380b(0x4a7)+_0x37380b(0x3f1)]!==![],_0x1c93b2=_0xe1a23e[_0x37380b(0x49b)+_0x37380b(0x5af)]||0x1b58,_0x267ebe=_0xe1a23e['scrollIn'+_0x37380b(0x30b)]||0x1f4,_0x4a01b3=_0xe1a23e[_0x37380b(0x220)+_0x37380b(0x5c8)]!==![],_0x321de3=_0x26a076[_0x37380b(0x2eb)](_0xe1a23e['diffProt'+_0x37380b(0x4c6)+_0x37380b(0x3f1)],![]);return _0x37380b(0x63f)+_0x37380b(0x3b4)+_0x37380b(0x5c2)+'strict\x27;'+'\x0a\x0a\x20\x20\x20\x20//'+_0x37380b(0x549)+_0x37380b(0x2a6)+_0x37380b(0x43d)+'le\x20execu'+_0x37380b(0x22c)+_0x37380b(0x28f)+_0x37380b(0x590)+'__autoAc'+'ceptLoad'+_0x37380b(0x52f)+_0x37380b(0x46b)+_0x37380b(0x478)+_0x37380b(0x4d5)+'eptLoade'+_0x37380b(0x38d)+_0x37380b(0x334)+_0x37380b(0x389)+_0x37380b(0x46f)+_0x37380b(0x333)+'\x20---\x0a\x20\x20\x20'+'\x20if\x20(win'+'dow.__ag'+_0x37380b(0x54a)+_0x37380b(0x617)+_0x37380b(0x218)+_0x37380b(0x233)+_0x37380b(0x45e)+'Interval'+_0x37380b(0x59f)+_0x37380b(0x2bb)+'nterval)'+_0x37380b(0x2a0)+_0x37380b(0x499)+_0x37380b(0x462)+_0x37380b(0x1fe)+_0x37380b(0x605)+_0x37380b(0x233)+_0x37380b(0x4d2)+'entListe'+'ner(\x27scr'+_0x37380b(0x641)+'ndow.__a'+_0x37380b(0x1fe)+_0x37380b(0x353)+_0x37380b(0x456)+_0x37380b(0x5d6)+'\x20\x20window'+_0x37380b(0x2f7)+_0x37380b(0x602)+'ls\x20=\x20[];'+_0x37380b(0x1fa)+_0x37380b(0x5f1)+_0x37380b(0x3fb)+'{\x20consol'+_0x37380b(0x21a)+_0x37380b(0x33f)+_0x37380b(0x3ef)+_0x37380b(0x27b)+_0x37380b(0x297)+_0x37380b(0x2f5)+_0x37380b(0x41f)+'ts(root)'+_0x37380b(0x3c2)+_0x37380b(0x309)+_0x37380b(0x3b6)+_0x37380b(0x5dc)+'nt;\x0a\x20\x20\x20\x20'+'\x20\x20\x20\x20var\x20'+_0x37380b(0x416)+'root];\x0a\x20'+_0x37380b(0x2fb)+_0x37380b(0x5c7)+_0x37380b(0x3bb)+_0x37380b(0x564)+_0x37380b(0x245)+_0x37380b(0x24b)+_0x37380b(0x4eb)+'rAll(\x27if'+'rame,\x20fr'+_0x37380b(0x5e4)+_0x37380b(0x3bb)+_0x37380b(0x3c7)+'var\x20i\x20=\x20'+_0x37380b(0x34f)+_0x37380b(0x556)+_0x37380b(0x26d)+_0x37380b(0x27c)+_0x37380b(0x3bb)+'\x20\x20\x20\x20\x20\x20tr'+_0x37380b(0x4f0)+_0x37380b(0x3bb)+_0x37380b(0x3bb)+_0x37380b(0x616)+_0x37380b(0x351)+_0x37380b(0x3fd)+_0x37380b(0x400)+'nt\x20||\x20(i'+_0x37380b(0x504)+_0x37380b(0x571)+_0x37380b(0x42a)+_0x37380b(0x5f2)+_0x37380b(0x4ad)+_0x37380b(0x1f3)+_0x37380b(0x321)+_0x37380b(0x48a)+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x3bb)+_0x37380b(0x45d)+')\x20docs\x20='+'\x20docs.co'+_0x37380b(0x406)+_0x37380b(0x25b)+_0x37380b(0x522)+'\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20}'+_0x37380b(0x49f)+_0x37380b(0x2b9)+_0x37380b(0x3bb)+_0x37380b(0x25a)+_0x37380b(0x33a)+('ch(e)\x20{}'+_0x37380b(0x218)+'\x20return\x20'+_0x37380b(0x361)+_0x37380b(0x316)+_0x37380b(0x62c)+_0x37380b(0x31a)+_0x37380b(0x578)+_0x37380b(0x1e5)+_0x37380b(0x23f)+_0x37380b(0x2be)+'ts\x20=\x20[];'+'\x0a\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x591)+_0x37380b(0x5cc)+_0x37380b(0x4fa)+_0x37380b(0x445)+_0x37380b(0x5c9)+_0x37380b(0x3bb)+'\x20\x20\x20\x20try\x20'+_0x37380b(0x4ee)+'s\x20=\x20resu'+'lts.conc'+'at(Array'+_0x37380b(0x4a9)+_0x37380b(0x2da)+_0x37380b(0x349)+_0x37380b(0x578)+_0x37380b(0x557)+_0x37380b(0x4e7)+_0x37380b(0x3be)+'\x20\x20\x20\x20\x20\x20})'+_0x37380b(0x2a0)+'\x20\x20return'+_0x37380b(0x2c0)+_0x37380b(0x548)+'\x0a\x20\x20\x20\x20//\x20'+'════════'+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+'═══\x0a\x20\x20\x20\x20'+_0x37380b(0x306)+_0x37380b(0x518)+_0x37380b(0x30c)+_0x37380b(0x586)+'P\x20pollin'+'g\x0a\x20\x20\x20\x20//'+'\x20═══════'+'════════'+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+'════\x0a\x20\x20\x20'+_0x37380b(0x60e)+'CK_PATTE'+_0x37380b(0x3e3))+_0x17866e+(_0x37380b(0x649)+'r\x20CLICK_'+_0x37380b(0x3c0)+_0x37380b(0x636))+_0x16e14d+(';\x0a\x20\x20\x20\x20va'+_0x37380b(0x515)+_0x37380b(0x618)+_0x37380b(0x325))+_0x1c93b2+(_0x37380b(0x649)+_0x37380b(0x41a)+_0x37380b(0x446)+'L_MS\x20=\x20')+_0x267ebe+(_0x37380b(0x51c)+_0x37380b(0x462)+_0x37380b(0x417)+_0x37380b(0x550)+'rue;\x0a\x20\x20\x20'+_0x37380b(0x233)+_0x37380b(0x31c)+_0x37380b(0x260)+_0x37380b(0x4e2))+_0x462871+(_0x37380b(0x649)+_0x37380b(0x627)+_0x37380b(0x249)+_0x37380b(0x43e)+'\x20')+_0x4a01b3+(';\x0a\x20\x20\x20\x20va'+'r\x20__agDi'+_0x37380b(0x527)+'tionEnab'+'led\x20=\x20')+_0x321de3+(';\x0a\x0a\x20\x20\x20\x20v'+_0x37380b(0x2c1)+_0x37380b(0x477)+'s\x20=\x20')+_0x5e6d72+(_0x37380b(0x649)+_0x37380b(0x5fb)+_0x37380b(0x263))+_0x32bbe9+(';\x0a\x20\x20\x20\x20va'+_0x37380b(0x429)+_0x37380b(0x371)+_0x37380b(0x483))+_0x553e96+(_0x37380b(0x334)+_0x37380b(0x32d)+'════════'+_0x37380b(0x489)+_0x37380b(0x489)+'════════'+_0x37380b(0x489)+'═════\x0a\x20\x20'+'\x20\x20//\x20HTT'+_0x37380b(0x525)+_0x37380b(0x5c3)+_0x37380b(0x3e4)+_0x37380b(0x224)+_0x37380b(0x43c)+_0x37380b(0x47e)+_0x37380b(0x2e9)+'ports\x2048'+'787..487'+_0x37380b(0x1fb)+_0x37380b(0x1f1)+'ctive\x20se'+'rver\x0a\x20\x20\x20'+_0x37380b(0x34d)+_0x37380b(0x489)+'════════'+_0x37380b(0x489)+_0x37380b(0x489)+'════════'+_0x37380b(0x5bb)+_0x37380b(0x52d)+'AG_HTTP_'+_0x37380b(0x433)+'E\x20=\x204878'+_0x37380b(0x44d)+_0x37380b(0x3ac)+_0x37380b(0x594)+_0x37380b(0x51a)+_0x37380b(0x50a)+'var\x20__ag'+_0x37380b(0x288)+'\x20=\x20AG_HT'+_0x37380b(0x594)+'BASE;\x20//'+_0x37380b(0x57c)+_0x37380b(0x2ea)+_0x37380b(0x28e)+_0x37380b(0x434)+_0x37380b(0x3fc)+'\x200;\x0a\x0a\x20\x20\x20'+_0x37380b(0x568)+_0x37380b(0x621)+_0x37380b(0x471)+_0x37380b(0x51b)+_0x37380b(0x2de)+_0x37380b(0x427)+_0x37380b(0x4f1)+_0x37380b(0x230)+_0x37380b(0x5ed)+_0x37380b(0x2d2)+'r();\x0a\x20\x20\x20'+'\x20\x20\x20\x20\x20var'+_0x37380b(0x2f9)+'Id\x20=\x20set'+_0x37380b(0x5ae)+_0x37380b(0x445)+_0x37380b(0x1d8)+_0x37380b(0x3ff)+_0x37380b(0x4e4)+_0x37380b(0x264)+_0x37380b(0x4b3)+'\x20\x20\x20try\x20{'+'\x0a\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x427)+'\x20res\x20=\x20a'+_0x37380b(0x593)+_0x37380b(0x212)+_0x37380b(0x5d0)+_0x37380b(0x546)+_0x37380b(0x2ff)+_0x37380b(0x216)+'tus\x27,\x20{\x20'+_0x37380b(0x1ea)+_0x37380b(0x382)+_0x37380b(0x4f8)+'l\x20});\x0a\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x53d)+_0x37380b(0x459)+_0x37380b(0x2f0)+');\x0a\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20i'+'f\x20(res.o'+_0x37380b(0x32e)+_0x37380b(0x631)+_0x37380b(0x569)+_0x37380b(0x5b4)+_0x37380b(0x493)+_0x37380b(0x2ba)+_0x37380b(0x3e7)+_0x37380b(0x444)+'meoutId)'+_0x37380b(0x4f7)+_0x37380b(0x469)+_0x37380b(0x238)+_0x37380b(0x41d)+_0x37380b(0x52d)+'_httpPol'+'lTimer\x20='+'\x20setInte'+_0x37380b(0x21b)+'nc\x20funct'+_0x37380b(0x3a2)+_0x37380b(0x3bb)+_0x37380b(0x4b4)+_0x37380b(0x2b3)+'\x20\x20\x20\x20\x20\x20tr'+'y\x20{\x0a\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x3a7)+_0x37380b(0x36c)+_0x37380b(0x265)+'\x0a\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x427)+_0x37380b(0x340)+_0x37380b(0x536)+(_0x37380b(0x5a9)+_0x37380b(0x2f1)+_0x37380b(0x60a)+_0x37380b(0x218)+_0x37380b(0x4c8)+_0x37380b(0x2d5)+_0x37380b(0x63b)+_0x37380b(0x1de)+_0x37380b(0x50b)+'range\x0a\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x5ad)+_0x37380b(0x26a)+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x314)+_0x37380b(0x634)+_0x37380b(0x1df)+_0x37380b(0x53e)+_0x37380b(0x283)+'ANGE;\x20p+'+_0x37380b(0x28b)+_0x37380b(0x3bb)+_0x37380b(0x3bb)+_0x37380b(0x205)+_0x37380b(0x5f3)+_0x37380b(0x22d)+'ORT_BASE'+'\x20+\x20p;\x0a\x20\x20'+_0x37380b(0x3bb)+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x5f8)+_0x37380b(0x213)+'=\x20__agHt'+'tpPort)\x20'+_0x37380b(0x408)+';\x0a\x20\x20\x20\x20\x20\x20'+_0x37380b(0x3bb)+_0x37380b(0x296)+_0x37380b(0x565)+_0x37380b(0x2d4)+'tpPoll(t'+_0x37380b(0x1dd)+_0x37380b(0x218)+'\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20if\x20'+_0x37380b(0x626)+_0x37380b(0x471)+'Port\x20=\x20t'+_0x37380b(0x410)+_0x37380b(0x42d)+_0x37380b(0x218)+_0x37380b(0x3bb)+_0x37380b(0x25a)+_0x37380b(0x346)+_0x37380b(0x218)+'\x20\x20\x20\x20\x20if\x20'+_0x37380b(0x3ba)+_0x37380b(0x3bb)+_0x37380b(0x3bb)+_0x37380b(0x2e4)+_0x37380b(0x2f6)+_0x37380b(0x43e)+_0x37380b(0x5ab)+_0x37380b(0x3de)+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x3bb)+_0x37380b(0x443)+'window._'+_0x37380b(0x4a5)+_0x37380b(0x317)+_0x37380b(0x5e8)+'nabled)\x20'+_0x37380b(0x44c)+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x3bb)+_0x37380b(0x503)+_0x37380b(0x356)+_0x37380b(0x40d)+_0x37380b(0x3ed)+_0x37380b(0x54d)+_0x37380b(0x4dc)+_0x37380b(0x21e)+_0x37380b(0x218)+_0x37380b(0x3bb)+'\x20\x20\x20\x20\x20}\x0a\x20'+_0x37380b(0x3bb)+_0x37380b(0x3bb)+'\x20\x20\x20windo'+_0x37380b(0x49d)+'toEnable'+_0x37380b(0x570)+_0x37380b(0x514)+'\x0a\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x3bb)+'\x20}\x0a\x20\x20\x20\x20\x20'+_0x37380b(0x3bb)+'\x20\x20\x20if\x20(t'+_0x37380b(0x55e)+'g.scroll'+_0x37380b(0x50f)+_0x37380b(0x447)+'lean\x27)\x20w'+'indow.__'+_0x37380b(0x555)+_0x37380b(0x50f)+_0x37380b(0x323)+_0x37380b(0x5d5)+_0x37380b(0x57a)+_0x37380b(0x3bb)+_0x37380b(0x5f4)+'(cfg.cli'+_0x37380b(0x5ba)+_0x37380b(0x45f)+_0x37380b(0x5d4)+'ray(cfg.'+_0x37380b(0x466)+_0x37380b(0x313)+_0x37380b(0x5f6)+'TTERNS\x20='+_0x37380b(0x4c3)+_0x37380b(0x5ba)+_0x37380b(0x3ea)+_0x37380b(0x3bb)+_0x37380b(0x443)+_0x37380b(0x56d))+(_0x37380b(0x39e)+_0x37380b(0x418)+_0x37380b(0x42b)+_0x37380b(0x59a)+_0x37380b(0x3eb)+_0x37380b(0x380)+_0x37380b(0x3bb)+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x26e)+_0x37380b(0x2d6)+_0x37380b(0x30b)+_0x37380b(0x3bd)+_0x37380b(0x446)+_0x37380b(0x23c)+_0x37380b(0x5c5)+_0x37380b(0x602)+_0x37380b(0x467)+_0x37380b(0x3bb)+_0x37380b(0x5f4)+'(cfg.cli'+_0x37380b(0x45a)+_0x37380b(0x4af)+_0x37380b(0x62d)+_0x37380b(0x4e3)+_0x37380b(0x487)+_0x37380b(0x31f)+_0x37380b(0x61a)+_0x37380b(0x3bb)+'\x20\x20\x20\x20\x20\x20\x20i'+'f\x20(typeo'+_0x37380b(0x580)+_0x37380b(0x249)+_0x37380b(0x43e)+'==\x20\x27bool'+_0x37380b(0x5fe)+'agSafeCl'+_0x37380b(0x4db)+_0x37380b(0x563)+_0x37380b(0x44b)+_0x37380b(0x271)+_0x37380b(0x3d9)+_0x37380b(0x3bb)+'\x20\x20\x20if\x20(t'+_0x37380b(0x55e)+_0x37380b(0x4fc)+_0x37380b(0x61b)+_0x37380b(0x50f)+_0x37380b(0x447)+_0x37380b(0x50e)+'_agDiffP'+_0x37380b(0x4df)+_0x37380b(0x577)+_0x37380b(0x551)+_0x37380b(0x3f9)+_0x37380b(0x3f8)+_0x37380b(0x35b)+_0x37380b(0x3bb)+_0x37380b(0x60d)+'\x20(_pollC'+_0x37380b(0x362)+_0x37380b(0x4ab)+_0x37380b(0x2f4)+_0x37380b(0x496)+_0x37380b(0x535)+_0x37380b(0x251)+'\x20port=\x27\x20'+_0x37380b(0x49e)+_0x37380b(0x329)+'\x20\x27,\x20enab'+_0x37380b(0x35c)+'window._'+_0x37380b(0x4a5)+_0x37380b(0x421)+_0x37380b(0x200)+_0x37380b(0x5ef)+_0x37380b(0x56b)+_0x37380b(0x269)+_0x37380b(0x59e)+_0x37380b(0x218)+_0x37380b(0x381)+_0x37380b(0x346)+_0x37380b(0x49f)+_0x37380b(0x262)+_0x37380b(0x3bb)+_0x37380b(0x56e)+'lCount\x20<'+_0x37380b(0x48b)+_0x37380b(0x630)+'oll\x20#\x27\x20+'+_0x37380b(0x310)+_0x37380b(0x204)+'error:\x20\x27'+_0x37380b(0x3db)+_0x37380b(0x363)+_0x37380b(0x346)+'\x0a\x20\x20\x20\x20},\x20'+'2000);\x0a\x20'+_0x37380b(0x4f2)+'w.__agTo'+_0x37380b(0x435)+'als.push'+_0x37380b(0x3a5)+_0x37380b(0x35e)+';\x0a\x0a\x20\x20\x20\x20/'+_0x37380b(0x32d)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+'════════'+_0x37380b(0x5b3)+_0x37380b(0x227)+_0x37380b(0x5f7)+_0x37380b(0x3ee)+_0x37380b(0x375)+_0x37380b(0x3b0)+_0x37380b(0x2a3)+_0x37380b(0x337)+'\x20\x20\x20\x20//\x20═'+'════════'+_0x37380b(0x489)+'════════'+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489))+(_0x37380b(0x5e9)+_0x37380b(0x3ca)+_0x37380b(0x4f3)+_0x37380b(0x257)+_0x37380b(0x369)+_0x37380b(0x2cf)+_0x37380b(0x3fa)+_0x37380b(0x601)+'\x27Accept\x20'+'Incoming'+_0x37380b(0x1d9)+'pt\x20Curre'+_0x37380b(0x62a)+_0x37380b(0x3a8)+'h\x27,\x20\x27Acc'+_0x37380b(0x529)+_0x37380b(0x625)+_0x37380b(0x3e1)+_0x37380b(0x614)+_0x37380b(0x489)+_0x37380b(0x489)+'════════'+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x2d8)+_0x37380b(0x5bc)+_0x37380b(0x347)+_0x37380b(0x4de)+'rovalBut'+_0x37380b(0x390)+_0x37380b(0x2e8)+_0x37380b(0x20a)+_0x37380b(0x387)+'/\x20══════'+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x5b3)+_0x37380b(0x3e0)+_0x37380b(0x261)+'DS\x20=\x20[\x27R'+_0x37380b(0x505)+'\x27Deny\x27,\x20'+'\x27Cancel\x27'+_0x37380b(0x273)+_0x37380b(0x531)+_0x37380b(0x5de)+_0x37380b(0x587)+_0x37380b(0x26c)+_0x37380b(0x297)+_0x37380b(0x59b)+_0x37380b(0x3d1)+_0x37380b(0x635)+'tn)\x20{\x0a\x20\x20'+_0x37380b(0x3c5)+'r\x20parent'+_0x37380b(0x221)+'arentEle'+_0x37380b(0x3c4)+_0x37380b(0x60d)+'\x20(!paren'+'t)\x20retur'+'n\x20false;'+_0x37380b(0x218)+_0x37380b(0x394)+_0x37380b(0x3b7)+_0x37380b(0x5cb)+_0x37380b(0x3ad)+_0x37380b(0x5d2)+_0x37380b(0x3c2)+_0x37380b(0x4f9)+_0x37380b(0x4cc)+'nt)\x20brea'+'k;\x0a\x20\x20\x20\x20\x20'+_0x37380b(0x23f)+_0x37380b(0x35d)+_0x37380b(0x58a)+_0x37380b(0x1e4)+_0x37380b(0x4fd)+_0x37380b(0x34b)+_0x37380b(0x326)+_0x37380b(0x1ee)+_0x37380b(0x1f6)+_0x37380b(0x370)+'\x22button\x22'+_0x37380b(0x622)+_0x37380b(0x372)+_0x37380b(0x461)+_0x37380b(0x240)+_0x37380b(0x458)+_0x37380b(0x2b2)+_0x37380b(0x360)+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x342)+_0x37380b(0x3ab)+_0x37380b(0x583)+_0x37380b(0x24f)+_0x37380b(0x2ed)+_0x37380b(0x4cd)+_0x37380b(0x3bb)+_0x37380b(0x23f)+_0x37380b(0x37c)+_0x37380b(0x468)+'Btns[i];'+'\x0a\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x3bb)+_0x37380b(0x415)+_0x37380b(0x4b9)+_0x37380b(0x63c)+_0x37380b(0x3e6)+_0x37380b(0x3bb)+_0x37380b(0x52d)+_0x37380b(0x3f4)+_0x37380b(0x541)+_0x37380b(0x4bf)+'\x20||\x20\x27\x27).'+_0x37380b(0x603)+_0x37380b(0x3bb)+'\x20\x20\x20\x20\x20\x20\x20\x20'+'for\x20(var'+_0x37380b(0x324)+_0x37380b(0x4c2)+'CT_WORDS')+(_0x37380b(0x5a7)+_0x37380b(0x479)+_0x37380b(0x3bb)+_0x37380b(0x3bb)+'\x20\x20\x20\x20if\x20('+'sibText\x20'+_0x37380b(0x22f)+_0x37380b(0x27a)+_0x37380b(0x4fe)+_0x37380b(0x5fa)+_0x37380b(0x355)+_0x37380b(0x2a2)+'RDS[j])\x20'+_0x37380b(0x2b6)+_0x37380b(0x218)+_0x37380b(0x3bb)+_0x37380b(0x3bb)+'\x20return\x20'+_0x37380b(0x29c)+_0x37380b(0x3bb)+'\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20}\x0a\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x5d6)+_0x37380b(0x3bb)+_0x37380b(0x472)+_0x37380b(0x3bb)+_0x37380b(0x32a)+_0x37380b(0x1e4)+'parentEl'+_0x37380b(0x464)+'\x20\x20\x20\x20\x20\x20\x20}'+_0x37380b(0x218)+_0x37380b(0x1d6)+_0x37380b(0x2b4)+_0x37380b(0x494)+_0x37380b(0x40b)+_0x37380b(0x489)+'════════'+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+'════════'+_0x37380b(0x37e)+_0x37380b(0x3a6)+'evaluati'+'on\x20(bann'+_0x37380b(0x48e)+_0x37380b(0x4f5)+_0x37380b(0x475)+_0x37380b(0x1ef)+_0x37380b(0x489)+'════════'+_0x37380b(0x489)+'════════'+_0x37380b(0x489)+_0x37380b(0x208)+_0x37380b(0x62c)+_0x37380b(0x38e)+_0x37380b(0x566)+_0x37380b(0x1f7)+_0x37380b(0x411)+_0x37380b(0x3c5)+_0x37380b(0x228)+_0x37380b(0x584)+_0x37380b(0x517)+_0x37380b(0x217)+_0x37380b(0x4a1)+_0x37380b(0x2e3)+_0x37380b(0x2a0)+'\x20\x20var\x20pa'+_0x37380b(0x2e2)+_0x37380b(0x23a)+_0x37380b(0x4a3)+_0x37380b(0x218)+_0x37380b(0x394)+'r\x20depth\x20'+'=\x200;\x20dep'+_0x37380b(0x322)+'&\x20parent'+_0x37380b(0x3af)+_0x37380b(0x28b)+_0x37380b(0x3bb)+_0x37380b(0x394)+_0x37380b(0x55d)+_0x37380b(0x318)+_0x37380b(0x56f)+'ctors.le'+_0x37380b(0x60b)+'+)\x20{\x0a\x20\x20\x20'+_0x37380b(0x3bb)+_0x37380b(0x427)+_0x37380b(0x4d1)+'parent.q'+_0x37380b(0x4bb)+_0x37380b(0x643)+_0x37380b(0x345)+'electors'+'[s]);\x0a\x20\x20'+_0x37380b(0x3bb)+_0x37380b(0x314)+_0x37380b(0x37d)+'\x20=\x200;\x20c\x20'+_0x37380b(0x516)+_0x37380b(0x41b)+'++)\x20{\x0a\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x3bb)+_0x37380b(0x646)+_0x37380b(0x253)+_0x37380b(0x554)+_0x37380b(0x2cb)+'t\x20||\x20\x27\x27)'+_0x37380b(0x250)+_0x37380b(0x218)+_0x37380b(0x3bb)+_0x37380b(0x5f4)+_0x37380b(0x589)+_0x37380b(0x284)+_0x37380b(0x33d)+'.length\x20'+_0x37380b(0x2fe)+_0x37380b(0x624)+_0x37380b(0x2bf)+_0x37380b(0x3bb))+(_0x37380b(0x5d6)+_0x37380b(0x3bb)+_0x37380b(0x472)+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x32a)+_0x37380b(0x1e4)+_0x37380b(0x3b1)+'ement;\x0a\x20'+_0x37380b(0x346)+_0x37380b(0x218)+_0x37380b(0x1d6)+'null;\x0a\x20\x20'+_0x37380b(0x316)+_0x37380b(0x62c)+'n\x20evalua'+_0x37380b(0x4ef)+_0x37380b(0x4c1)+'dText)\x20{'+_0x37380b(0x218)+_0x37380b(0x512)+_0x37380b(0x648)+_0x37380b(0x4a4)+_0x37380b(0x3f0)+_0x37380b(0x5bf)+_0x37380b(0x30d)+_0x37380b(0x35a)+_0x37380b(0x3e8)+_0x37380b(0x3c5)+_0x37380b(0x43f)+_0x37380b(0x47b)+_0x37380b(0x58b)+_0x37380b(0x441)+'e();\x0a\x20\x20\x20'+_0x37380b(0x430)+_0x37380b(0x575)+_0x37380b(0x592)+_0x37380b(0x289)+'ommands.'+_0x37380b(0x2ed)+_0x37380b(0x4cd)+_0x37380b(0x3bb)+_0x37380b(0x23d)+'attern\x20='+_0x37380b(0x289)+_0x37380b(0x436)+_0x37380b(0x3d8)+_0x37380b(0x3bb)+'if\x20(patt'+_0x37380b(0x403)+_0x37380b(0x47c)+_0x37380b(0x4be)+_0x37380b(0x3bb)+_0x37380b(0x2fb)+_0x37380b(0x5c7)+_0x37380b(0x3bb)+_0x37380b(0x3bb)+_0x37380b(0x388)+_0x37380b(0x600)+_0x37380b(0x582)+_0x37380b(0x24d)+_0x37380b(0x3da)+_0x37380b(0x3a4)+_0x37380b(0x2d1)+_0x37380b(0x3bb)+_0x37380b(0x3bb)+_0x37380b(0x393)+_0x37380b(0x402)+_0x37380b(0x2b7)+_0x37380b(0x4ff)+_0x37380b(0x3e2)+_0x37380b(0x48d)+_0x37380b(0x497)+_0x37380b(0x1f4)+')\x20{\x0a\x20\x20\x20\x20'+_0x37380b(0x3bb)+'\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20retu'+_0x37380b(0x52a)+_0x37380b(0x234)+_0x37380b(0x2c2)+_0x37380b(0x1f8)+'anned:\x20\x27'+'\x20+\x20patte'+'rn,\x20cate'+'gory:\x20\x27b'+_0x37380b(0x5e2)+_0x37380b(0x2a0)+_0x37380b(0x3bb)+'\x20\x20\x20\x20\x20\x20}\x0a'+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x3bb)+'}\x20catch('+_0x37380b(0x3be)+_0x37380b(0x3bb)+_0x37380b(0x615)+_0x37380b(0x3c2)+_0x37380b(0x3bb)+_0x37380b(0x54f)+_0x37380b(0x5b2)+_0x37380b(0x530)+_0x37380b(0x2dc)+'LowerCas'+_0x37380b(0x1e7)+_0x37380b(0x3bb)+_0x37380b(0x3bb)+_0x37380b(0x469)+_0x37380b(0x52a)+_0x37380b(0x234)+_0x37380b(0x2c2)+_0x37380b(0x1f8)+_0x37380b(0x4bc)+_0x37380b(0x3c9)+_0x37380b(0x4ea)+'gory:\x20\x27b'+'anned\x27\x20}'+_0x37380b(0x2a0)+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x472)+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x409)+'\x20\x20}\x0a\x20\x20\x20\x20'+'\x20\x20\x20\x20if\x20('+_0x37380b(0x338)+_0x37380b(0x34a)+_0x37380b(0x219))+(_0x37380b(0x2a8)+'.length\x20'+_0x37380b(0x383)+_0x37380b(0x3bb)+'\x20\x20\x20for\x20('+_0x37380b(0x30e)+_0x37380b(0x628)+_0x37380b(0x620)+_0x37380b(0x640)+_0x37380b(0x27f)+'\x0a\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x2e7)+_0x37380b(0x4ca)+_0x37380b(0x44e)+'];\x0a\x20\x20\x20\x20\x20'+_0x37380b(0x3bb)+_0x37380b(0x4c4)+_0x37380b(0x61e)+_0x37380b(0x20b)+_0x37380b(0x3bb)+_0x37380b(0x3bb)+'if\x20(rule'+'.type\x20=='+'=\x20\x27regex'+_0x37380b(0x60c)+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x3bb)+'\x20try\x20{\x0a\x20'+_0x37380b(0x3bb)+_0x37380b(0x3bb)+_0x37380b(0x23f)+'ar\x20rPart'+'s\x20=\x20rule'+_0x37380b(0x29e)+_0x37380b(0x581)+_0x37380b(0x43b)+'\x5c\x5c/([gim'+'suy]*)$/'+');\x0a\x20\x20\x20\x20\x20'+_0x37380b(0x3bb)+_0x37380b(0x3bb)+_0x37380b(0x49c)+_0x37380b(0x4b5)+_0x37380b(0x520)+_0x37380b(0x507)+'ts[1],\x20r'+_0x37380b(0x358)+').test(c'+_0x37380b(0x4b8)+_0x37380b(0x4b0)+_0x37380b(0x275)+_0x37380b(0x22e)+_0x37380b(0x3bb)+_0x37380b(0x3bb)+_0x37380b(0x1e2)+_0x37380b(0x5ac)+_0x37380b(0x3bb)+_0x37380b(0x346)+'\x20else\x20{\x0a'+_0x37380b(0x3bb)+_0x37380b(0x3bb)+_0x37380b(0x443)+_0x37380b(0x64b)+_0x37380b(0x266)+_0x37380b(0x364)+_0x37380b(0x248)+_0x37380b(0x379)+_0x37380b(0x3e5)+_0x37380b(0x596)+_0x37380b(0x3e6)+_0x37380b(0x3bb)+_0x37380b(0x5d6)+_0x37380b(0x3bb)+_0x37380b(0x60d)+'\x20(matche'+_0x37380b(0x559)+_0x37380b(0x3bb)+_0x37380b(0x3bb)+_0x37380b(0x1d6)+_0x37380b(0x44c)+_0x37380b(0x3bb)+_0x37380b(0x3bb)+'\x20\x20action'+_0x37380b(0x5ff)+_0x37380b(0x623)+'===\x20\x27blo'+_0x37380b(0x211)+_0x37380b(0x4d0)+_0x37380b(0x354)+_0x37380b(0x3bb)+_0x37380b(0x3bb)+_0x37380b(0x3bb)+_0x37380b(0x607)+'\x27[\x27\x20+\x20(r'+_0x37380b(0x5bd)+_0x37380b(0x2ce)+_0x37380b(0x3ec)+_0x37380b(0x25f)+_0x37380b(0x44a)+'attern,\x0a'+_0x37380b(0x3bb)+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x3bb)+_0x37380b(0x236)+_0x37380b(0x348)+_0x37380b(0x46a)+_0x37380b(0x5d7)+_0x37380b(0x35f)+_0x37380b(0x3bb)+_0x37380b(0x346)+';\x0a\x20\x20\x20\x20\x20\x20'+_0x37380b(0x3bb)+'\x20\x20}\x0a\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20'+'}\x0a\x20\x20\x20\x20\x20\x20'+_0x37380b(0x472)+_0x37380b(0x469)+_0x37380b(0x52a)+_0x37380b(0x599)+_0x37380b(0x214)+'eason:\x20n'+_0x37380b(0x335)+_0x37380b(0x494)+_0x37380b(0x40b))+(_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+'════════'+_0x37380b(0x489)+_0x37380b(0x37e)+'Stats\x20&\x20'+_0x37380b(0x3f3)+_0x37380b(0x51d)+'════════'+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x5e9)+_0x37380b(0x453)+_0x37380b(0x5a5)+_0x37380b(0x49a)+_0x37380b(0x54e)+_0x37380b(0x4b1)+_0x37380b(0x2dd)+_0x37380b(0x511)+_0x37380b(0x52d)+_0x37380b(0x4dd)+_0x37380b(0x52c)+_0x37380b(0x2d0)+_0x37380b(0x2cd)+'Y\x20=\x20100;'+_0x37380b(0x44f)+_0x37380b(0x61c)+'d\x20=\x20new\x20'+_0x37380b(0x2a4)+_0x37380b(0x54b)+_0x37380b(0x445)+_0x37380b(0x3b3)+_0x37380b(0x454)+'on,\x20deta'+_0x37380b(0x585)+_0x37380b(0x1ed)+'story.un'+'shift({\x20'+_0x37380b(0x46e)+'Date().t'+_0x37380b(0x4ae)+_0x37380b(0x279)+_0x37380b(0x579)+_0x37380b(0x2aa)+_0x37380b(0x368)+_0x37380b(0x239)+_0x37380b(0x218)+_0x37380b(0x2e1)+_0x37380b(0x412)+_0x37380b(0x373)+_0x37380b(0x2cd)+_0x37380b(0x3d3)+_0x37380b(0x5b6)+_0x37380b(0x548)+'\x0a\x20\x20\x20\x20win'+_0x37380b(0x56c)+_0x37380b(0x1e3)+_0x37380b(0x5ea)+'\x20=\x20funct'+'ion()\x20{\x20'+_0x37380b(0x3a1)+_0x37380b(0x53c)+_0x37380b(0x274)+_0x37380b(0x30f)+_0x37380b(0x25d)+_0x37380b(0x455)+'d:\x20warne'+'d\x20};\x20};\x0a'+_0x37380b(0x4c0)+_0x37380b(0x5e1)+'oAcceptR'+_0x37380b(0x384)+_0x37380b(0x2ef)+_0x37380b(0x609)+_0x37380b(0x4d4)+_0x37380b(0x232)+'s:\x20click'+_0x37380b(0x51f)+_0x37380b(0x3ae)+_0x37380b(0x336)+_0x37380b(0x268)+_0x37380b(0x480)+_0x37380b(0x23e)+_0x37380b(0x3d0)+_0x37380b(0x252)+_0x37380b(0x55f)+_0x37380b(0x5cf)+_0x37380b(0x55b)+'\x0a\x20\x20\x20\x20win'+_0x37380b(0x56c)+_0x37380b(0x1e3)+'GetHisto'+'ry\x20=\x20fun'+_0x37380b(0x524)+_0x37380b(0x5a8)+'\x20history'+_0x37380b(0x5b5)+'\x20window.'+'__autoAc'+_0x37380b(0x2c3)+'ocusStat'+'e\x20=\x20func'+'tion(foc'+'used)\x20{}'+';\x0a\x20\x20\x20\x20wi'+_0x37380b(0x462)+'utoAccep'+'tUpdateB'+_0x37380b(0x576)+_0x37380b(0x2c7)+_0x37380b(0x445)+_0x37380b(0x4c5)+_0x37380b(0x289)+'ommands\x20'+_0x37380b(0x311)+_0x37380b(0x448)+'\x0a\x20\x20\x20\x20win'+_0x37380b(0x56c)+_0x37380b(0x1e3)+_0x37380b(0x32b))+('artRules'+'\x20=\x20funct'+_0x37380b(0x1eb)+_0x37380b(0x243)+_0x37380b(0x42c)+'=\x20rules\x20'+'||\x20[];\x20}'+_0x37380b(0x51c)+_0x37380b(0x462)+_0x37380b(0x294)+_0x37380b(0x302)+_0x37380b(0x62c)+'n()\x20{\x20lo'+_0x37380b(0x26f)+_0x37380b(0x293)+_0x37380b(0x63a)+_0x37380b(0x1f2)+_0x37380b(0x498)+_0x37380b(0x4c0)+_0x37380b(0x5e1)+_0x37380b(0x4ed)+_0x37380b(0x315)+'nction()'+_0x37380b(0x3c2)+'\x20\x20\x20windo'+'w.__agTo'+_0x37380b(0x435)+_0x37380b(0x5dd)+_0x37380b(0x2ca)+_0x37380b(0x619)+'l);\x0a\x20\x20\x20\x20'+_0x37380b(0x443)+_0x37380b(0x478)+_0x37380b(0x241)+_0x37380b(0x33c)+_0x37380b(0x2ec)+_0x37380b(0x5be)+_0x37380b(0x282)+'tener(\x27s'+_0x37380b(0x2d7)+_0x37380b(0x478)+_0x37380b(0x241)+'lListene'+_0x37380b(0x5d1)+_0x37380b(0x2a0)+'\x20\x20window'+_0x37380b(0x2f7)+_0x37380b(0x602)+_0x37380b(0x2ac)+_0x37380b(0x218)+_0x37380b(0x233)+_0x37380b(0x404)+_0x37380b(0x4a8)+_0x37380b(0x5b7)+'se;\x0a\x20\x20\x20\x20'+'\x20\x20\x20\x20log('+_0x37380b(0x259)+_0x37380b(0x359)+_0x37380b(0x3b5)+_0x37380b(0x5f5)+_0x37380b(0x542)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+'════════'+_0x37380b(0x489)+_0x37380b(0x486)+_0x37380b(0x4d3)+_0x37380b(0x201)+_0x37380b(0x63e)+_0x37380b(0x347)+_0x37380b(0x64a)+_0x37380b(0x332)+'on\x0a\x20\x20\x20\x20/'+_0x37380b(0x32d)+_0x37380b(0x489)+'════════'+'════════'+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x5b3)+_0x37380b(0x492)+_0x37380b(0x55a)+'imer\x20=\x20s'+_0x37380b(0x4f4)+'al(funct'+_0x37380b(0x3a2)+_0x37380b(0x3bb)+_0x37380b(0x30a)+'dow.__ag'+_0x37380b(0x28a)+_0x37380b(0x59d)+_0x37380b(0x612)+_0x37380b(0x3c5)+_0x37380b(0x41c)+_0x37380b(0x399)+'rray.fro'+_0x37380b(0x3df)+_0x37380b(0x21f)+_0x37380b(0x5db)+_0x37380b(0x5d9)+_0x37380b(0x2d9)+_0x37380b(0x642)+_0x37380b(0x553)+_0x37380b(0x428)+_0x37380b(0x272)+'onaco-bu'+_0x37380b(0x5fc)+_0x37380b(0x1f0)+_0x37380b(0x2e0)+_0x37380b(0x401)+_0x37380b(0x5ec)+_0x37380b(0x33e)+_0x37380b(0x240)+_0x37380b(0x458)+_0x37380b(0x2b2)+_0x37380b(0x4bd)+_0x37380b(0x547)+_0x37380b(0x31e)+_0x37380b(0x285)+_0x37380b(0x58d)+_0x37380b(0x61f)+_0x37380b(0x558)+_0x37380b(0x3cc))+('rEach(fu'+_0x37380b(0x244)+')\x20{\x20clic'+_0x37380b(0x247)+_0x37380b(0x343)+_0x37380b(0x2df)+_0x37380b(0x430)+_0x37380b(0x575)+_0x37380b(0x592)+_0x37380b(0x4d8)+'les.leng'+_0x37380b(0x397)+_0x37380b(0x3c2)+_0x37380b(0x23f)+_0x37380b(0x5b9)+_0x37380b(0x425)+_0x37380b(0x222)+_0x37380b(0x3bb)+_0x37380b(0x27e)+_0x37380b(0x644)+_0x37380b(0x25c)+'\x20null)\x20c'+_0x37380b(0x474)+_0x37380b(0x218)+_0x37380b(0x5f4)+'(_clicke'+_0x37380b(0x3c8)+_0x37380b(0x63c)+_0x37380b(0x3a3)+_0x37380b(0x3bb)+'\x20var\x20tex'+_0x37380b(0x40e)+'nnerText'+_0x37380b(0x22b)+'xtConten'+_0x37380b(0x5a2)+_0x37380b(0x250)+'\x0a\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x5f4)+'(!text\x20|'+_0x37380b(0x552)+_0x37380b(0x55c)+'40)\x20cont'+_0x37380b(0x38c)+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x5b8)+_0x37380b(0x1e9)+_0x37380b(0x61b)+_0x37380b(0x51e)+_0x37380b(0x560)+'ttons\x20by'+'\x20text\x20──'+_0x37380b(0x218)+_0x37380b(0x5f4)+'(__agDif'+_0x37380b(0x308)+_0x37380b(0x2fc)+'ed)\x20{\x0a\x20\x20'+_0x37380b(0x3bb)+_0x37380b(0x3c5)+_0x37380b(0x5b1)+_0x37380b(0x438)+'alse;\x0a\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x314)+_0x37380b(0x290)+_0x37380b(0x29d)+'e\x20<\x20EDIT'+_0x37380b(0x295)+_0x37380b(0x32f)+'ngth;\x20se'+_0x37380b(0x27c)+_0x37380b(0x3bb)+_0x37380b(0x3bb)+_0x37380b(0x56a)+'xt.index'+_0x37380b(0x5aa)+'R_SKIP_W'+'ORDS[se]'+_0x37380b(0x60f)+_0x37380b(0x4b6)+'ditor\x20=\x20'+_0x37380b(0x513)+_0x37380b(0x2e5)+_0x37380b(0x3bb)+_0x37380b(0x346)+_0x37380b(0x218)+_0x37380b(0x3bb)+_0x37380b(0x34e)+_0x37380b(0x3a0)+_0x37380b(0x3f2)+_0x37380b(0x422)+_0x37380b(0x3bb)+_0x37380b(0x256)+_0x37380b(0x58f)+_0x37380b(0x4df)+_0x37380b(0x1e6)+_0x37380b(0x40f)+_0x37380b(0x330)+'iff/merg'+_0x37380b(0x5d8)+_0x37380b(0x5d3)+_0x37380b(0x3bb)+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x328)+_0x37380b(0x482)+_0x37380b(0x225)+_0x37380b(0x4c7)+_0x37380b(0x202)+'f-editor'+'\x27)\x20||\x20b.'+_0x37380b(0x4ac)+'\x27.merge-'+_0x37380b(0x3d6)+_0x37380b(0x33b)+'\x20b.close'+'st(\x27.inl'+_0x37380b(0x237)+_0x37380b(0x534)+_0x37380b(0x488)+'closest('+_0x37380b(0x300)+_0x37380b(0x287)+_0x37380b(0x3a9)+_0x37380b(0x4ec))+('\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x316)+_0x37380b(0x3bb)+'\x20//\x20──\x20P'+_0x37380b(0x209)+_0x37380b(0x2fa)+_0x37380b(0x572)+_0x37380b(0x5c4)+_0x37380b(0x442)+_0x37380b(0x39d)+'\x20\x20\x20\x20\x20\x20\x20v'+_0x37380b(0x5eb)+_0x37380b(0x604)+_0x37380b(0x37b)+_0x37380b(0x281)+_0x37380b(0x63d)+'or\x20(var\x20'+'p\x20=\x200;\x20p'+'\x20<\x20CLICK'+_0x37380b(0x537)+_0x37380b(0x3f5)+_0x37380b(0x53f)+_0x37380b(0x218)+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x3d5)+_0x37380b(0x2b0)+_0x37380b(0x2ad)+_0x37380b(0x344)+'||\x20text.'+'indexOf('+'CLICK_PA'+_0x37380b(0x574)+_0x37380b(0x3ce)+')\x20{\x0a\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x3bb)+_0x37380b(0x52e)+_0x37380b(0x242)+_0x37380b(0x307)+_0x37380b(0x3bb)+_0x37380b(0x3bb)+_0x37380b(0x3c1)+_0x37380b(0x2a0)+_0x37380b(0x3bb)+'\x20\x20}\x0a\x20\x20\x20\x20'+_0x37380b(0x3bb)+_0x37380b(0x409)+_0x37380b(0x60d)+_0x37380b(0x319)+_0x37380b(0x604)+_0x37380b(0x4cf)+_0x37380b(0x39a)+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x2bc)+_0x37380b(0x3a6)+_0x37380b(0x4ce)+_0x37380b(0x1fc)+_0x37380b(0x392)+'ands\x20+\x20s'+_0x37380b(0x620)+'s)\x20──\x0a\x20\x20'+_0x37380b(0x3bb)+_0x37380b(0x24e)+_0x37380b(0x4b7)+'=\x20findNe'+_0x37380b(0x566)+_0x37380b(0x1f7)+'b);\x0a\x20\x20\x20\x20'+_0x37380b(0x3bb)+'var\x20resu'+_0x37380b(0x3c3)+_0x37380b(0x352)+_0x37380b(0x62b)+_0x37380b(0x62f)+_0x37380b(0x41e)+_0x37380b(0x60d)+'\x20(result'+'.action\x20'+'===\x20\x27blo'+_0x37380b(0x495)+_0x37380b(0x3bb)+_0x37380b(0x365)+'og(\x27BLOC'+_0x37380b(0x28d)+_0x37380b(0x588)+'reason\x20+'+_0x37380b(0x3e9)+_0x37380b(0x21c)+_0x37380b(0x5fd)+'d\x20||\x20\x27\x27)'+_0x37380b(0x414)+_0x37380b(0x40c)+_0x37380b(0x277)+';\x0a\x20\x20\x20\x20\x20\x20'+_0x37380b(0x3bb)+_0x37380b(0x36a)+'tory(\x27bl'+_0x37380b(0x2c2)+_0x37380b(0x3d4)+'son\x20+\x20\x27\x20'+_0x37380b(0x608)+_0x37380b(0x407)+'\x20||\x20\x27\x27).'+_0x37380b(0x2f8)+_0x37380b(0x298)+_0x37380b(0x4b3)+'\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20block'+_0x37380b(0x5c0)+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x426)+_0x37380b(0x3cd)+_0x37380b(0x2b1)+_0x37380b(0x3bb)+_0x37380b(0x59c)+_0x37380b(0x474)+_0x37380b(0x218)+_0x37380b(0x381)+_0x37380b(0x3bb)+'\x20\x20\x20if\x20(r'+_0x37380b(0x1fd)+'tion\x20==='+'\x20\x27warn\x27)'+'\x20{\x0a\x20\x20\x20\x20\x20'+_0x37380b(0x3bb))+('\x20\x20\x20log(\x27'+_0x37380b(0x2c4)+_0x37380b(0x20c)+_0x37380b(0x46d)+_0x37380b(0x424)+_0x37380b(0x39b)+_0x37380b(0x5e5)+_0x37380b(0x286)+_0x37380b(0x58e)+'tring(0,'+_0x37380b(0x38b)+_0x37380b(0x5a0)+_0x37380b(0x3bb)+_0x37380b(0x1db)+'History('+_0x37380b(0x573)+_0x37380b(0x3aa)+'eason\x20+\x20'+_0x37380b(0x39f)+_0x37380b(0x350)+_0x37380b(0x2d3)+_0x37380b(0x629)+_0x37380b(0x258)+_0x37380b(0x215)+_0x37380b(0x3bb)+'\x20\x20\x20\x20\x20war'+_0x37380b(0x632)+_0x37380b(0x3bb)+_0x37380b(0x509)+_0x37380b(0x2a9)+'add(b);\x0a'+_0x37380b(0x3bb)+_0x37380b(0x3bb)+_0x37380b(0x408)+';\x0a\x20\x20\x20\x20\x20\x20'+_0x37380b(0x29f)+'\x0a\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x4c8)+_0x37380b(0x29a)+'Click:\x20s'+'pan.curs'+_0x37380b(0x4aa)+'er\x20→\x20cli'+'ck\x20direc'+_0x37380b(0x223)+_0x37380b(0x3bb)+'\x20\x20\x20if\x20(b'+_0x37380b(0x2bd)+_0x37380b(0x46c)+'AN\x27\x20&&\x20b'+_0x37380b(0x431)+_0x37380b(0x613)+_0x37380b(0x276)+_0x37380b(0x558)+_0x37380b(0x423)+_0x37380b(0x218)+_0x37380b(0x3bb)+'\x20log(\x27Cl'+_0x37380b(0x305)+'n):\x20\x22\x27\x20+'+_0x37380b(0x538)+'\x27\x22\x27);\x0a\x20\x20'+_0x37380b(0x3bb)+'\x20\x20\x20\x20\x20\x20ad'+'dHistory'+_0x37380b(0x2b5)+_0x37380b(0x47f)+_0x37380b(0x270)+_0x37380b(0x598)+_0x37380b(0x42f)+'\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20_'+_0x37380b(0x2a9)+_0x37380b(0x246)+_0x37380b(0x3bb)+'\x20\x20\x20\x20\x20\x20\x20\x20'+'b.click('+_0x37380b(0x4b3)+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x611)+_0x37380b(0x48f)+_0x37380b(0x3bb)+_0x37380b(0x2c9)+_0x37380b(0x597)+_0x37380b(0x3bb)+_0x37380b(0x42e)+'\x20\x20\x20\x20\x20\x20\x20/'+_0x37380b(0x31b)+'e\x20Click:'+'\x20other\x20b'+_0x37380b(0x53b)+_0x37380b(0x57f)+_0x37380b(0x468)+_0x37380b(0x3d7)+_0x37380b(0x43a)+_0x37380b(0x40a)+_0x37380b(0x3bb)+_0x37380b(0x443)+'!__agSaf'+_0x37380b(0x5f9)+_0x37380b(0x3fe)+_0x37380b(0x61d)+_0x37380b(0x57d)+'n(b))\x20{\x0a'+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x3bb)+_0x37380b(0x207)+_0x37380b(0x28c)+_0x37380b(0x538)+'\x27\x22\x27\x20+\x20(n'+_0x37380b(0x407)+_0x37380b(0x38a)+_0x37380b(0x341)+'nearbyCm'+_0x37380b(0x457)+_0x37380b(0x3cf)+_0x37380b(0x544)+_0x37380b(0x4b3)+_0x37380b(0x3bb)+_0x37380b(0x3b9)+'story(\x27a'+'ccept\x27,\x20'+'\x27Clicked'+_0x37380b(0x331)+_0x37380b(0x4fb))+('\x27\x20+\x20(nea'+_0x37380b(0x396)+_0x37380b(0x3e9)+_0x37380b(0x299)+_0x37380b(0x3d2)+'substrin'+_0x37380b(0x3f7)+_0x37380b(0x210)+'\x0a\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x61c)+'d.add(b)'+_0x37380b(0x2a0)+_0x37380b(0x3bb)+_0x37380b(0x391)+_0x37380b(0x452)+_0x37380b(0x3bb)+_0x37380b(0x4e5)+_0x37380b(0x34c)+_0x37380b(0x3bb)+_0x37380b(0x1da)+_0x37380b(0x4a0)+_0x37380b(0x3bb)+_0x37380b(0x472)+_0x37380b(0x5d6)+_0x37380b(0x1f5)+_0x37380b(0x374)+_0x37380b(0x280)+_0x37380b(0x420)+'dow.__ag'+_0x37380b(0x54a)+_0x37380b(0x606)+_0x37380b(0x255)+_0x37380b(0x481)+'r);\x0a\x0a\x20\x20\x20'+_0x37380b(0x34d)+'════════'+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x5bb)+_0x37380b(0x532)+_0x37380b(0x24a)+'\x20SCROLL\x20'+_0x37380b(0x206)+_0x37380b(0x45c)+_0x37380b(0x1ef)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x208)+'\x20var\x20las'+'tManualS'+'crollTim'+_0x37380b(0x405)+_0x37380b(0x20d)+_0x37380b(0x523)+_0x37380b(0x2f3)+_0x37380b(0x20b)+_0x37380b(0x420)+'dow.__ag'+'ScrollLi'+_0x37380b(0x2a1)+_0x37380b(0x62c)+_0x37380b(0x1f9)+'\x20\x20\x20\x20\x20\x20\x20i'+_0x37380b(0x5ce)+_0x37380b(0x506)+'ing\x20&&\x20e'+_0x37380b(0x2b8)+_0x37380b(0x490)+_0x37380b(0x3bb)+_0x37380b(0x3dd)+_0x37380b(0x395)+_0x37380b(0x440)+_0x37380b(0x3bb)+_0x37380b(0x5e3)+_0x37380b(0x4e1)+_0x37380b(0x278)+_0x37380b(0x3c6)+_0x37380b(0x3bb)+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x432)+_0x37380b(0x647)+_0x37380b(0x502)+_0x37380b(0x4ac)+_0x37380b(0x1e8)+_0x37380b(0x287)+_0x37380b(0x3bf)+_0x37380b(0x3f6)+_0x37380b(0x36d)+_0x37380b(0x2ae)+_0x37380b(0x231)+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x3bb)+_0x37380b(0x5a1)+_0x37380b(0x36e)+'lTime\x20=\x20'+_0x37380b(0x62e)+'();\x0a\x20\x20\x20\x20'+_0x37380b(0x3bb)+_0x37380b(0x5d6)+_0x37380b(0x3bb)+_0x37380b(0x472)+'\x20\x20\x20\x20}\x0a\x20\x20'+_0x37380b(0x21d)+_0x37380b(0x233)+_0x37380b(0x376)+_0x37380b(0x5ee)+_0x37380b(0x47a)+_0x37380b(0x23b)+_0x37380b(0x254)+_0x37380b(0x45b)+_0x37380b(0x37a)+_0x37380b(0x4d7)+_0x37380b(0x40b)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+'════════'+_0x37380b(0x489))+(_0x37380b(0x37e)+_0x37380b(0x54c)+_0x37380b(0x610)+'\x20\x20\x20//\x20══'+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x489)+_0x37380b(0x3bc)+_0x37380b(0x47d)+_0x37380b(0x5c1)+_0x37380b(0x543)+_0x37380b(0x1ff)+_0x37380b(0x445)+_0x37380b(0x526)+'\x20\x20\x20\x20\x20if\x20'+'(!window'+_0x37380b(0x633)+'oEnabled'+_0x37380b(0x367)+_0x37380b(0x2a0)+_0x37380b(0x203)+_0x37380b(0x562)+_0x37380b(0x555)+_0x37380b(0x528)+'\x20return;'+_0x37380b(0x218)+_0x37380b(0x4d6)+'\x20=\x20Date.'+_0x37380b(0x20f)+_0x37380b(0x4f9)+_0x37380b(0x4e6)+_0x37380b(0x5a1)+'ualScrol'+_0x37380b(0x57e)+_0x37380b(0x465)+_0x37380b(0x398)+_0x37380b(0x1ec)+_0x37380b(0x41e)+_0x37380b(0x473)+_0x37380b(0x301)+_0x37380b(0x510)+'y.from(d'+'ocument.'+_0x37380b(0x4fd)+_0x37380b(0x34b)+'(\x27*\x27)).f'+_0x37380b(0x450)+_0x37380b(0x2a7)+_0x37380b(0x339)+'\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20var\x20sty'+'le\x20=\x20win'+'dow.getC'+_0x37380b(0x39c)+_0x37380b(0x292)+_0x37380b(0x2a0)+_0x37380b(0x3c5)+'r\x20hasScr'+_0x37380b(0x561)+_0x37380b(0x58c)+_0x37380b(0x50c)+_0x37380b(0x4b2)+_0x37380b(0x449)+_0x37380b(0x38f)+_0x37380b(0x3bb)+_0x37380b(0x2f2)+'tyle.ove'+_0x37380b(0x235)+'==\x20\x27auto'+'\x27\x20||\x20sty'+_0x37380b(0x385)+_0x37380b(0x439)+_0x37380b(0x500)+_0x37380b(0x360)+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x3b2)+_0x37380b(0x4e0)+'r)\x20retur'+_0x37380b(0x48c)+_0x37380b(0x218)+_0x37380b(0x5f4)+_0x37380b(0x4d9)+_0x37380b(0x36f)+_0x37380b(0x491)+_0x37380b(0x533)+_0x37380b(0x5a4)+'or\x27)\x20||\x20'+'el.close'+_0x37380b(0x1d7)+_0x37380b(0x419)+'\x27)))\x20ret'+_0x37380b(0x463)+_0x37380b(0x281)+_0x37380b(0x4f9)+_0x37380b(0x4c9)+'gName\x20=='+_0x37380b(0x303)+_0x37380b(0x32c)+_0x37380b(0x4da)+'se;\x0a\x20\x20\x20\x20'+_0x37380b(0x3bb)+_0x37380b(0x3dc)+'rue;\x0a\x20\x20\x20'+_0x37380b(0x36b)+_0x37380b(0x41e)+_0x37380b(0x386)+_0x37380b(0x301)+'s.length'+'\x20>\x200)\x20{\x0a'+_0x37380b(0x3bb)+'\x20\x20\x20\x20isAu'+_0x37380b(0x506)+_0x37380b(0x2fd)+_0x37380b(0x3e6)+_0x37380b(0x3bb)+'scrollab'+_0x37380b(0x50d)+_0x37380b(0x484)+'tion(el)'+'\x20{\x0a\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20'+_0x37380b(0x470))+(_0x37380b(0x53a)+'Height\x20-'+_0x37380b(0x58c)+_0x37380b(0x267)+'el.clien'+_0x37380b(0x638)+_0x37380b(0x5e0)+'\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20\x20\x20\x20\x20\x20'+'\x20\x20\x20el.sc'+'rollTop\x20'+_0x37380b(0x4ba)+'ollHeigh'+_0x37380b(0x413)+_0x37380b(0x3bb)+_0x37380b(0x637)+_0x37380b(0x3bb)+_0x37380b(0x567)+_0x37380b(0x3bb)+_0x37380b(0x4f6)+_0x37380b(0x291)+'tion()\x20{'+'\x20isAutoS'+_0x37380b(0x327)+_0x37380b(0x26b)+_0x37380b(0x501)+_0x37380b(0x2a0)+_0x37380b(0x472)+_0x37380b(0x2af)+'L_INTERV'+'AL_MS);\x0a'+_0x37380b(0x4c0)+_0x37380b(0x5b0)+_0x37380b(0x451)+_0x37380b(0x37f)+_0x37380b(0x1e1)+_0x37380b(0x5c1)+_0x37380b(0x229)+_0x37380b(0x312)+_0x37380b(0x3cb)+_0x37380b(0x485)+_0x37380b(0x2ab)+_0x37380b(0x645)+_0x37380b(0x56b)+_0x37380b(0x269)+'length\x20+'+_0x37380b(0x377)+'oll:\x20\x27\x20+'+_0x37380b(0x233)+_0x37380b(0x31c)+_0x37380b(0x260)+'d\x20+\x20\x27\x20|\x20'+'Smart:\x20\x27'+_0x37380b(0x5c6)+_0x37380b(0x521)+_0x37380b(0x4cb)+_0x37380b(0x595)));}const _0xa0a400={};_0xa0a400[_0x408db9(0x5a3)]=compose,module[_0x408db9(0x5e7)]=_0xa0a400;
+/**
+ * compositor.js — Script Selector
+ *
+ * Returns the appropriate injection script based on config:
+ *   - Background mode: full background loop with overlay (background_mode.js)
+ *   - Otherwise: simple accept-button polling loop (inline)
+ *
+ * Usage:
+ *   const { compose } = require('./compositor');
+ *   const script = compose(config);
+ */
+
+const fs = require('fs');
+const path = require('path');
+
+let _bgCache = null;
+let _bgCacheMtime = null;
+
+/**
+ * Find the background_mode.js script file.
+ * Searches multiple candidate paths to handle both dev and bundled contexts.
+ */
+function _findBgScript() {
+    const candidates = [
+        // Same directory as compositor.js (dev: main_scripts/)
+        path.join(__dirname, 'background_mode.js'),
+        // Up from dist/ into main_scripts/ (bundled context)
+        path.join(__dirname, '..', 'main_scripts', 'background_mode.js'),
+        // Up two levels (legacy)
+        path.join(__dirname, '..', '..', 'main_scripts', 'background_mode.js'),
+    ];
+
+    for (const p of candidates) {
+        if (fs.existsSync(p)) return p;
+    }
+
+    throw new Error(`Could not find background_mode.js. __dirname=${__dirname}, tried: ${candidates.join(', ')}`);
+}
+
+/**
+ * Load and cache the background mode script, re-reading if file changed.
+ */
+function _getBgScript() {
+    const scriptPath = _findBgScript();
+    const mtime = fs.statSync(scriptPath).mtimeMs;
+    if (_bgCache && _bgCacheMtime === mtime) return _bgCache;
+    _bgCache = fs.readFileSync(scriptPath, 'utf8');
+    _bgCacheMtime = mtime;
+    return _bgCache;
+}
+
+/**
+ * Generate the simple poll script (inline, no external file).
+ * Used when background mode is off — polls for accept buttons.
+ */
+function _getSimplePollScript(config) {
+    const interval = config.pollInterval || 2000;
+    const ide = (config.ide || 'cursor').toLowerCase();
+    const clickPatterns = JSON.stringify(config.clickPatterns || ['Run', 'Allow', 'Always Allow', 'Keep Waiting', 'Retry', 'Continue', 'Allow Once']);
+    const scrollEnabled = config.scrollEnabled !== false;
+    const scrollPauseMs = config.scrollPauseMs || 7000;
+    const scrollIntervalMs = config.scrollIntervalMs || 500;
+    const safeClickEnabled = config.safeClickEnabled !== false;
+    const diffProtectionEnabled = config.diffProtectionEnabled !== false;
+    const httpPort = config.httpPort || 48787;
+
+    const selectors = ide === 'antigravity'
+        ? `['.bg-ide-button-background']`
+        : `['button', '[class*="button"]', '[class*="anysphere"]']`;
+
+    return `(function() {
+    'use strict';
+    if (typeof window === 'undefined') return;
+
+    var _spLog = function(m) { console.log('[SimplePoll] ' + m); };
+
+    if (window.__simplePollRunning) {
+        _spLog('Already running, skipping re-inject');
+        return;
+    }
+
+    // --- Config ---
+    var config = {
+        clickPatterns: ${clickPatterns},
+        scrollEnabled: ${scrollEnabled},
+        scrollPauseMs: ${scrollPauseMs},
+        scrollIntervalMs: ${scrollIntervalMs},
+        safeClickEnabled: ${safeClickEnabled},
+        diffProtectionEnabled: ${diffProtectionEnabled},
+        httpPort: ${httpPort},
+        bannedCommands: [],
+        godMode: false
+    };
+
+    // --- DOM Helpers ---
+    var getDocuments = function(root) {
+        root = root || document;
+        var docs = [root];
+        try {
+            var iframes = root.querySelectorAll('iframe, frame');
+            for (var i = 0; i < iframes.length; i++) {
+                try {
+                    var d = iframes[i].contentDocument || (iframes[i].contentWindow && iframes[i].contentWindow.document);
+                    if (d) docs = docs.concat(getDocuments(d));
+                } catch(e) {}
+            }
+        } catch(e) {}
+        return docs;
+    };
+
+    var queryAll = function(selector) {
+        var results = [];
+        var docs = getDocuments();
+        for (var i = 0; i < docs.length; i++) {
+            try {
+                var els = docs[i].querySelectorAll(selector);
+                for (var j = 0; j < els.length; j++) results.push(els[j]);
+            } catch(e) {}
+        }
+        // Shadow DOM piercing
+        try {
+            var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_ELEMENT);
+            var node;
+            while ((node = walker.nextNode())) {
+                if (node.shadowRoot) {
+                    try {
+                        var shadowEls = node.shadowRoot.querySelectorAll(selector);
+                        for (var k = 0; k < shadowEls.length; k++) {
+                            if (results.indexOf(shadowEls[k]) === -1) results.push(shadowEls[k]);
+                        }
+                    } catch(e) {}
+                }
+            }
+        } catch(e) {}
+        return results;
+    };
+
+    // --- Reject patterns (expanded from reference) ---
+    // When God Mode is ON, 'always allow/run/proceed/auto' are REMOVED from reject
+    var baseRejectPatterns = ['skip', 'reject', 'cancel', 'close', 'refine', 'deny', 'no', 'dismiss', 'abort', 'ask every time'];
+    var godModeOnlyPatterns = ['always run', 'always allow', 'always proceed', 'always auto'];
+    var rejectPatterns = config.godMode ? baseRejectPatterns : baseRejectPatterns.concat(godModeOnlyPatterns);
+
+    // --- Diff/merge editor labels (NO 'accept all' — it blocks agent Accept All button) ---
+    var diffLabels = ['accept changes', 'accept incoming', 'accept current',
+                      'accept both', 'use theirs', 'use ours', 'use mine'];
+
+    // --- Conversation Area Guard (from reference: excludes sidebar, editor, toolbar) ---
+    // Detect if running inside vscode-webview:// (OOPIF agent panel)
+    var _isWebviewContext = (window.location.protocol === 'vscode-webview:') ||
+                            !!document.querySelector('.react-app-container') ||
+                            !!document.querySelector('[data-vscode-context]');
+
+    function isInConversationArea(el) {
+        // In webview context, the ENTIRE page IS the agent panel — always allow
+        if (_isWebviewContext) return true;
+        // When Conversation Guard is OFF, skip area check (click anywhere)
+        if (!config.safeClickEnabled) return true;
+        var excludedSelectors = [
+            '#workbench\\\\.parts\\\\.sidebar',
+            '#workbench\\\\.parts\\\\.activitybar',
+            '#workbench\\\\.parts\\\\.titlebar',
+            '#workbench\\\\.parts\\\\.statusbar',
+            '#workbench\\\\.parts\\\\.editor',
+            '.menubar-menu-button',
+            '.title-actions',
+            '[class*="explorer"]',
+            '.tabs-container',
+            '.composite.viewlet',
+            '.sidebar',
+            '.activity-bar-container'
+        ];
+        for (var i = 0; i < excludedSelectors.length; i++) {
+            try { if (el.closest(excludedSelectors[i])) return false; } catch(e) {}
+        }
+        var includedSelectors = [
+            '#antigravity\\\\.agentPanel',
+            '#workbench\\\\.parts\\\\.auxiliarybar',
+            '[class*="agent"]',
+            '[class*="chat"]',
+            '[class*="conversation"]',
+            '[class*="agentic"]'
+        ];
+        for (var i = 0; i < includedSelectors.length; i++) {
+            try { if (el.closest(includedSelectors[i])) return true; } catch(e) {}
+        }
+        return true; // Default accept if passed exclusion
+    }
+
+    // --- Get button own text (avoids checkbox/label text bleed) ---
+    function getButtonOwnText(el) {
+        var ownText = '';
+        for (var i = 0; i < el.childNodes.length; i++) {
+            var node = el.childNodes[i];
+            if (node.nodeType === 3) { // TEXT_NODE
+                ownText += node.textContent;
+            } else if (node.nodeType === 1) { // ELEMENT_NODE
+                var tag = (node.tagName || '').toLowerCase();
+                if (tag === 'input' || tag === 'label' || tag === 'checkbox') continue;
+                var childText = (node.textContent || '').trim();
+                if (childText.length <= 30 && childText.toLowerCase().indexOf('always') === -1) {
+                    ownText += ' ' + childText;
+                }
+            }
+        }
+        ownText = ownText.trim();
+        if (!ownText) ownText = (el.textContent || '').trim();
+        return ownText.toLowerCase();
+    }
+
+    // --- Diff Protection ---
+    function isInDiffEditor(el) {
+        if (!config.diffProtectionEnabled) return false;
+        var text = getButtonOwnText(el);
+        for (var i = 0; i < diffLabels.length; i++) {
+            if (text.indexOf(diffLabels[i]) !== -1) return true;
+        }
+        var parent = el;
+        for (var d = 0; d < 5 && parent; d++) {
+            var cls = (parent.className || '').toLowerCase();
+            if (cls.indexOf('monaco-diff-editor') !== -1 ||
+                cls.indexOf('merge-editor') !== -1) return true;
+            parent = parent.parentElement;
+        }
+        return false;
+    }
+
+    // --- Banned Command Detection (from MunKhin) ---
+    function findNearbyCommandText(el) {
+        var commandText = '';
+        var container = el.parentElement;
+        var depth = 0;
+        while (container && depth < 10) {
+            var sibling = container.previousElementSibling;
+            var siblingCount = 0;
+            while (sibling && siblingCount < 5) {
+                if (sibling.tagName === 'PRE' || sibling.tagName === 'CODE') {
+                    var t = (sibling.textContent || '').trim();
+                    if (t.length > 0) commandText += ' ' + t;
+                }
+                var codeEls = sibling.querySelectorAll ? sibling.querySelectorAll('pre, code, pre code') : [];
+                for (var c = 0; c < codeEls.length; c++) {
+                    var ct = (codeEls[c].textContent || '').trim();
+                    if (ct.length > 0 && ct.length < 5000) commandText += ' ' + ct;
+                }
+                sibling = sibling.previousElementSibling;
+                siblingCount++;
+            }
+            if (commandText.length > 10) break;
+            container = container.parentElement;
+            depth++;
+        }
+        if (el.getAttribute('aria-label')) commandText += ' ' + el.getAttribute('aria-label');
+        if (el.getAttribute('title')) commandText += ' ' + el.getAttribute('title');
+        return commandText.trim().toLowerCase();
+    }
+
+    function isCommandBanned(commandText) {
+        var bannedList = config.bannedCommands || [];
+        if (bannedList.length === 0 || !commandText) return false;
+        var lowerText = commandText.toLowerCase();
+        for (var b = 0; b < bannedList.length; b++) {
+            var pattern = (bannedList[b] || '').trim();
+            if (!pattern) continue;
+            try {
+                if (pattern.charAt(0) === '/' && pattern.lastIndexOf('/') > 0) {
+                    var lastSlash = pattern.lastIndexOf('/');
+                    var regex = new RegExp(pattern.substring(1, lastSlash), pattern.substring(lastSlash + 1) || 'i');
+                    if (regex.test(commandText)) {
+                        _spLog('[BANNED] Blocked by regex: ' + pattern);
+                        stats.blocked++;
+                        return true;
+                    }
+                } else {
+                    if (lowerText.indexOf(pattern.toLowerCase()) !== -1) {
+                        _spLog('[BANNED] Blocked by pattern: ' + pattern);
+                        stats.blocked++;
+                        return true;
+                    }
+                }
+            } catch(e) {
+                if (lowerText.indexOf(pattern.toLowerCase()) !== -1) {
+                    stats.blocked++;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // --- Click Verification ---
+    function isElementVisible(el) {
+        if (!el || !el.isConnected) return false;
+        var style = window.getComputedStyle(el);
+        var rect = el.getBoundingClientRect();
+        return style.display !== 'none' && rect.width > 0 && style.visibility !== 'hidden';
+    }
+
+    function waitForDisappear(el, timeout) {
+        timeout = timeout || 500;
+        return new Promise(function(resolve) {
+            var startTime = Date.now();
+            var check = function() {
+                if (!isElementVisible(el)) { resolve(true); }
+                else if (Date.now() - startTime >= timeout) { resolve(false); }
+                else { requestAnimationFrame(check); }
+            };
+            setTimeout(check, 50);
+        });
+    }
+
+    function isAcceptButton(el) {
+        // Guard: only click inside conversation/agent area
+        if (!isInConversationArea(el)) return false;
+
+        var text = getButtonOwnText(el);
+        if (text.length === 0 || text.length > 100) return false;
+
+        // Reject patterns
+        for (var i = 0; i < rejectPatterns.length; i++) {
+            if (text.indexOf(rejectPatterns[i]) !== -1) return false;
+        }
+        // Match click patterns
+        var matched = false;
+        for (var i = 0; i < config.clickPatterns.length; i++) {
+            if (text.indexOf(config.clickPatterns[i].toLowerCase()) !== -1) {
+                matched = true; break;
+            }
+        }
+        if (!matched) return false;
+
+        var style = window.getComputedStyle(el);
+        var rect = el.getBoundingClientRect();
+        if (style.display === 'none' || rect.width === 0 || style.pointerEvents === 'none' || el.disabled) return false;
+        if (isInDiffEditor(el)) { stats.blocked++; return false; }
+
+        // Check banned commands for run/execute buttons
+        if (text.indexOf('run') !== -1 || text.indexOf('execute') !== -1) {
+            var nearbyText = findNearbyCommandText(el);
+            if (isCommandBanned(nearbyText)) return false;
+        }
+
+        return true;
+    }
+
+    // --- "Always run" dropdown handler ---
+    var _alwaysRunClicked = false;
+    function clickAlwaysRunDropdown() {
+        if (_alwaysRunClicked) return false;
+        var dropdownSelectors = ['[role="menuitem"]', '[role="option"]', '.dropdown-item', '.menu-item', 'li'];
+        for (var s = 0; s < dropdownSelectors.length; s++) {
+            var items = queryAll(dropdownSelectors[s]);
+            for (var i = 0; i < items.length; i++) {
+                var text = (items[i].textContent || '').trim().toLowerCase();
+                if (text === 'always run' || text === 'always allow' ||
+                    (text.indexOf('always') !== -1 && (text.indexOf('run') !== -1 || text.indexOf('allow') !== -1))) {
+                    var st = window.getComputedStyle(items[i]);
+                    var rc = items[i].getBoundingClientRect();
+                    if (st.display !== 'none' && st.visibility !== 'hidden' && rc.width > 0 && rc.height > 0) {
+                        _spLog('Clicking "Always run" dropdown option');
+                        items[i].dispatchEvent(new MouseEvent('click', { view: window, bubbles: true, cancelable: true }));
+                        _alwaysRunClicked = true;
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    // --- Stats ---
+    var stats = { clicks: 0, blocked: 0, cycles: 0 };
+    window.__autoAcceptGetStats = function() { return stats; };
+    window.__autoAcceptResetStats = function() { stats = { clicks: 0, blocked: 0, cycles: 0 }; };
+
+    // --- HTTP Live Sync ---
+    function syncConfig() {
+        try {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'http://127.0.0.1:' + config.httpPort, true);
+            xhr.timeout = 1000;
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    try {
+                        var c = JSON.parse(xhr.responseText);
+                        if (c.clickPatterns) config.clickPatterns = c.clickPatterns;
+                        if (c.scrollEnabled !== undefined) config.scrollEnabled = c.scrollEnabled;
+                        if (c.pauseScrollMs !== undefined) config.scrollPauseMs = c.pauseScrollMs;
+                        if (c.scrollIntervalMs !== undefined) config.scrollIntervalMs = c.scrollIntervalMs;
+                        if (c.safeClickEnabled !== undefined) config.safeClickEnabled = c.safeClickEnabled;
+                        if (c.diffProtectionEnabled !== undefined) config.diffProtectionEnabled = c.diffProtectionEnabled;
+                        if (c.bannedCommands) config.bannedCommands = c.bannedCommands;
+                        if (c.godMode !== undefined) {
+                            config.godMode = c.godMode;
+                            rejectPatterns = config.godMode ? baseRejectPatterns : baseRejectPatterns.concat(godModeOnlyPatterns);
+                        }
+                    } catch(e) {}
+                }
+            };
+            xhr.send();
+        } catch(e) {}
+    }
+    setInterval(syncConfig, 2000);
+
+    // --- Auto Scroll (smart: only deepest scrollable inside agent panel) ---
+    var lastUserScroll = 0;
+    document.addEventListener('wheel', function() { lastUserScroll = Date.now(); }, { passive: true });
+
+    function findAgentPanel() {
+        // Try specific agent panel selectors first
+        var panelIds = [
+            'antigravity.agentPanel',  // Antigravity agent panel
+        ];
+        for (var i = 0; i < panelIds.length; i++) {
+            try {
+                var el = document.getElementById(panelIds[i]);
+                if (el && el.offsetHeight > 50) return el;
+            } catch(e) {}
+        }
+        // Try CSS selectors
+        var panelSelectors = ['.chat-widget', '.inline-chat'];
+        for (var i = 0; i < panelSelectors.length; i++) {
+            try {
+                var el = document.querySelector(panelSelectors[i]);
+                if (el && el.offsetHeight > 50) return el;
+            } catch(e) {}
+        }
+        return null;
+    }
+
+    function findDeepestScrollable(root) {
+        var best = null;
+        var bestDepth = -1;
+        try {
+            var all = root.querySelectorAll('*');
+            for (var i = 0; i < all.length; i++) {
+                var el = all[i];
+                if (el.scrollHeight <= el.clientHeight + 30) continue;
+                if (el.offsetHeight < 50 || el.offsetWidth < 50) continue;
+                var style = window.getComputedStyle(el);
+                var ov = style.overflowY;
+                if (ov !== 'auto' && ov !== 'scroll') continue;
+                var depth = 0;
+                var p = el;
+                while (p && p !== root) { depth++; p = p.parentElement; }
+                if (depth > bestDepth) {
+                    bestDepth = depth;
+                    best = el;
+                }
+            }
+        } catch(e) {}
+        return best;
+    }
+
+    function autoScroll() {
+        if (!config.scrollEnabled) return;
+        if (Date.now() - lastUserScroll < config.scrollPauseMs) return;
+
+        var panel = findAgentPanel();
+        // In webview context, fall back to document.body if no specific panel found
+        if (!panel && _isWebviewContext) panel = document.body;
+        if (!panel) return;
+
+        var target = findDeepestScrollable(panel);
+        if (target) {
+            target.scrollTop = target.scrollHeight;
+        }
+    }
+
+    setInterval(autoScroll, config.scrollIntervalMs);
+
+    // --- Main Poll Loop ---
+    var selectors = ${selectors};
+    var interval = ${interval};
+
+    var poll = async function() {
+        window.__simplePollRunning = true;
+        _spLog('Started (ide=${ide}, interval=' + interval + 'ms)');
+
+        while (window.__simplePollRunning) {
+            stats.cycles++;
+            var clicked = 0;
+
+            // Try "Always run" dropdown first
+            clickAlwaysRunDropdown();
+
+            var verified = 0;
+            for (var s = 0; s < selectors.length; s++) {
+                var els = queryAll(selectors[s]);
+                for (var e = 0; e < els.length; e++) {
+                    if (isAcceptButton(els[e])) {
+                        var btnText = getButtonOwnText(els[e]);
+                        _spLog('Clicking: "' + btnText + '"');
+                        els[e].dispatchEvent(new MouseEvent('click', { view: window, bubbles: true, cancelable: true }));
+                        clicked++;
+                        stats.clicks++;
+                        var disappeared = await waitForDisappear(els[e]);
+                        if (disappeared) {
+                            verified++;
+                            _spLog('[Verified] "' + btnText + '" disappeared');
+                        }
+                    }
+                }
+            }
+            if (clicked > 0) _spLog('Cycle ' + stats.cycles + ': clicked ' + clicked + ', verified ' + verified);
+            await new Promise(function(r) { setTimeout(r, interval); });
+        }
+        _spLog('Stopped');
+    };
+
+    window.stopSimplePoll = function() {
+        window.__simplePollRunning = false;
+        _spLog('Stop requested');
+    };
+
+    poll();
+})();`;
+}
+
+/**
+ * Main entry point: returns the appropriate injection script.
+ */
+function compose(config) {
+    config = config || {};
+
+    const useBackground = config.isBackgroundMode;
+    console.log(`[Compositor] compose: isBackgroundMode=${config.isBackgroundMode} → ${useBackground ? 'BACKGROUND' : 'SIMPLE POLL'}`);
+
+    if (useBackground) {
+        const script = _getBgScript();
+        console.log(`[Compositor] Background script loaded (${(script.length / 1024).toFixed(1)}KB)`);
+        return script;
+    }
+
+    console.log(`[Compositor] Simple poll (ide=${config.ide}, interval=${config.pollInterval})`);
+    return _getSimplePollScript(config);
+}
+
+module.exports = { compose };

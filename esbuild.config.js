@@ -65,98 +65,34 @@ async function build() {
     const obfuscatedSize = Buffer.byteLength(obfuscated.getObfuscatedCode(), 'utf8');
     console.log(`[2/3] Obfuscated: ${(originalSize / 1024).toFixed(1)}KB → ${(obfuscatedSize / 1024).toFixed(1)}KB`);
 
-    // ─── Step 3: Obfuscate auto_accept.js (injected browser script) ───
-    const autoAcceptPath = path.join('./main_scripts', 'auto_accept.js');
-    if (fs.existsSync(autoAcceptPath)) {
-        console.log('[3/3] Obfuscating auto_accept.js...');
-        const browserCode = fs.readFileSync(autoAcceptPath, 'utf8');
-        const obfBrowser = JavaScriptObfuscator.obfuscate(browserCode, {
-            compact: true,
-            controlFlowFlattening: true,
-            controlFlowFlatteningThreshold: 0.4,
-            deadCodeInjection: true,
-            deadCodeInjectionThreshold: 0.15,
-            identifierNamesGenerator: 'hexadecimal',
-            renameGlobals: false,
-            rotateStringArray: true,
-            selfDefending: false,
-            shuffleStringArray: true,
-            splitStrings: true,
-            splitStringsChunkLength: 10,
-            stringArray: true,
-            stringArrayEncoding: ['base64'],
-            stringArrayThreshold: 0.75,
-            transformObjectKeys: true,
-            target: 'browser',
-            // Keep public API names so CDP handler can call them
-            reservedNames: [
-                '^__autoAcceptStart$', '^__autoAcceptStop$',
-                '^__autoAcceptGetStats$', '^__autoAcceptResetStats$',
-                '^__autoAcceptUpdateBannedCommands$', '^__autoAcceptSetFocusState$',
-                '^__autoAcceptState$', '^__agBGLoopOwner$',
-                '^__agToolIntervals$', '^__agAutoEnabled$',
-                '^__agScrollEnabled$', '^__agSafeClickEnabled$',
-                '^__agDiffProtectionEnabled$', '^__agHttpPort$'
-            ],
-        });
-        fs.writeFileSync(autoAcceptPath, obfBrowser.getObfuscatedCode(), 'utf8');
-        const bOriginal = Buffer.byteLength(browserCode, 'utf8');
-        const bObfuscated = Buffer.byteLength(obfBrowser.getObfuscatedCode(), 'utf8');
-        console.log(`[3/3] auto_accept.js: ${(bOriginal / 1024).toFixed(1)}KB → ${(bObfuscated / 1024).toFixed(1)}KB`);
-    }
-
-    // ─── Step 4: Obfuscate remaining main_scripts (cdp-handler, compositor, relauncher) ───
-    const nodeScripts = ['cdp-handler.js', 'compositor.js', 'relauncher.js'];
-    let step = 4;
-    const totalSteps = 3 + nodeScripts.length;
-
-    for (const scriptName of nodeScripts) {
-        const scriptPath = path.join('./main_scripts', scriptName);
-        if (!fs.existsSync(scriptPath)) {
-            console.log(`[${step}/${totalSteps}] Skipping ${scriptName} (not found)`);
-            step++;
-            continue;
-        }
-
-        console.log(`[${step}/${totalSteps}] Obfuscating ${scriptName}...`);
-        const srcCode = fs.readFileSync(scriptPath, 'utf8');
-        const obfNode = JavaScriptObfuscator.obfuscate(srcCode, {
-            compact: true,
-            controlFlowFlattening: true,
-            controlFlowFlatteningThreshold: 0.4,
-            deadCodeInjection: true,
-            deadCodeInjectionThreshold: 0.15,
-            identifierNamesGenerator: 'hexadecimal',
-            renameGlobals: false,
-            rotateStringArray: true,
-            selfDefending: false,
-            shuffleStringArray: true,
-            splitStrings: true,
-            splitStringsChunkLength: 8,
-            stringArray: true,
-            stringArrayEncoding: ['base64'],
-            stringArrayThreshold: 0.75,
-            transformObjectKeys: true,
-            target: 'node',
-            reservedNames: [
-                '^require$', '^module$', '^exports$', '^__dirname$', '^__filename$',
-                // Preserve exported class/function names
-                '^CdpHandler$', '^Relauncher$', '^compose$'
-            ],
-            reservedStrings: ['vscode'],
-        });
-        fs.writeFileSync(scriptPath, obfNode.getObfuscatedCode(), 'utf8');
-        const sOriginal = Buffer.byteLength(srcCode, 'utf8');
-        const sObfuscated = Buffer.byteLength(obfNode.getObfuscatedCode(), 'utf8');
-        console.log(`[${step}/${totalSteps}] ${scriptName}: ${(sOriginal / 1024).toFixed(1)}KB → ${(sObfuscated / 1024).toFixed(1)}KB`);
-        step++;
-    }
+    // ─── NOTE: main_scripts/ are NOT obfuscated (clean source preserved) ───
+    // Only dist/extension.js is obfuscated. main_scripts/ files are kept readable
+    // for development and debugging. To obfuscate for release, use a separate
+    // npm run compile:release script.
 
     // ─── Cleanup: delete sourcemaps ───
     const mapFile = path.join(DIST_DIR, 'extension.js.map');
     if (fs.existsSync(mapFile)) {
         fs.unlinkSync(mapFile);
         console.log('🗑️  Deleted extension.js.map');
+    }
+
+    // ─── Copy dynamically-required scripts into dist/ ───
+    // cdp-handler.js uses `require('./compositor')` which resolves relative to dist/
+    // compositor.js uses `require('./background_mode.js')` via fs.readFileSync
+    // setup-panel.js is dynamically required by extension.js
+    const dynamicDeps = [
+        { src: path.join('./main_scripts', 'compositor.js'), dest: path.join(DIST_DIR, 'compositor.js') },
+        { src: path.join('./main_scripts', 'background_mode.js'), dest: path.join(DIST_DIR, 'background_mode.js') },
+        { src: './setup-panel.js', dest: path.join(DIST_DIR, 'setup-panel.js') },
+    ];
+    for (const { src, dest } of dynamicDeps) {
+        if (fs.existsSync(src)) {
+            fs.copyFileSync(src, dest);
+            console.log(`📋 Copied ${src} → ${dest}`);
+        } else {
+            console.log(`⚠️  Skipping ${src} (not found)`);
+        }
     }
 
     console.log('\n✅ Build + Obfuscation complete!');
