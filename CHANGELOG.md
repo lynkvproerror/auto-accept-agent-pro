@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.5.5 — 2026-02-27
+### Bug Fix — Fix Shortcut Not Patching Taskbar
+- **Taskbar shortcut**: Thêm scan path `%APPDATA%\...\Quick Launch\User Pinned\TaskBar` — shortcut pin trên Taskbar trước đây không được quét
+- **Quick Launch**: Thêm scan path Quick Launch cho các shortcut khác
+
 ## v1.5.4 — 2026-02-27
 ### Improvement — Auto-Fix CDP Shortcut
 - **Auto-detect IDE update**: Extension tự động phát hiện khi IDE cập nhật version mới, kiểm tra shortcuts và hiện cảnh báo ⚠️ với nút "Fix Now" nếu flag bị mất
