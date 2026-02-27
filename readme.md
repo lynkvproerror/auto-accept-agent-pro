@@ -70,9 +70,20 @@ Auto-accepts **"Always Allow"**, **"Always Run"**, **"Allow This Conversation"**
 
 ### 🔧 Auto-Fix CDP Shortcut
 One-click fix for Windows CDP setup:
-- Scans Desktop + Start Menu for Antigravity `.lnk` shortcuts
+- Scans Desktop + Start Menu for IDE shortcuts (Antigravity, Cursor, Windsurf, Trae)
 - Adds `--remote-debugging-port=9222` to shortcut target
-- Creates `.bak` backup before modification
+- Auto-corrects wrong port if set to different value
+- Shows clear feedback: **PATCHED** / **ALREADY_OK** / **NOT_FOUND**
+
+**Settings → Auto-Fix CDP:**
+
+![Fix Shortcut settings panel](media/fix_shortcut_settings.png)
+
+**After clicking Fix Shortcut:**
+
+![Fix Shortcut success notification](media/fix_shortcut_success.png)
+
+> ⚠️ **Important:** Mỗi lần IDE cập nhật phiên bản mới, shortcut sẽ bị ghi đè và mất flag `--remote-debugging-port=9222`. Hãy vào **Settings → Auto-Fix CDP → Fix Shortcut** để patch lại sau mỗi lần update IDE. Nếu không, Background Mode và Auto Click sẽ không hoạt động.
 
 ### 🧠 Smart Accept — Command Safety
 Blocks dangerous terminal commands before they execute:
@@ -180,6 +191,16 @@ Extension Host                    CDP (port 9222)
 ---
 
 ## 📝 Changelog
+
+### v1.5.4
+- 🔧 **Fix Shortcut improved** — 3 outcomes (PATCHED/ALREADY_OK/NOT_FOUND), multi-IDE, wrong port fix
+- 📋 **Copy Flag button** — khi không tìm thấy shortcut
+- ⚠️ **Readme warning** — nhắc chạy lại Fix Shortcut sau mỗi lần IDE update
+
+### v1.5.2
+- 🐛 **Background fix** — Web Worker timer bypasses browser throttling when window loses focus
+- 🐛 **requestAnimationFrame removed** — replaced with setTimeout (rAF stops when unfocused)
+- 🐛 **Loop delays** — all delays use workerDelay() via Web Worker thread
 
 ### v1.5.1
 - 🔥 **Run button fix** — CDP permission script cycle with Webview Guard + textMatches

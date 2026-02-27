@@ -411,6 +411,10 @@ function activate(context) {
     // Weekly ROI notifications
     scheduleWeeklyROI(context);
 
+    // ─── IDE Version Change Detection — Auto-Fix CDP Shortcut ─────
+    // After IDE update, shortcuts may lose --remote-debugging-port=9222
+    checkIDEVersionAndFixShortcut(context);
+
     log('Extension activated successfully');
 }
 
@@ -652,6 +656,104 @@ async function handleGodModeToggle(context) {
     if (isEnabled) { await stopCDPSession(); await startCDPSession(context); }
 }
 
+// ─── IDE Version Change Detection ────────────────────────────────────
+// On IDE update, shortcuts are overwritten and lose --remote-debugging-port=9222
+// This function detects the update and prompts the user to re-apply the fix
+function checkIDEVersionAndFixShortcut(context) {
+    if (process.platform !== 'win32') return; // Windows only
+
+    const currentVersion = vscode.version;
+    const storedVersion = context.globalState.get('auto-accept-ide-version', '');
+
+    // Always store current version
+    context.globalState.update('auto-accept-ide-version', currentVersion);
+
+    if (!storedVersion) {
+        // First run — just store version, don't auto-fix
+        log(`[CDP Check] First run, storing IDE version: ${currentVersion}`);
+        return;
+    }
+
+    if (storedVersion === currentVersion) {
+        // Same version — no update happened
+        return;
+    }
+
+    // IDE version changed! Check if shortcuts still have the flag
+    log(`[CDP Check] IDE updated: ${storedVersion} → ${currentVersion}. Checking CDP shortcuts...`);
+
+    const ideName = getIDEDisplayName();
+    const psCheck = path.join(os.tmpdir(), 'antigravity_check_cdp.ps1');
+    const psContent = `
+$WshShell = New-Object -comObject WScript.Shell
+$paths = @(
+    "$env:USERPROFILE\\Desktop",
+    "$env:PUBLIC\\Desktop",
+    "$env:APPDATA\\Microsoft\\Windows\\Start Menu\\Programs",
+    "$env:ALLUSERSPROFILE\\Microsoft\\Windows\\Start Menu\\Programs"
+)
+$ideNames = @("Antigravity", "Cursor", "Windsurf", "Trae")
+$needsFix = 0
+$ok = 0
+foreach ($dir in $paths) {
+    if (-not (Test-Path $dir)) { continue }
+    Get-ChildItem -Path $dir -Filter "*.lnk" -Recurse -ErrorAction SilentlyContinue | ForEach-Object {
+        try {
+            $s = $WshShell.CreateShortcut($_.FullName)
+            $match = $false
+            foreach ($name in $ideNames) {
+                if ($s.TargetPath -like "*$name*" -or $_.Name -like "*$name*") { $match = $true; break }
+            }
+            if ($match) {
+                if ($s.Arguments -like "*remote-debugging-port=9222*") { $ok++ }
+                else { $needsFix++ }
+            }
+        } catch {}
+    }
+}
+if ($needsFix -gt 0) { Write-Output "NEEDS_FIX:$needsFix" }
+elseif ($ok -gt 0) { Write-Output "ALL_OK:$ok" }
+else { Write-Output "NO_SHORTCUT" }
+`;
+
+    try {
+        fs.writeFileSync(psCheck, psContent, 'utf8');
+    } catch (e) {
+        log(`[CDP Check] Failed to write check script: ${e.message}`);
+        return;
+    }
+
+    const cp = require('child_process');
+    cp.exec(`powershell -NoProfile -ExecutionPolicy Bypass -File "${psCheck}"`, (err, stdout) => {
+        try { fs.unlinkSync(psCheck); } catch (e) { }
+
+        if (err) {
+            log(`[CDP Check] Error: ${err.message}`);
+            return;
+        }
+
+        const output = stdout.trim();
+        log(`[CDP Check] Result: ${output}`);
+
+        if (output.includes('NEEDS_FIX')) {
+            // Shortcuts lost the flag after IDE update — prompt user
+            const count = (output.match(/NEEDS_FIX:(\d+)/) || [])[1] || '1';
+            vscode.window.showWarningMessage(
+                `⚠️ ${ideName} đã cập nhật (${storedVersion} → ${currentVersion}). ${count} shortcut(s) cần patch lại --remote-debugging-port=9222 để Background Mode hoạt động.`,
+                'Fix Now',
+                'Later'
+            ).then(action => {
+                if (action === 'Fix Now') {
+                    autoFixCDPShortcut();
+                }
+            });
+        } else if (output.includes('ALL_OK')) {
+            log(`[CDP Check] All shortcuts OK after IDE update.`);
+        }
+        // NO_SHORTCUT → silent, don't nag
+    });
+}
+
 // ─── Auto-Fix CDP Shortcut (Windows) ─────────────────────────────────
 async function autoFixCDPShortcut() {
     if (process.platform !== 'win32') {
@@ -659,7 +761,9 @@ async function autoFixCDPShortcut() {
         return;
     }
 
+    const ideName = getIDEDisplayName();
     const psFile = path.join(os.tmpdir(), 'antigravity_patch_shortcut.ps1');
+    // PowerShell: scans shortcuts, patches if flag missing, reports 3 outcomes
     const psContent = `
 $flag = "--remote-debugging-port=9222"
 $WshShell = New-Object -comObject WScript.Shell
@@ -669,24 +773,48 @@ $paths = @(
     "$env:APPDATA\\Microsoft\\Windows\\Start Menu\\Programs",
     "$env:ALLUSERSPROFILE\\Microsoft\\Windows\\Start Menu\\Programs"
 )
-$patched = $false
+$ideNames = @("Antigravity", "Cursor", "Windsurf", "Trae")
+$patched = 0
+$alreadyOk = 0
+$found = 0
 foreach ($dir in $paths) {
-    if (Test-Path $dir) {
-        $files = Get-ChildItem -Path $dir -Filter "*.lnk" -Recurse -ErrorAction SilentlyContinue
-        foreach ($file in $files) {
+    if (-not (Test-Path $dir)) { continue }
+    $files = Get-ChildItem -Path $dir -Filter "*.lnk" -Recurse -ErrorAction SilentlyContinue
+    foreach ($file in $files) {
+        try {
             $shortcut = $WshShell.CreateShortcut($file.FullName)
-            if ($shortcut.TargetPath -like "*Antigravity*") {
-                if ($shortcut.Arguments -notlike "*remote-debugging-port*") {
-                    $shortcut.Arguments = ($shortcut.Arguments + " " + $flag).Trim()
-                    $shortcut.Save()
-                    $patched = $true
-                    Write-Output "PATCHED: $($file.FullName)"
+            $isIDE = $false
+            foreach ($name in $ideNames) {
+                if ($shortcut.TargetPath -like "*$name*" -or $file.Name -like "*$name*") {
+                    $isIDE = $true; break
                 }
             }
+            if (-not $isIDE) { continue }
+            $found++
+            if ($shortcut.Arguments -like "*remote-debugging-port*") {
+                if ($shortcut.Arguments -like "*remote-debugging-port=9222*") {
+                    $alreadyOk++
+                    Write-Output "ALREADY_OK: $($file.FullName)"
+                } else {
+                    $shortcut.Arguments = ($shortcut.Arguments -replace '--remote-debugging-port=\d+', $flag)
+                    $shortcut.Save()
+                    $patched++
+                    Write-Output "PATCHED_PORT: $($file.FullName)"
+                }
+            } else {
+                $shortcut.Arguments = ($shortcut.Arguments + " " + $flag).Trim()
+                $shortcut.Save()
+                $patched++
+                Write-Output "PATCHED: $($file.FullName)"
+            }
+        } catch {
+            Write-Output "ERROR: $($file.FullName) - $($_.Exception.Message)"
         }
     }
 }
-if ($patched) { Write-Output "SUCCESS" } else { Write-Output "NOT_FOUND" }
+if ($patched -gt 0) { Write-Output "RESULT:PATCHED:$patched" }
+elseif ($alreadyOk -gt 0) { Write-Output "RESULT:ALREADY_OK:$alreadyOk" }
+else { Write-Output "RESULT:NOT_FOUND:0" }
 `;
 
     try {
@@ -707,24 +835,43 @@ if ($patched) { Write-Output "SUCCESS" } else { Write-Output "NOT_FOUND" }
             vscode.window.showWarningMessage('Shortcut patching failed. Please add --remote-debugging-port=9222 to your shortcut manually.');
             return;
         }
-        log(`Auto-Fix CDP: ${stdout.trim()}`);
-        if (stdout.includes('SUCCESS')) {
-            log('Auto-Fix CDP: Shortcut patched!');
+
+        const output = stdout.trim();
+        log(`Auto-Fix CDP: ${output}`);
+
+        if (output.includes('RESULT:PATCHED:')) {
+            const count = (output.match(/RESULT:PATCHED:(\d+)/) || [])[1] || '1';
+            log(`Auto-Fix CDP: ${count} shortcut(s) patched!`);
             vscode.window.showInformationMessage(
-                '✅ Shortcut updated with --remote-debugging-port=9222! Restart Antigravity for the fix to take effect.',
+                `\u2705 ${count} shortcut(s) updated with --remote-debugging-port=9222! Restart ${ideName} for the fix to take effect.`,
                 'Close & Restart'
             ).then(action => {
                 if (action === 'Close & Restart') {
                     vscode.commands.executeCommand('workbench.action.quit');
                 }
             });
-        } else {
-            vscode.window.showWarningMessage(
-                'No Antigravity shortcut found on Desktop or Start Menu. Add --remote-debugging-port=9222 to your shortcut manually.'
+        } else if (output.includes('RESULT:ALREADY_OK:')) {
+            const count = (output.match(/RESULT:ALREADY_OK:(\d+)/) || [])[1] || '1';
+            log(`Auto-Fix CDP: ${count} shortcut(s) already have the correct flag.`);
+            vscode.window.showInformationMessage(
+                `\u2705 ${count} ${ideName} shortcut(s) already have --remote-debugging-port=9222. No changes needed. If CDP still doesn\'t work, restart ${ideName}.`
             );
+        } else {
+            log('Auto-Fix CDP: No IDE shortcuts found.');
+            vscode.window.showWarningMessage(
+                `No ${ideName} shortcut found on Desktop or Start Menu. ` +
+                `Please create a shortcut or add --remote-debugging-port=9222 to your launch command manually.`,
+                'Copy Flag'
+            ).then(action => {
+                if (action === 'Copy Flag') {
+                    vscode.env.clipboard.writeText('--remote-debugging-port=9222');
+                    vscode.window.showInformationMessage('\ud83d\udccb Copied --remote-debugging-port=9222 to clipboard.');
+                }
+            });
         }
     });
 }
+
 
 // ─── HTTP Live Sync Server ───────────────────────────────────────────
 function startHttpServer() {

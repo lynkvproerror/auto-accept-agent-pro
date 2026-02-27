@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.5.4 — 2026-02-27
+### Improvement — Auto-Fix CDP Shortcut
+- **Auto-detect IDE update**: Extension tự động phát hiện khi IDE cập nhật version mới, kiểm tra shortcuts và hiện cảnh báo ⚠️ với nút "Fix Now" nếu flag bị mất
+- **3 outcome feedback**: PATCHED (flag added), ALREADY_OK (flag correct), NOT_FOUND (no shortcut) — thay vì chỉ SUCCESS/NOT_FOUND
+- **Multi-IDE support**: Tìm shortcut Antigravity, Cursor, Windsurf, Trae (trước chỉ Antigravity)
+- **Match cả tên file**: Kiểm tra cả `TargetPath` và tên file `.lnk` — bắt shortcut đã đổi tên
+- **Wrong port fix**: Nếu shortcut có `--remote-debugging-port=9xxx` sai port → tự ghi đè thành `9222`
+- **Copy Flag button**: Khi không tìm thấy shortcut → hiện nút "Copy Flag" cho user tự dán
+- **Try/catch per shortcut**: Bắt lỗi từng shortcut thay vì crash cả script
+- **Readme**: Thêm cảnh báo ⚠️ và hình ảnh minh hoạ Fix Shortcut
+
 ## v1.5.2 — 2026-02-26
 ### Bug Fix — Background Operation When Window Loses Focus
 - **Web Worker Timer**: Added Web Worker-based timer that bypasses browser throttling — `setTimeout` gets throttled to ≥1s when tab is in background, Web Worker runs in a separate thread and is NOT affected
