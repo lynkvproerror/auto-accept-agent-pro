@@ -690,7 +690,9 @@ $paths = @(
     "$env:USERPROFILE\\Desktop",
     "$env:PUBLIC\\Desktop",
     "$env:APPDATA\\Microsoft\\Windows\\Start Menu\\Programs",
-    "$env:ALLUSERSPROFILE\\Microsoft\\Windows\\Start Menu\\Programs"
+    "$env:ALLUSERSPROFILE\\Microsoft\\Windows\\Start Menu\\Programs",
+    "$env:APPDATA\\Microsoft\\Internet Explorer\\Quick Launch\\User Pinned\\TaskBar",
+    "$env:APPDATA\\Microsoft\\Internet Explorer\\Quick Launch"
 )
 $ideNames = @("Antigravity", "Cursor", "Windsurf", "Trae")
 $needsFix = 0
@@ -771,7 +773,9 @@ $paths = @(
     "$env:USERPROFILE\\Desktop",
     "$env:PUBLIC\\Desktop",
     "$env:APPDATA\\Microsoft\\Windows\\Start Menu\\Programs",
-    "$env:ALLUSERSPROFILE\\Microsoft\\Windows\\Start Menu\\Programs"
+    "$env:ALLUSERSPROFILE\\Microsoft\\Windows\\Start Menu\\Programs",
+    "$env:APPDATA\\Microsoft\\Internet Explorer\\Quick Launch\\User Pinned\\TaskBar",
+    "$env:APPDATA\\Microsoft\\Internet Explorer\\Quick Launch"
 )
 $ideNames = @("Antigravity", "Cursor", "Windsurf", "Trae")
 $patched = 0
