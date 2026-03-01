@@ -402,23 +402,39 @@ function _getSimplePollScript(config) {
     }
     setInterval(syncConfig, 2000);
 
-    // --- Auto Scroll (smart: only deepest scrollable inside agent panel) ---
+    // --- Auto Scroll (smart: multi-strategy, Web Worker timer) ---
     var lastUserScroll = 0;
+    var _scrollCache = { panel: null, target: null, cacheTime: 0 };
     document.addEventListener('wheel', function() { lastUserScroll = Date.now(); }, { passive: true });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'PageDown' || e.key === 'PageUp' || e.key === 'ArrowDown' || e.key === 'ArrowUp' ||
+            e.key === 'Home' || e.key === 'End') {
+            lastUserScroll = Date.now();
+        }
+    }, { passive: true });
 
     function findAgentPanel() {
-        // Try specific agent panel selectors first
-        var panelIds = [
-            'antigravity.agentPanel',  // Antigravity agent panel
-        ];
+        var panelIds = ['antigravity.agentPanel'];
         for (var i = 0; i < panelIds.length; i++) {
             try {
                 var el = document.getElementById(panelIds[i]);
                 if (el && el.offsetHeight > 50) return el;
             } catch(e) {}
         }
-        // Try CSS selectors
-        var panelSelectors = ['.chat-widget', '.inline-chat'];
+        var panelSelectors = [
+            '.chat-widget',
+            '.inline-chat',
+            '[class*="agentic"]',
+            '[class*="conversation"]',
+            '[class*="chat-panel"]',
+            '[class*="agent-panel"]',
+            '.auxiliary-bar-content',
+            '#workbench\\\\.parts\\\\.auxiliarybar .content',
+            '#workbench\\\\.parts\\\\.auxiliarybar',
+            '[class*="chat-view"]',
+            '[class*="copilot"]',
+            '.interactive-session'
+        ];
         for (var i = 0; i < panelSelectors.length; i++) {
             try {
                 var el = document.querySelector(panelSelectors[i]);
@@ -431,20 +447,23 @@ function _getSimplePollScript(config) {
     function findDeepestScrollable(root) {
         var best = null;
         var bestDepth = -1;
+        var bestScrollGap = 0;
         try {
             var all = root.querySelectorAll('*');
             for (var i = 0; i < all.length; i++) {
                 var el = all[i];
-                if (el.scrollHeight <= el.clientHeight + 30) continue;
+                var scrollGap = el.scrollHeight - el.clientHeight;
+                if (scrollGap <= 20) continue;
                 if (el.offsetHeight < 50 || el.offsetWidth < 50) continue;
                 var style = window.getComputedStyle(el);
                 var ov = style.overflowY;
-                if (ov !== 'auto' && ov !== 'scroll') continue;
+                if (ov !== 'auto' && ov !== 'scroll' && ov !== 'overlay') continue;
                 var depth = 0;
                 var p = el;
                 while (p && p !== root) { depth++; p = p.parentElement; }
-                if (depth > bestDepth) {
+                if (depth > bestDepth || (depth === bestDepth && scrollGap > bestScrollGap)) {
                     bestDepth = depth;
+                    bestScrollGap = scrollGap;
                     best = el;
                 }
             }
@@ -452,22 +471,54 @@ function _getSimplePollScript(config) {
         return best;
     }
 
+    function isAtBottom(el) {
+        return el.scrollTop >= el.scrollHeight - el.clientHeight - 5;
+    }
+
+    function multiStrategyScroll(target) {
+        target.scrollTop = target.scrollHeight;
+        if (!isAtBottom(target)) {
+            try { target.scrollTo({ top: target.scrollHeight, behavior: 'instant' }); } catch(e) {}
+        }
+        if (!isAtBottom(target)) {
+            try {
+                var lastChild = target.lastElementChild;
+                if (lastChild) lastChild.scrollIntoView({ block: 'end', behavior: 'instant' });
+            } catch(e) {}
+        }
+    }
+
     function autoScroll() {
         if (!config.scrollEnabled) return;
         if (Date.now() - lastUserScroll < config.scrollPauseMs) return;
 
-        var panel = findAgentPanel();
-        // In webview context, fall back to document.body if no specific panel found
-        if (!panel && _isWebviewContext) panel = document.body;
-        if (!panel) return;
+        var now = Date.now();
+        var panel = null;
+        var target = null;
+        if (_scrollCache.panel && _scrollCache.cacheTime > now - 2000) {
+            panel = _scrollCache.panel;
+            target = _scrollCache.target;
+            if (!panel.isConnected) { panel = null; target = null; }
+            if (target && !target.isConnected) target = null;
+        }
 
-        var target = findDeepestScrollable(panel);
+        if (!panel) {
+            panel = findAgentPanel();
+            if (!panel && _isWebviewContext) panel = document.body;
+            if (!panel) return;
+            target = findDeepestScrollable(panel);
+            _scrollCache = { panel: panel, target: target, cacheTime: now };
+        }
+
         if (target) {
-            target.scrollTop = target.scrollHeight;
+            if (!isAtBottom(target)) {
+                multiStrategyScroll(target);
+            }
+        } else if (panel.scrollHeight > panel.clientHeight + 20) {
+            panel.scrollTop = panel.scrollHeight;
         }
     }
 
-    setInterval(autoScroll, config.scrollIntervalMs);
 
     // --- Web Worker Timer (bypasses browser throttling in background tabs) ---
     var _twCode = 'self.onmessage=function(e){setTimeout(function(){self.postMessage({id:e.data.id});},e.data.ms);};';
@@ -503,6 +554,15 @@ function _getSimplePollScript(config) {
             }
         });
     }
+
+    // Web Worker-based scroll timer — bypasses browser throttling
+    (function startScrollLoop() {
+        function tick() {
+            autoScroll();
+            workerDelay(config.scrollIntervalMs || 500).then(tick);
+        }
+        tick();
+    })();
 
     // --- Main Poll Loop ---
     var selectors = ${selectors};

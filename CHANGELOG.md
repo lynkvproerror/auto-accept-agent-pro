@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.5.7 — 2026-03-01
+### Major Fix — Scroll Not Working in Background
+- **Web Worker scroll timer**: Thay `setInterval` (bị throttle) bằng `workerDelay` — scroll chạy chính xác 500ms kể cả khi cửa sổ mất focus
+- **12 panel selectors**: Mở rộng `findAgentPanel()` từ 3 → 12 selectors (chat-widget, agentic, conversation, copilot, auxiliary-bar...)
+- **Multi-strategy scroll**: 3 fallback: `scrollTop` → `scrollTo` → `scrollIntoView` trên last child
+- **Scroll verification**: `isAtBottom()` check sau mỗi strategy, chỉ scroll khi chưa ở bottom
+- **Keyboard detection**: Detect PageUp/Down, Arrow, Home/End ngoài wheel event
+- **DOM cache 2s**: Cache panel + target 2 giây, tránh query DOM mỗi 500ms
+- **Panel fallback**: Nếu không tìm thấy scrollable element → scroll panel trực tiếp
+- **`overflowY: overlay`**: Thêm detect kiểu overlay (Chrome/Edge)
+
 ## v1.5.6 — 2026-03-01
 ### Bug Fix — Accept Button Not Auto-Clicked
 - **Missing `'Accept'` pattern**: Nút "Accept Alt+↵" trong terminal chat không được auto-click vì chỉ có pattern `'Accept all'` — thêm `'Accept'` standalone vào clickPatterns

@@ -140,9 +140,17 @@
         !!document.querySelector('.react-app-container') ||
         !!document.querySelector('[data-vscode-context]');
 
-    // ─── PRO: Auto Scroll (smart: only deepest scrollable in agent panel) ───
+    // ─── PRO: Auto Scroll (smart: multi-strategy, Web Worker timer) ───
     var _lastUserScroll = 0;
+    var _scrollCache = { panel: null, target: null, cacheTime: 0 };
+    // Detect user scroll: wheel + keyboard (PageUp/Down, arrow keys)
     document.addEventListener('wheel', function () { _lastUserScroll = Date.now(); }, { passive: true });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'PageDown' || e.key === 'PageUp' || e.key === 'ArrowDown' || e.key === 'ArrowUp' ||
+            e.key === 'Home' || e.key === 'End') {
+            _lastUserScroll = Date.now();
+        }
+    }, { passive: true });
 
     function findAgentPanel() {
         // Try Antigravity agent panel by ID
@@ -150,8 +158,21 @@
             var el = document.getElementById('antigravity.agentPanel');
             if (el && el.offsetHeight > 50) return el;
         } catch (e) { }
-        // Try CSS selectors
-        var selectors = ['.chat-widget', '.inline-chat'];
+        // Expanded selectors for all IDE layouts
+        var selectors = [
+            '.chat-widget',
+            '.inline-chat',
+            '[class*="agentic"]',
+            '[class*="conversation"]',
+            '[class*="chat-panel"]',
+            '[class*="agent-panel"]',
+            '.auxiliary-bar-content',
+            '#workbench\\.parts\\.auxiliarybar .content',
+            '#workbench\\.parts\\.auxiliarybar',
+            '[class*="chat-view"]',
+            '[class*="copilot"]',
+            '.interactive-session'
+        ];
         for (var i = 0; i < selectors.length; i++) {
             try {
                 var el = document.querySelector(selectors[i]);
@@ -164,20 +185,24 @@
     function findDeepestScrollable(root) {
         var best = null;
         var bestDepth = -1;
+        var bestScrollGap = 0;
         try {
             var all = root.querySelectorAll('*');
             for (var i = 0; i < all.length; i++) {
                 var el = all[i];
-                if (el.scrollHeight <= el.clientHeight + 30) continue;
+                var scrollGap = el.scrollHeight - el.clientHeight;
+                if (scrollGap <= 20) continue;
                 if (el.offsetHeight < 50 || el.offsetWidth < 50) continue;
                 var style = window.getComputedStyle(el);
                 var ov = style.overflowY;
-                if (ov !== 'auto' && ov !== 'scroll') continue;
+                if (ov !== 'auto' && ov !== 'scroll' && ov !== 'overlay') continue;
                 var depth = 0;
                 var p = el;
                 while (p && p !== root) { depth++; p = p.parentElement; }
-                if (depth > bestDepth) {
+                // Prefer deepest, but also prefer larger scroll gap (more content)
+                if (depth > bestDepth || (depth === bestDepth && scrollGap > bestScrollGap)) {
                     bestDepth = depth;
+                    bestScrollGap = scrollGap;
                     best = el;
                 }
             }
@@ -185,21 +210,75 @@
         return best;
     }
 
+    function isAtBottom(el) {
+        return el.scrollTop >= el.scrollHeight - el.clientHeight - 5;
+    }
+
+    function multiStrategyScroll(target) {
+        // Strategy 1: Direct scrollTop (most reliable)
+        target.scrollTop = target.scrollHeight;
+
+        // Strategy 2: Verify and retry with scrollTo
+        if (!isAtBottom(target)) {
+            try { target.scrollTo({ top: target.scrollHeight, behavior: 'instant' }); } catch (e) { }
+        }
+
+        // Strategy 3: scrollIntoView on last visible child
+        if (!isAtBottom(target)) {
+            try {
+                var lastChild = target.lastElementChild;
+                if (lastChild) {
+                    lastChild.scrollIntoView({ block: 'end', behavior: 'instant' });
+                }
+            } catch (e) { }
+        }
+    }
+
     function autoScroll() {
         if (!_config.scrollEnabled) return;
         if (Date.now() - _lastUserScroll < _config.scrollPauseMs) return;
 
-        var panel = findAgentPanel();
-        // In webview context, fall back to document.body if no specific panel found
-        if (!panel && _isWebviewContext) panel = document.body;
-        if (!panel) return;
+        // Use cache for 2 seconds to avoid expensive DOM queries each tick
+        var now = Date.now();
+        var panel = null;
+        var target = null;
+        if (_scrollCache.panel && _scrollCache.cacheTime > now - 2000) {
+            panel = _scrollCache.panel;
+            target = _scrollCache.target;
+            // Verify cached elements are still valid
+            if (!panel.isConnected) { panel = null; target = null; }
+            if (target && !target.isConnected) target = null;
+        }
 
-        var target = findDeepestScrollable(panel);
+        if (!panel) {
+            panel = findAgentPanel();
+            if (!panel && _isWebviewContext) panel = document.body;
+            if (!panel) return;
+            target = findDeepestScrollable(panel);
+            _scrollCache = { panel: panel, target: target, cacheTime: now };
+        }
+
         if (target) {
-            target.scrollTop = target.scrollHeight;
+            // Only scroll if not already at bottom
+            if (!isAtBottom(target)) {
+                multiStrategyScroll(target);
+            }
+        } else {
+            // Fallback: try scrolling the panel itself
+            if (panel.scrollHeight > panel.clientHeight + 20) {
+                panel.scrollTop = panel.scrollHeight;
+            }
         }
     }
-    setInterval(autoScroll, 500);
+
+    // Web Worker-based scroll timer — bypasses browser throttling
+    (function startScrollLoop() {
+        function tick() {
+            autoScroll();
+            workerDelay(_config.scrollIntervalMs || 500).then(tick);
+        }
+        tick();
+    })();
 
     // --- OVERLAY CONSTANTS ---
     const OVERLAY_ID = '__autoAcceptBgOverlay';
