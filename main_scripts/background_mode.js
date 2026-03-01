@@ -97,7 +97,7 @@
 
     // ─── PRO: Configurable patterns & settings ───────────────────────
     var _config = {
-        clickPatterns: ['Run', 'Allow', 'Always Allow', 'Keep Waiting', 'Retry', 'Continue', 'Allow Once', 'Allow This Con', 'Accept all'],
+        clickPatterns: ['Run', 'Allow', 'Always Allow', 'Keep Waiting', 'Retry', 'Continue', 'Allow Once', 'Allow This Con', 'Accept all', 'Accept'],
         scrollEnabled: true,
         scrollPauseMs: 7000,
         scrollIntervalMs: 500,

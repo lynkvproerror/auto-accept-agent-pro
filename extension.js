@@ -47,7 +47,7 @@ const ACTIVITY_WINDOW_MS = 10000;
 const ACTIVITY_ADAPT_INTERVAL = 5000;
 
 // Default click patterns
-const DEFAULT_CLICK_PATTERNS = ['Run', 'Allow', 'Always Allow', 'Keep Waiting', 'Retry', 'Continue', 'Allow Once', 'Allow This Con', 'Accept all'];
+const DEFAULT_CLICK_PATTERNS = ['Run', 'Allow', 'Always Allow', 'Keep Waiting', 'Retry', 'Continue', 'Allow Once', 'Allow This Con', 'Accept all', 'Accept'];
 const DEFAULT_DISABLED_PATTERNS = ['Accept all'];
 
 const DEFAULT_BANNED_COMMANDS = [

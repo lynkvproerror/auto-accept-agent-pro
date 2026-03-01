@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.5.6 — 2026-03-01
+### Bug Fix — Accept Button Not Auto-Clicked
+- **Missing `'Accept'` pattern**: Nút "Accept Alt+↵" trong terminal chat không được auto-click vì chỉ có pattern `'Accept all'` — thêm `'Accept'` standalone vào clickPatterns
+- Fixed in: `extension.js`, `background_mode.js`, `compositor.js`
+
 ## v1.5.5 — 2026-02-27
 ### Bug Fix — Fix Shortcut Not Patching Taskbar
 - **Taskbar shortcut**: Thêm scan path `%APPDATA%\...\Quick Launch\User Pinned\TaskBar` — shortcut pin trên Taskbar trước đây không được quét

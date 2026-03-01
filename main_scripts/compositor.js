@@ -56,7 +56,7 @@ function _getBgScript() {
 function _getSimplePollScript(config) {
     const interval = config.pollInterval || 2000;
     const ide = (config.ide || 'cursor').toLowerCase();
-    const clickPatterns = JSON.stringify(config.clickPatterns || ['Run', 'Allow', 'Always Allow', 'Keep Waiting', 'Retry', 'Continue', 'Allow Once']);
+    const clickPatterns = JSON.stringify(config.clickPatterns || ['Run', 'Allow', 'Always Allow', 'Keep Waiting', 'Retry', 'Continue', 'Allow Once', 'Accept all', 'Accept']);
     const scrollEnabled = config.scrollEnabled !== false;
     const scrollPauseMs = config.scrollPauseMs || 7000;
     const scrollIntervalMs = config.scrollIntervalMs || 500;
