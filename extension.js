@@ -1190,6 +1190,7 @@ function buildPermissionScript() {
         var container = node.parentElement;
         var depth = 0;
         while (container && depth < 6) {
+            // Check PREVIOUS siblings (above)
             var sib = container.previousElementSibling;
             var sc = 0;
             while (sib && sc < 3) {
@@ -1199,6 +1200,23 @@ function buildPermissionScript() {
                 }
                 sib = sib.previousElementSibling; sc++;
             }
+            // Check NEXT siblings (below — error appears here in agent chat)
+            sib = container.nextElementSibling;
+            sc = 0;
+            while (sib && sc < 3) {
+                var st = (sib.textContent || '').toLowerCase().substring(0, 500);
+                for (var i = 0; i < ERROR_KW.length; i++) {
+                    if (st.indexOf(ERROR_KW[i]) !== -1) return ERROR_KW[i];
+                }
+                sib = sib.nextElementSibling; sc++;
+            }
+            // Check container's own text
+            try {
+                var ct = (container.textContent || '').toLowerCase().substring(0, 300);
+                for (var i = 0; i < ERROR_KW.length; i++) {
+                    if (ct.indexOf(ERROR_KW[i]) !== -1 && ct.length > 50) return ERROR_KW[i];
+                }
+            } catch(e) {}
             container = container.parentElement; depth++;
         }
         return null;

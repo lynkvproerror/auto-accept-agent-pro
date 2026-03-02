@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.5.9 — 2026-03-02
+### Critical Fix — Continue Spam Still Occurring
+- **Direction Bug**: Error guard chỉ quét phía TRÊN nút Continue (`previousElementSibling`), nhưng error message nằm phía DƯỚI (`nextElementSibling`) → hoàn toàn bỏ sót
+- **Fix**: Quét CẢ HAI hướng (trên + dưới) + container text — apply cho cả 3 nguồn click
+- **Screenshot confirmed**: Pattern "Continue → Error Agent execution terminated" bây giờ bị chặn
+
 ## v1.5.8 — 2026-03-02
 ### Major Fix — Error Loop Protection
 - **Error Context Guard**: Trước khi click "Continue"/"Retry", quét DOM xung quanh tìm error keywords → chặn click nếu phát hiện lỗi

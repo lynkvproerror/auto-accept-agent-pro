@@ -725,11 +725,11 @@
     const LOOP_BRAKE_DURATION = 60000; // 1 minute brake
 
     function findNearbyErrorContext(el) {
-        // Walk up the DOM tree and check sibling/ancestor text for error keywords
+        // Walk up the DOM tree and check BOTH directions for error keywords
         let container = el.parentElement;
         let depth = 0;
         while (container && depth < 8) {
-            // Check siblings
+            // Check PREVIOUS siblings (above the button)
             let sibling = container.previousElementSibling;
             let sibCount = 0;
             while (sibling && sibCount < 3) {
@@ -740,7 +740,26 @@
                 sibling = sibling.previousElementSibling;
                 sibCount++;
             }
-            // Check container itself (but not entire page)
+            // Check NEXT siblings (below the button — error often appears here)
+            sibling = container.nextElementSibling;
+            sibCount = 0;
+            while (sibling && sibCount < 3) {
+                const text = (sibling.textContent || '').toLowerCase().substring(0, 500);
+                for (const kw of ERROR_KEYWORDS) {
+                    if (text.includes(kw)) return kw;
+                }
+                sibling = sibling.nextElementSibling;
+                sibCount++;
+            }
+            // Check container's own text (for inline error messages)
+            try {
+                const ownText = (container.textContent || '').toLowerCase().substring(0, 300);
+                for (const kw of ERROR_KEYWORDS) {
+                    // Avoid matching the button's own text
+                    if (ownText.includes(kw) && ownText.length > 50) return kw;
+                }
+            } catch (e) { }
+            // Check container class
             if (container.className && typeof container.className === 'string') {
                 const cls = container.className.toLowerCase();
                 if (cls.includes('error') || cls.includes('warning') || cls.includes('alert')) {

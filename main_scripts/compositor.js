@@ -324,6 +324,7 @@ function _getSimplePollScript(config) {
         var container = el.parentElement;
         var depth = 0;
         while (container && depth < 8) {
+            // Check PREVIOUS siblings (above)
             var sibling = container.previousElementSibling;
             var sibCount = 0;
             while (sibling && sibCount < 3) {
@@ -334,6 +335,25 @@ function _getSimplePollScript(config) {
                 sibling = sibling.previousElementSibling;
                 sibCount++;
             }
+            // Check NEXT siblings (below — error often appears here)
+            sibling = container.nextElementSibling;
+            sibCount = 0;
+            while (sibling && sibCount < 3) {
+                var text = (sibling.textContent || '').toLowerCase().substring(0, 500);
+                for (var k = 0; k < ERROR_KEYWORDS.length; k++) {
+                    if (text.indexOf(ERROR_KEYWORDS[k]) !== -1) return ERROR_KEYWORDS[k];
+                }
+                sibling = sibling.nextElementSibling;
+                sibCount++;
+            }
+            // Check container's own text
+            try {
+                var ownText = (container.textContent || '').toLowerCase().substring(0, 300);
+                for (var k = 0; k < ERROR_KEYWORDS.length; k++) {
+                    if (ownText.indexOf(ERROR_KEYWORDS[k]) !== -1 && ownText.length > 50) return ERROR_KEYWORDS[k];
+                }
+            } catch(e) {}
+            // Check container class
             if (container.className && typeof container.className === 'string') {
                 var cls = container.className.toLowerCase();
                 if (cls.indexOf('error') !== -1 || cls.indexOf('warning') !== -1 || cls.indexOf('alert') !== -1) {
