@@ -309,9 +309,79 @@ function _getSimplePollScript(config) {
         });
     }
 
+    // --- Error Loop Detection ---
+    var ERROR_KEYWORDS = ['error', 'failed', 'failure', 'exception', 'timed out', 'timeout',
+        'could not', 'unable to', 'cannot', 'fatal', 'crashed', 'aborted', 'terminated',
+        'not found', 'refused', 'denied', 'rejected', 'invalid', 'unexpected'];
+    var _clickCooldown = {};
+    var _loopBrakeActive = false;
+    var _loopBrakeUntil = 0;
+    var COOLDOWN_MAX_CLICKS = 3;
+    var COOLDOWN_WINDOW_MS = 30000;
+    var LOOP_BRAKE_DURATION = 60000;
+
+    function findNearbyErrorContext(el) {
+        var container = el.parentElement;
+        var depth = 0;
+        while (container && depth < 8) {
+            var sibling = container.previousElementSibling;
+            var sibCount = 0;
+            while (sibling && sibCount < 3) {
+                var text = (sibling.textContent || '').toLowerCase().substring(0, 500);
+                for (var k = 0; k < ERROR_KEYWORDS.length; k++) {
+                    if (text.indexOf(ERROR_KEYWORDS[k]) !== -1) return ERROR_KEYWORDS[k];
+                }
+                sibling = sibling.previousElementSibling;
+                sibCount++;
+            }
+            if (container.className && typeof container.className === 'string') {
+                var cls = container.className.toLowerCase();
+                if (cls.indexOf('error') !== -1 || cls.indexOf('warning') !== -1 || cls.indexOf('alert') !== -1) {
+                    return 'error-class';
+                }
+            }
+            container = container.parentElement;
+            depth++;
+        }
+        return null;
+    }
+
+    function isRetryOrContinue(text) {
+        return text.indexOf('continue') !== -1 || text.indexOf('retry') !== -1 || text.indexOf('try again') !== -1;
+    }
+
+    function checkClickCooldown(text) {
+        var now = Date.now();
+        if (!_clickCooldown[text]) _clickCooldown[text] = [];
+        var filtered = [];
+        for (var i = 0; i < _clickCooldown[text].length; i++) {
+            if (now - _clickCooldown[text][i] < COOLDOWN_WINDOW_MS) filtered.push(_clickCooldown[text][i]);
+        }
+        _clickCooldown[text] = filtered;
+        return _clickCooldown[text].length >= COOLDOWN_MAX_CLICKS;
+    }
+
+    function recordClick(text) {
+        if (!_clickCooldown[text]) _clickCooldown[text] = [];
+        _clickCooldown[text].push(Date.now());
+        if (_clickCooldown[text].length >= COOLDOWN_MAX_CLICKS) {
+            _loopBrakeActive = true;
+            _loopBrakeUntil = Date.now() + LOOP_BRAKE_DURATION;
+            _spLog('[LOOP BRAKE] Detected ' + COOLDOWN_MAX_CLICKS + 'x "' + text + '" in ' + (COOLDOWN_WINDOW_MS / 1000) + 's — pausing clicks for ' + (LOOP_BRAKE_DURATION / 1000) + 's');
+        }
+    }
+
     function isAcceptButton(el) {
         // Guard: only click inside conversation/agent area
         if (!isInConversationArea(el)) return false;
+
+        // Loop brake — stop all clicking temporarily
+        if (_loopBrakeActive) {
+            if (Date.now() < _loopBrakeUntil) return false;
+            _loopBrakeActive = false;
+            _clickCooldown = {};
+            _spLog('[LOOP BRAKE] Brake released, resuming clicks');
+        }
 
         var text = getButtonOwnText(el);
         if (text.length === 0 || text.length > 100) return false;
@@ -338,6 +408,21 @@ function _getSimplePollScript(config) {
         if (text.indexOf('run') !== -1 || text.indexOf('execute') !== -1) {
             var nearbyText = findNearbyCommandText(el);
             if (isCommandBanned(nearbyText)) return false;
+        }
+
+        // Error loop guard: for Continue/Retry, check nearby error context
+        if (isRetryOrContinue(text)) {
+            var errorKw = findNearbyErrorContext(el);
+            if (errorKw) {
+                _spLog('[ERROR GUARD] Blocked "' + text + '" — nearby error: "' + errorKw + '"');
+                stats.blocked++;
+                return false;
+            }
+            if (checkClickCooldown(text)) {
+                _spLog('[COOLDOWN] Blocked "' + text + '" — ' + COOLDOWN_MAX_CLICKS + ' clicks in ' + (COOLDOWN_WINDOW_MS / 1000) + 's');
+                stats.blocked++;
+                return false;
+            }
         }
 
         return true;
@@ -589,6 +674,8 @@ function _getSimplePollScript(config) {
                         els[e].dispatchEvent(new MouseEvent('click', { view: window, bubbles: true, cancelable: true }));
                         clicked++;
                         stats.clicks++;
+                        // Record for cooldown tracking
+                        if (isRetryOrContinue(btnText)) { recordClick(btnText); }
                         var disappeared = await waitForDisappear(els[e]);
                         if (disappeared) {
                             verified++;

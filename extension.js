@@ -392,11 +392,17 @@ function activate(context) {
     // ─── Per-Window State ─────────────────────────────────────────
     log(`Window state: enabled=${isEnabled}, bg=${isBackgroundMode}`);
 
-    // Start polling if was enabled previously
+    // Start polling if was enabled previously (with delay on restart to prevent error loops)
     if (isEnabled) {
         sessionClicksAtStart = roiStats.clicks;
         sessionBlockedAtStart = roiStats.blocked;
-        startPolling(context);
+        log('Auto-resuming in 5s (was enabled before restart)...');
+        setTimeout(() => {
+            if (isEnabled) {
+                startPolling(context);
+                log('Auto-resumed after startup delay');
+            }
+        }, 5000);
     }
 
     // ─── Smart Frequency: Activity Tracking ─────────────────────
@@ -1168,6 +1174,59 @@ function buildPermissionScript() {
     var GOD_MODE = ${GOD_MODE};
     var REJECT = ['skip', 'reject', 'cancel', 'close', 'refine', 'deny', 'dismiss', 'abort'];
 
+    // ═══ ERROR LOOP GUARD (persistent across evaluations) ═══
+    var ERROR_KW = ['error', 'failed', 'failure', 'exception', 'timed out', 'timeout',
+        'could not', 'unable to', 'cannot', 'fatal', 'crashed', 'aborted', 'terminated'];
+    var RETRY_KW = ['continue', 'retry', 'try again'];
+    if (!window.__permClickCooldown) window.__permClickCooldown = {};
+    if (!window.__permLoopBrakeUntil) window.__permLoopBrakeUntil = 0;
+
+    function isRetryText(t) {
+        for (var i = 0; i < RETRY_KW.length; i++) { if (t.indexOf(RETRY_KW[i]) !== -1) return true; }
+        return false;
+    }
+
+    function hasNearbyError(node) {
+        var container = node.parentElement;
+        var depth = 0;
+        while (container && depth < 6) {
+            var sib = container.previousElementSibling;
+            var sc = 0;
+            while (sib && sc < 3) {
+                var st = (sib.textContent || '').toLowerCase().substring(0, 500);
+                for (var i = 0; i < ERROR_KW.length; i++) {
+                    if (st.indexOf(ERROR_KW[i]) !== -1) return ERROR_KW[i];
+                }
+                sib = sib.previousElementSibling; sc++;
+            }
+            container = container.parentElement; depth++;
+        }
+        return null;
+    }
+
+    function checkCooldown(text) {
+        var now = Date.now();
+        // Loop brake active?
+        if (window.__permLoopBrakeUntil > now) return 'brake';
+        var cd = window.__permClickCooldown;
+        if (!cd[text]) cd[text] = [];
+        var recent = [];
+        for (var i = 0; i < cd[text].length; i++) {
+            if (now - cd[text][i] < 30000) recent.push(cd[text][i]);
+        }
+        cd[text] = recent;
+        if (recent.length >= 3) {
+            window.__permLoopBrakeUntil = now + 60000;
+            return 'brake';
+        }
+        return null;
+    }
+
+    function recordCd(text) {
+        if (!window.__permClickCooldown[text]) window.__permClickCooldown[text] = [];
+        window.__permClickCooldown[text].push(Date.now());
+    }
+
     function getDirectText(node) {
         var text = '';
         for (var i = 0; i < node.childNodes.length; i++) {
@@ -1181,7 +1240,7 @@ function buildPermissionScript() {
     function textMatches(nodeText, target) {
         if (nodeText === target) return true;
         if (nodeText.startsWith(target + ' alt+')) return true;
-        if (nodeText.startsWith(target + '\\t')) return true;
+        if (nodeText.startsWith(target + '\\\\t')) return true;
         if (target === 'accept' && (nodeText === 'accept all' || nodeText.startsWith('accept all'))) return true;
         if (target.length >= 6 && nodeText.startsWith(target)) return true;
         return false;
@@ -1248,8 +1307,17 @@ function buildPermissionScript() {
     for (var t = 0; t < SAFE_TEXTS.length; t++) {
         var btn = findButton(document.body, SAFE_TEXTS[t]);
         if (btn) {
+            var btnLabel = SAFE_TEXTS[t];
+            // Error loop guard for Continue/Retry
+            if (isRetryText(btnLabel)) {
+                var errKw = hasNearbyError(btn);
+                if (errKw) return 'error-blocked:' + btnLabel + ':' + errKw;
+                var cdResult = checkCooldown(btnLabel);
+                if (cdResult) return 'cooldown-blocked:' + btnLabel;
+                recordCd(btnLabel);
+            }
             btn.click();
-            return 'clicked:' + SAFE_TEXTS[t];
+            return 'clicked:' + btnLabel;
         }
     }
     return 'no-button';
@@ -1261,10 +1329,13 @@ async function checkPermissionButtons() {
     try {
         const script = buildPermissionScript();
         const result = await cdpHandler.evaluateOnAllPages(script);
-        if (result) {
+        if (result && result.startsWith('clicked:')) {
             log(`[CDP-Perm] ${result}`);
             roiStats.clicks++;
             addHistoryEntry('accept', 'cdp-perm', result);
+        } else if (result && (result.startsWith('error-blocked:') || result.startsWith('cooldown-blocked:'))) {
+            log(`[CDP-Perm] 🚫 ${result}`);
+            roiStats.blocked = (roiStats.blocked || 0) + 1;
         }
     } catch (e) { /* silent */ }
 }

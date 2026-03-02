@@ -713,8 +713,84 @@
         return false;
     }
 
+    // --- Error Loop Detection ---
+    const ERROR_KEYWORDS = ['error', 'failed', 'failure', 'exception', 'timed out', 'timeout',
+        'could not', 'unable to', 'cannot', 'fatal', 'crashed', 'aborted', 'terminated',
+        'not found', 'refused', 'denied', 'rejected', 'invalid', 'unexpected'];
+    var _clickCooldown = {};  // { buttonText: [timestamp, timestamp, ...] }
+    var _loopBrakeActive = false;
+    var _loopBrakeUntil = 0;
+    const COOLDOWN_MAX_CLICKS = 3;
+    const COOLDOWN_WINDOW_MS = 30000;  // 30 seconds
+    const LOOP_BRAKE_DURATION = 60000; // 1 minute brake
+
+    function findNearbyErrorContext(el) {
+        // Walk up the DOM tree and check sibling/ancestor text for error keywords
+        let container = el.parentElement;
+        let depth = 0;
+        while (container && depth < 8) {
+            // Check siblings
+            let sibling = container.previousElementSibling;
+            let sibCount = 0;
+            while (sibling && sibCount < 3) {
+                const text = (sibling.textContent || '').toLowerCase().substring(0, 500);
+                for (const kw of ERROR_KEYWORDS) {
+                    if (text.includes(kw)) return kw;
+                }
+                sibling = sibling.previousElementSibling;
+                sibCount++;
+            }
+            // Check container itself (but not entire page)
+            if (container.className && typeof container.className === 'string') {
+                const cls = container.className.toLowerCase();
+                if (cls.includes('error') || cls.includes('warning') || cls.includes('alert')) {
+                    return 'error-class';
+                }
+            }
+            container = container.parentElement;
+            depth++;
+        }
+        return null;
+    }
+
+    function isRetryOrContinue(text) {
+        return text.includes('continue') || text.includes('retry') || text.includes('try again');
+    }
+
+    function checkClickCooldown(text) {
+        const now = Date.now();
+        // Clean old entries
+        if (!_clickCooldown[text]) _clickCooldown[text] = [];
+        _clickCooldown[text] = _clickCooldown[text].filter(t => now - t < COOLDOWN_WINDOW_MS);
+        // Check count
+        if (_clickCooldown[text].length >= COOLDOWN_MAX_CLICKS) {
+            return true; // BLOCKED — too many clicks
+        }
+        return false;
+    }
+
+    function recordClick(text) {
+        if (!_clickCooldown[text]) _clickCooldown[text] = [];
+        _clickCooldown[text].push(Date.now());
+        // Trigger loop brake if hitting limit
+        if (_clickCooldown[text].length >= COOLDOWN_MAX_CLICKS) {
+            _loopBrakeActive = true;
+            _loopBrakeUntil = Date.now() + LOOP_BRAKE_DURATION;
+            log(`[LOOP BRAKE] 🛑 Detected ${COOLDOWN_MAX_CLICKS}x "${text}" in ${COOLDOWN_WINDOW_MS / 1000}s — pausing all clicks for ${LOOP_BRAKE_DURATION / 1000}s`);
+        }
+    }
+
     function isAcceptButton(el) {
         if (!isInConversationArea(el)) return false;
+
+        // Loop brake — stop all clicking temporarily
+        if (_loopBrakeActive) {
+            if (Date.now() < _loopBrakeUntil) return false;
+            // Brake expired
+            _loopBrakeActive = false;
+            _clickCooldown = {};
+            log('[LOOP BRAKE] ✅ Brake released, resuming clicks');
+        }
 
         const text = getButtonOwnText(el);
         if (text.length === 0 || text.length > 100) return false;
@@ -737,6 +813,22 @@
         if (text.includes('run') || text.includes('execute')) {
             const nearbyText = findNearbyCommandText(el);
             if (isCommandBanned(nearbyText)) return false;
+        }
+
+        // Error loop guard: for Continue/Retry, check nearby error context
+        if (isRetryOrContinue(text)) {
+            const errorKw = findNearbyErrorContext(el);
+            if (errorKw) {
+                log(`[ERROR GUARD] 🚫 Blocked "${text}" — nearby error: "${errorKw}"`);
+                _stats.blocked++;
+                return false;
+            }
+            // Cooldown check
+            if (checkClickCooldown(text)) {
+                log(`[COOLDOWN] 🚫 Blocked "${text}" — ${COOLDOWN_MAX_CLICKS} clicks in ${COOLDOWN_WINDOW_MS / 1000}s`);
+                _stats.blocked++;
+                return false;
+            }
         }
 
         return true;
@@ -870,6 +962,11 @@
                 el.dispatchEvent(new MouseEvent('click', { view: window, bubbles: true, cancelable: true }));
                 clicked++;
                 _stats.clicks++;
+
+                // Record for cooldown tracking
+                if (isRetryOrContinue(buttonText)) {
+                    recordClick(buttonText);
+                }
 
                 const disappeared = await waitForDisappear(el);
 

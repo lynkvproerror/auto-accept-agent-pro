@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.5.8 — 2026-03-02
+### Major Fix — Error Loop Protection
+- **Error Context Guard**: Trước khi click "Continue"/"Retry", quét DOM xung quanh tìm error keywords → chặn click nếu phát hiện lỗi
+- **Click Cooldown**: Click cùng nút 3 lần trong 30s → tự chặn
+- **Loop Brake**: Khi trigger cooldown → dừng TẤT CẢ click 1 phút, log cảnh báo 🛑
+- **Permission Script Guard**: Lớp click thứ 3 (CDP Permission) cũng được bảo vệ — dùng persistent `window.__permClickCooldown`
+- **ROI Fix**: Chỉ đếm actual clicks vào ROI, không đếm blocked
+- **Startup Delay**: Auto-resume sau restart IDE delay 5s, tránh click nhầm khi chưa sẵn sàng
+
 ## v1.5.7 — 2026-03-01
 ### Major Fix — Scroll Not Working in Background
 - **Web Worker scroll timer**: Thay `setInterval` (bị throttle) bằng `workerDelay` — scroll chạy chính xác 500ms kể cả khi cửa sổ mất focus
