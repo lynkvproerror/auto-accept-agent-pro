@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.6.0 — 2026-03-02
+### Critical Fix — Native Command Continue Spam (Root Cause Found)
+- **Root cause**: `executeAcceptCommandsForIDE()` fires VS Code commands (`antigravity.agent.acceptAgentStep`, `antigravity.command.accept`...) mỗi 500ms — **bypass hoàn toàn** tất cả DOM error guards
+- **Native Command Brake**: Thêm self-cooldown (8 fires/10s → brake 1 phút) + CDP error detection triggers native brake
+- **Cross-layer protection**: Khi CDP Permission Script phát hiện error loop → brake cả native commands
+- **Direction Fix**: Error guard quét CẢ HAI hướng (trên + dưới button) + container text
+
 ## v1.5.9 — 2026-03-02
 ### Critical Fix — Continue Spam Still Occurring
 - **Direction Bug**: Error guard chỉ quét phía TRÊN nút Continue (`previousElementSibling`), nhưng error message nằm phía DƯỚI (`nextElementSibling`) → hoàn toàn bỏ sót

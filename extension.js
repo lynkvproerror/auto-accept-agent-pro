@@ -1354,6 +1354,8 @@ async function checkPermissionButtons() {
         } else if (result && (result.startsWith('error-blocked:') || result.startsWith('cooldown-blocked:'))) {
             log(`[CDP-Perm] 🚫 ${result}`);
             roiStats.blocked = (roiStats.blocked || 0) + 1;
+            // CRITICAL: also brake native commands — they bypass DOM checks
+            activateNativeCommandBrake('CDP detected error loop: ' + result);
         }
     } catch (e) { /* silent */ }
 }
@@ -1374,8 +1376,27 @@ function stopPermissionPolling() {
 
 // ─── Accept Commands ─────────────────────────────────────────────────
 let isAccepting = false; // Async lock — prevents double-accepts
+let nativeCommandBrakeUntil = 0;  // Timestamp when brake expires
+let nativeCommandFires = [];  // Track recent command fires
+const NATIVE_BRAKE_DURATION = 60000; // 1 minute
+
+// Called by checkPermissionButtons when error loop detected
+function activateNativeCommandBrake(reason) {
+    nativeCommandBrakeUntil = Date.now() + NATIVE_BRAKE_DURATION;
+    log(`[NATIVE BRAKE] 🛑 Pausing native commands for ${NATIVE_BRAKE_DURATION / 1000}s (${reason})`);
+}
+
 async function executeAcceptCommandsForIDE() {
     if (isAccepting) return; // Lock: previous batch still running
+
+    // Error brake — stop firing native commands when error loop detected
+    if (nativeCommandBrakeUntil > Date.now()) return;
+    if (nativeCommandBrakeUntil > 0 && nativeCommandBrakeUntil <= Date.now()) {
+        nativeCommandBrakeUntil = 0;
+        nativeCommandFires = [];
+        log('[NATIVE BRAKE] ✅ Brake released, resuming native commands');
+    }
+
     // Guard: only fire when user has relevant patterns enabled
     const activePatterns = clickPatterns.filter(p => !disabledClickPatterns.includes(p));
     const wantsAction = activePatterns.some(p => {
@@ -1383,6 +1404,15 @@ async function executeAcceptCommandsForIDE() {
         return lower.includes('accept') || lower.includes('allow') || lower.includes('continue') || lower.includes('run');
     });
     if (!wantsAction) return;
+
+    // Self-cooldown: if firing too frequently, pause
+    const now = Date.now();
+    nativeCommandFires = nativeCommandFires.filter(t => now - t < 10000);
+    if (nativeCommandFires.length >= 8) {
+        activateNativeCommandBrake('too many rapid command fires');
+        return;
+    }
+    nativeCommandFires.push(now);
 
     isAccepting = true;
     try {
