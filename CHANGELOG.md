@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.6.1 — 2026-03-03
+### Fix — Stop Not Killing Background Processes
+- **Root cause**: `stopBackgroundLoop()` chỉ set `isRunning=false` — scroll loop, Web Worker, HTTP sync timer, event listeners vẫn chạy ngầm
+- **Full cleanup**: Stop giờ kill 6 thứ: main loop, scroll loop, HTTP sync timer, Web Worker `.terminate()`, pending callbacks, event listeners
+- **Apply cả 2 file**: `background_mode.js` + `compositor.js` (`stopSimplePoll` cũng full cleanup)
+
 ## v1.6.0 — 2026-03-02
 ### Critical Fix — Native Command Continue Spam (Root Cause Found)
 - **Root cause**: `executeAcceptCommandsForIDE()` fires VS Code commands (`antigravity.agent.acceptAgentStep`, `antigravity.command.accept`...) mỗi 500ms — **bypass hoàn toàn** tất cả DOM error guards

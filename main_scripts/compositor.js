@@ -505,18 +505,20 @@ function _getSimplePollScript(config) {
             xhr.send();
         } catch(e) {}
     }
-    setInterval(syncConfig, 2000);
+    var _syncConfigTimer = setInterval(syncConfig, 2000);
 
     // --- Auto Scroll (smart: multi-strategy, Web Worker timer) ---
     var lastUserScroll = 0;
     var _scrollCache = { panel: null, target: null, cacheTime: 0 };
-    document.addEventListener('wheel', function() { lastUserScroll = Date.now(); }, { passive: true });
-    document.addEventListener('keydown', function(e) {
+    var _wheelHandler = function() { lastUserScroll = Date.now(); };
+    var _keydownHandler = function(e) {
         if (e.key === 'PageDown' || e.key === 'PageUp' || e.key === 'ArrowDown' || e.key === 'ArrowUp' ||
             e.key === 'Home' || e.key === 'End') {
             lastUserScroll = Date.now();
         }
-    }, { passive: true });
+    };
+    document.addEventListener('wheel', _wheelHandler, { passive: true });
+    document.addEventListener('keydown', _keydownHandler, { passive: true });
 
     function findAgentPanel() {
         var panelIds = ['antigravity.agentPanel'];
@@ -661,8 +663,10 @@ function _getSimplePollScript(config) {
     }
 
     // Web Worker-based scroll timer — bypasses browser throttling
+    var _scrollStopped = false;
     (function startScrollLoop() {
         function tick() {
+            if (_scrollStopped) return;  // Exit loop when stopped
             autoScroll();
             workerDelay(config.scrollIntervalMs || 500).then(tick);
         }
@@ -711,8 +715,28 @@ function _getSimplePollScript(config) {
     };
 
     window.stopSimplePoll = function() {
+        // 1. Stop main poll loop
         window.__simplePollRunning = false;
-        _spLog('Stop requested');
+        // 2. Stop scroll loop
+        _scrollStopped = true;
+        // 3. Stop HTTP sync timer
+        if (_syncConfigTimer) {
+            clearInterval(_syncConfigTimer);
+            _syncConfigTimer = null;
+        }
+        // 4. Terminate Web Worker
+        if (_tw) {
+            try { _tw.terminate(); } catch(e) {}
+            _tw = null;
+        }
+        // 5. Clear all pending Worker callbacks
+        for (var key in _twCbs) { delete _twCbs[key]; }
+        // 6. Remove event listeners
+        try {
+            document.removeEventListener('wheel', _wheelHandler, { passive: true });
+            document.removeEventListener('keydown', _keydownHandler);
+        } catch(e) {}
+        _spLog('FULLY stopped (poll + scroll + sync + worker)');
     };
 
     poll();

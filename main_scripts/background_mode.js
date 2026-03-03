@@ -133,7 +133,7 @@
             xhr.send();
         } catch (e) { }
     }
-    setInterval(syncConfig, 2000);
+    var _syncConfigTimer = setInterval(syncConfig, 2000);
 
     // ─── Webview context detection (OOPIF agent panel) ───
     var _isWebviewContext = (window.location.protocol === 'vscode-webview:') ||
@@ -144,13 +144,15 @@
     var _lastUserScroll = 0;
     var _scrollCache = { panel: null, target: null, cacheTime: 0 };
     // Detect user scroll: wheel + keyboard (PageUp/Down, arrow keys)
-    document.addEventListener('wheel', function () { _lastUserScroll = Date.now(); }, { passive: true });
-    document.addEventListener('keydown', function (e) {
+    var _wheelHandler = function () { _lastUserScroll = Date.now(); };
+    var _keydownHandler = function (e) {
         if (e.key === 'PageDown' || e.key === 'PageUp' || e.key === 'ArrowDown' || e.key === 'ArrowUp' ||
             e.key === 'Home' || e.key === 'End') {
             _lastUserScroll = Date.now();
         }
-    }, { passive: true });
+    };
+    document.addEventListener('wheel', _wheelHandler, { passive: true });
+    document.addEventListener('keydown', _keydownHandler, { passive: true });
 
     function findAgentPanel() {
         // Try Antigravity agent panel by ID
@@ -272,8 +274,10 @@
     }
 
     // Web Worker-based scroll timer — bypasses browser throttling
+    var _scrollStopped = false;
     (function startScrollLoop() {
         function tick() {
+            if (_scrollStopped) return;  // Exit loop when stopped
             autoScroll();
             workerDelay(_config.scrollIntervalMs || 500).then(tick);
         }
@@ -1201,14 +1205,34 @@
     };
 
     window.stopBackgroundLoop = function () {
+        // 1. Stop main loop
         if (window.__bgLoopState) {
             window.__bgLoopState.isRunning = false;
             window.__bgLoopState._noTabCycles = 0;
             dismountOverlay();
-            log('Background loop stopped.');
-        } else {
-            log('No loop running.');
         }
+        // 2. Stop scroll loop
+        _scrollStopped = true;
+        // 3. Stop HTTP sync timer
+        if (_syncConfigTimer) {
+            clearInterval(_syncConfigTimer);
+            _syncConfigTimer = null;
+        }
+        // 4. Terminate Web Worker
+        if (_timerWorker) {
+            try { _timerWorker.terminate(); } catch (e) { }
+            _timerWorker = null;
+        }
+        // 5. Clear all pending Worker callbacks
+        for (var key in _timerCallbacks) {
+            delete _timerCallbacks[key];
+        }
+        // 6. Remove event listeners
+        try {
+            document.removeEventListener('wheel', _wheelHandler, { passive: true });
+            document.removeEventListener('keydown', _keydownHandler);
+        } catch (e) { }
+        log('Background loop FULLY stopped (loop + scroll + sync + worker).');
     };
 
     log('✅ Script initialized (Pro). Ready to start.');
