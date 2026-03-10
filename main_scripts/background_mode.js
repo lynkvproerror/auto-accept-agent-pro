@@ -140,10 +140,18 @@
         !!document.querySelector('.react-app-container') ||
         !!document.querySelector('[data-vscode-context]');
 
-    // ─── PRO: Auto Scroll (smart: multi-strategy, Web Worker timer) ───
+    // ─── PRO: Auto Scroll (smart: multi-strategy, verified, self-healing) ───
     var _lastUserScroll = 0;
     var _scrollCache = { panel: null, target: null, cacheTime: 0 };
-    // Detect user scroll: wheel + keyboard (PageUp/Down, arrow keys)
+    // Feature 4: Health tracker
+    var _scrollHealth = { success: 0, fail: 0, recoveries: 0, strategySwitch: 0, mutationScrolls: 0, buttonScans: 0 };
+    window.__autoAcceptScrollHealth = function () { return _scrollHealth; };
+    // Feature 2-3: Fail counter + strategy rotation
+    var _scrollFailCount = 0;
+    var _scrollStrategy = 0; // 0=scrollTop, 1=scrollTo, 2=scrollIntoView
+    var _scrollSlowMode = false;
+
+    // Named event handlers for cleanup
     var _wheelHandler = function () { _lastUserScroll = Date.now(); };
     var _keydownHandler = function (e) {
         if (e.key === 'PageDown' || e.key === 'PageUp' || e.key === 'ArrowDown' || e.key === 'ArrowUp' ||
@@ -155,24 +163,18 @@
     document.addEventListener('keydown', _keydownHandler, { passive: true });
 
     function findAgentPanel() {
-        // Try Antigravity agent panel by ID
         try {
             var el = document.getElementById('antigravity.agentPanel');
             if (el && el.offsetHeight > 50) return el;
         } catch (e) { }
-        // Expanded selectors for all IDE layouts
         var selectors = [
-            '.chat-widget',
-            '.inline-chat',
-            '[class*="agentic"]',
-            '[class*="conversation"]',
-            '[class*="chat-panel"]',
-            '[class*="agent-panel"]',
+            '.chat-widget', '.inline-chat',
+            '[class*="agentic"]', '[class*="conversation"]',
+            '[class*="chat-panel"]', '[class*="agent-panel"]',
             '.auxiliary-bar-content',
             '#workbench\\.parts\\.auxiliarybar .content',
             '#workbench\\.parts\\.auxiliarybar',
-            '[class*="chat-view"]',
-            '[class*="copilot"]',
+            '[class*="chat-view"]', '[class*="copilot"]',
             '.interactive-session'
         ];
         for (var i = 0; i < selectors.length; i++) {
@@ -186,8 +188,31 @@
 
     function findDeepestScrollable(root) {
         var best = null;
-        var bestDepth = -1;
-        var bestScrollGap = 0;
+        var bestScore = -1;
+
+        // Code block / editor tags to EXCLUDE from scroll target
+        var excludeTags = ['CODE', 'PRE', 'TEXTAREA'];
+        var excludeClassPatterns = ['monaco-editor', 'code-block', 'highlight', 'prism', 'syntax', 'markup-cell'];
+        // Conversation container patterns to PREFER
+        var preferClassPatterns = ['chat', 'conversation', 'agentic', 'message-list', 'session', 'response'];
+
+        function isCodeBlock(el) {
+            if (excludeTags.indexOf(el.tagName) >= 0) return true;
+            var cls = (el.className || '').toLowerCase();
+            for (var i = 0; i < excludeClassPatterns.length; i++) {
+                if (cls.indexOf(excludeClassPatterns[i]) >= 0) return true;
+            }
+            return false;
+        }
+
+        function isConversationContainer(el) {
+            var cls = (el.className || '').toLowerCase();
+            for (var i = 0; i < preferClassPatterns.length; i++) {
+                if (cls.indexOf(preferClassPatterns[i]) >= 0) return true;
+            }
+            return false;
+        }
+
         try {
             var all = root.querySelectorAll('*');
             for (var i = 0; i < all.length; i++) {
@@ -198,13 +223,16 @@
                 var style = window.getComputedStyle(el);
                 var ov = style.overflowY;
                 if (ov !== 'auto' && ov !== 'scroll' && ov !== 'overlay') continue;
+                // EXCLUDE code blocks and editors
+                if (isCodeBlock(el)) continue;
                 var depth = 0;
                 var p = el;
                 while (p && p !== root) { depth++; p = p.parentElement; }
-                // Prefer deepest, but also prefer larger scroll gap (more content)
-                if (depth > bestDepth || (depth === bestDepth && scrollGap > bestScrollGap)) {
-                    bestDepth = depth;
-                    bestScrollGap = scrollGap;
+                // Score: depth * 10 + bonus for conversation container + scrollGap tiebreaker
+                var score = depth * 10 + (scrollGap > 200 ? 5 : 0);
+                if (isConversationContainer(el)) score += 50; // Strong preference
+                if (score > bestScore) {
+                    bestScore = score;
                     best = el;
                 }
             }
@@ -213,41 +241,106 @@
     }
 
     function isAtBottom(el) {
-        return el.scrollTop >= el.scrollHeight - el.clientHeight - 5;
+        return el.scrollHeight - el.scrollTop - el.clientHeight < 30;
+    }
+
+    // Feature 3: Strategy-based scroll
+    function strategyScroll(target, strategy) {
+        switch (strategy) {
+            case 0: // scrollTop
+                target.scrollTop = target.scrollHeight;
+                break;
+            case 1: // scrollTo
+                try { target.scrollTo({ top: target.scrollHeight, behavior: 'instant' }); } catch (e) { }
+                break;
+            case 2: // scrollIntoView
+                try {
+                    var lastChild = target.lastElementChild;
+                    if (lastChild) lastChild.scrollIntoView({ block: 'end', behavior: 'instant' });
+                } catch (e) { }
+                break;
+        }
     }
 
     function multiStrategyScroll(target) {
-        // Strategy 1: Direct scrollTop (most reliable)
-        target.scrollTop = target.scrollHeight;
+        strategyScroll(target, 0);
+        if (!isAtBottom(target)) strategyScroll(target, 1);
+        if (!isAtBottom(target)) strategyScroll(target, 2);
+    }
 
-        // Strategy 2: Verify and retry with scrollTo
-        if (!isAtBottom(target)) {
-            try { target.scrollTo({ top: target.scrollHeight, behavior: 'instant' }); } catch (e) { }
-        }
-
-        // Strategy 3: scrollIntoView on last visible child
-        if (!isAtBottom(target)) {
-            try {
-                var lastChild = target.lastElementChild;
-                if (lastChild) {
-                    lastChild.scrollIntoView({ block: 'end', behavior: 'instant' });
+    // Feature 7: Post-scroll button scan for Alt+Enter
+    function scanForPendingButtons() {
+        try {
+            var buttons = queryAll('button, [role="button"]');
+            for (var i = 0; i < buttons.length; i++) {
+                var text = (buttons[i].textContent || '').trim();
+                if (/alt\+[↵⏎\u21b5]/i.test(text) || /alt\+enter/i.test(text)) {
+                    if (isAcceptButton(buttons[i])) {
+                        var btnText = getButtonOwnText(buttons[i]);
+                        log('[POST-SCROLL] Found pending Alt+Enter button: "' + btnText + '"');
+                        buttons[i].dispatchEvent(new MouseEvent('click', { view: window, bubbles: true, cancelable: true }));
+                        _stats.clicks++;
+                        _scrollHealth.buttonScans++;
+                        return true;
+                    }
                 }
-            } catch (e) { }
+            }
+        } catch (e) { }
+        return false;
+    }
+
+    // Feature 8: Scroll nested containers (Progress Updates, Ran command, tool output)
+    // Scroll ALL nested scrollable sections to bottom (except code blocks)
+    var _nestedExcludeTags = ['CODE', 'PRE', 'TEXTAREA'];
+    var _nestedExcludeClass = ['monaco-editor', 'code-block', 'highlight', 'prism', 'syntax', 'markup-cell'];
+    function isExcludedNested(el) {
+        if (_nestedExcludeTags.indexOf(el.tagName) >= 0) return true;
+        var cls = (el.className || '').toLowerCase();
+        for (var i = 0; i < _nestedExcludeClass.length; i++) {
+            if (cls.indexOf(_nestedExcludeClass[i]) >= 0) return true;
         }
+        return false;
+    }
+    var _lastNestedScroll = 0;
+    function scrollNestedContainers() {
+        var now = Date.now();
+        if (now - _lastNestedScroll < 2000) return; // Throttle: max once per 2s
+        _lastNestedScroll = now;
+        try {
+            var panel = _scrollCache.panel || findAgentPanel();
+            if (!panel && _isWebviewContext) panel = document.body;
+            if (!panel) return;
+            var all = panel.querySelectorAll('*');
+            var scrolled = 0;
+            for (var i = 0; i < all.length; i++) {
+                var el = all[i];
+                var gap = el.scrollHeight - el.scrollTop - el.clientHeight;
+                if (gap <= 20) continue;
+                if (el.offsetHeight < 30 || el.offsetWidth < 50) continue;
+                var style = window.getComputedStyle(el);
+                if (style.overflowY !== 'auto' && style.overflowY !== 'scroll' && style.overflowY !== 'overlay') continue;
+                if (el === _scrollCache.target) continue;
+                if (isExcludedNested(el)) continue;
+                el.scrollTop = el.scrollHeight;
+                scrolled++;
+            }
+            if (scrolled > 0) {
+                _scrollHealth.nestedScrolls = (_scrollHealth.nestedScrolls || 0) + scrolled;
+            }
+        } catch (e) { }
     }
 
     function autoScroll() {
         if (!_config.scrollEnabled) return;
         if (Date.now() - _lastUserScroll < _config.scrollPauseMs) return;
 
-        // Use cache for 2 seconds to avoid expensive DOM queries each tick
+        // Use cache for 2 seconds (invalidated on fail)
         var now = Date.now();
         var panel = null;
         var target = null;
         if (_scrollCache.panel && _scrollCache.cacheTime > now - 2000) {
             panel = _scrollCache.panel;
             target = _scrollCache.target;
-            // Verify cached elements are still valid
             if (!panel.isConnected) { panel = null; target = null; }
             if (target && !target.isConnected) target = null;
         }
@@ -260,26 +353,122 @@
             _scrollCache = { panel: panel, target: target, cacheTime: now };
         }
 
-        if (target) {
-            // Only scroll if not already at bottom
-            if (!isAtBottom(target)) {
-                multiStrategyScroll(target);
+        var el = target || panel;
+        if (!el || el.scrollHeight <= el.clientHeight + 20) return;
+
+        // Feature 1: Scroll Verify — check before/after
+        if (isAtBottom(el)) {
+            // Already at bottom → reset fail counter + scan for buttons (Feature 7)
+            if (_scrollFailCount > 0) {
+                _scrollFailCount = 0;
+                _scrollSlowMode = false;
+            }
+            _scrollHealth.success++;
+            scrollNestedContainers();
+            scanForPendingButtons();
+            return;
+        }
+
+        // Always scroll nested containers each tick
+        scrollNestedContainers();
+
+        var beforeScroll = el.scrollTop;
+
+        // Use current strategy (Feature 3)
+        strategyScroll(el, _scrollStrategy);
+
+        // If primary strategy failed, try all
+        if (!isAtBottom(el)) {
+            multiStrategyScroll(el);
+        }
+
+        var afterScroll = el.scrollTop;
+
+        // Feature 1: Verify
+        if (afterScroll > beforeScroll || isAtBottom(el)) {
+            // Success
+            _scrollHealth.success++;
+            _scrollFailCount = 0;
+            _scrollSlowMode = false;
+            // Feature 7: scan buttons after reaching bottom
+            if (isAtBottom(el)) {
+                scrollNestedContainers();
+                scanForPendingButtons();
             }
         } else {
-            // Fallback: try scrolling the panel itself
-            if (panel.scrollHeight > panel.clientHeight + 20) {
-                panel.scrollTop = panel.scrollHeight;
+            // FAIL — scrollTop didn't change
+            _scrollHealth.fail++;
+            _scrollFailCount++;
+
+            // Feature 2-3: Auto-recovery based on fail count
+            if (_scrollFailCount === 3) {
+                // Switch strategy
+                _scrollStrategy = (_scrollStrategy + 1) % 3;
+                _scrollHealth.strategySwitch++;
+                _scrollCache.cacheTime = 0; // Invalidate cache
+                log('[SCROLL] Strategy switch to ' + _scrollStrategy + ' after 3 fails');
+            } else if (_scrollFailCount === 6) {
+                // Full reset — re-scan everything
+                _scrollStrategy = 0;
+                _scrollCache = { panel: null, target: null, cacheTime: 0 };
+                _scrollHealth.recoveries++;
+                log('[SCROLL] Full DOM re-scan after 6 fails');
+            } else if (_scrollFailCount >= 9 && !_scrollSlowMode) {
+                // Slow mode — reduce frequency
+                _scrollSlowMode = true;
+                log('[SCROLL] ⚠ Slow mode after 9+ fails');
             }
         }
     }
 
-    // Web Worker-based scroll timer — bypasses browser throttling
+    // Feature 6 L3: MutationObserver — scroll on new content
+    var _mutationObserver = null;
+    var _mutationScrollTimer = null;
+    function setupMutationObserver() {
+        var panel = findAgentPanel();
+        if (!panel && _isWebviewContext) panel = document.body;
+        if (!panel || _mutationObserver) return;
+
+        _mutationObserver = new MutationObserver(function (mutations) {
+            if (!_config.scrollEnabled || _scrollStopped) return;
+            // Only react to meaningful changes (new nodes added)
+            var hasNewContent = false;
+            for (var i = 0; i < mutations.length; i++) {
+                if (mutations[i].addedNodes.length > 0) { hasNewContent = true; break; }
+            }
+            if (!hasNewContent) return;
+            if (Date.now() - _lastUserScroll < _config.scrollPauseMs) return;
+
+            // Debounce: scroll 100ms after last mutation
+            if (_mutationScrollTimer) clearTimeout(_mutationScrollTimer);
+            _mutationScrollTimer = setTimeout(function () {
+                autoScroll();
+                _scrollHealth.mutationScrolls++;
+            }, 100);
+        });
+
+        _mutationObserver.observe(panel, { childList: true, subtree: true });
+        log('[SCROLL] MutationObserver attached to chat panel');
+    }
+
+    // Retry MutationObserver setup until panel is found
     var _scrollStopped = false;
+    var _moRetry = 0;
+    var _moRetryTimer = setInterval(function () {
+        if (_scrollStopped) { clearInterval(_moRetryTimer); return; }
+        if (_mutationObserver) { clearInterval(_moRetryTimer); return; }
+        setupMutationObserver();
+        _moRetry++;
+        if (_moRetry > 20) clearInterval(_moRetryTimer); // Give up after 20 tries (40s)
+    }, 2000);
+
+    // Web Worker-based scroll timer — bypasses browser throttling
     (function startScrollLoop() {
         function tick() {
-            if (_scrollStopped) return;  // Exit loop when stopped
+            if (_scrollStopped) return;
             autoScroll();
-            workerDelay(_config.scrollIntervalMs || 500).then(tick);
+            var delay = _scrollSlowMode ? 5000 : (_config.scrollIntervalMs || 500);
+            workerDelay(delay).then(tick);
         }
         tick();
     })();
@@ -720,10 +909,17 @@
     // --- Error Loop Detection ---
     const ERROR_KEYWORDS = ['error', 'failed', 'failure', 'exception', 'timed out', 'timeout',
         'could not', 'unable to', 'cannot', 'fatal', 'crashed', 'aborted', 'terminated',
-        'not found', 'refused', 'denied', 'rejected', 'invalid', 'unexpected'];
+        'not found', 'refused', 'denied', 'rejected', 'invalid', 'unexpected',
+        'rate limit', 'too many requests', 'quota exceeded', 'service unavailable',
+        'internal server error', 'bad gateway', 'connection reset', 'network error'];
+    // Token overflow patterns — trigger immediate pause
+    var TOKEN_OVERFLOW_PATTERNS = ['prompt is too long', 'token limit', 'too long.*token',
+        'exceeded.*maximum', 'context.*too.*large', 'maximum.*token', '400 bad request'];
+    var _tokenOverflowDetected = false;
     var _clickCooldown = {};  // { buttonText: [timestamp, timestamp, ...] }
     var _loopBrakeActive = false;
     var _loopBrakeUntil = 0;
+    var _errorHistory = [];  // Track recent errors for smart auto-pause
     const COOLDOWN_MAX_CLICKS = 3;
     const COOLDOWN_WINDOW_MS = 30000;  // 30 seconds
     const LOOP_BRAKE_DURATION = 60000; // 1 minute brake
@@ -738,6 +934,14 @@
             let sibCount = 0;
             while (sibling && sibCount < 3) {
                 const text = (sibling.textContent || '').toLowerCase().substring(0, 500);
+                // Token overflow check — immediate pause
+                for (var t = 0; t < TOKEN_OVERFLOW_PATTERNS.length; t++) {
+                    if (text.indexOf(TOKEN_OVERFLOW_PATTERNS[t]) >= 0) {
+                        _tokenOverflowDetected = true;
+                        log('[TOKEN-OVERFLOW] Detected: "' + TOKEN_OVERFLOW_PATTERNS[t] + '" — auto-pausing');
+                        return 'TOKEN_OVERFLOW';
+                    }
+                }
                 for (const kw of ERROR_KEYWORDS) {
                     if (text.includes(kw)) return kw;
                 }
@@ -749,6 +953,14 @@
             sibCount = 0;
             while (sibling && sibCount < 3) {
                 const text = (sibling.textContent || '').toLowerCase().substring(0, 500);
+                // Token overflow check
+                for (var t = 0; t < TOKEN_OVERFLOW_PATTERNS.length; t++) {
+                    if (text.indexOf(TOKEN_OVERFLOW_PATTERNS[t]) >= 0) {
+                        _tokenOverflowDetected = true;
+                        log('[TOKEN-OVERFLOW] Detected: "' + TOKEN_OVERFLOW_PATTERNS[t] + '" — auto-pausing');
+                        return 'TOKEN_OVERFLOW';
+                    }
+                }
                 for (const kw of ERROR_KEYWORDS) {
                     if (text.includes(kw)) return kw;
                 }
@@ -774,6 +986,25 @@
             depth++;
         }
         return null;
+    }
+
+    // Smart auto-pause: track error history
+    function recordError(errorType) {
+        var now = Date.now();
+        _errorHistory.push({ type: errorType, time: now });
+        // Keep only last 2 minutes
+        _errorHistory = _errorHistory.filter(function (e) { return now - e.time < 120000; });
+        // Count occurrences of same error
+        var count = 0;
+        for (var i = 0; i < _errorHistory.length; i++) {
+            if (_errorHistory[i].type === errorType) count++;
+        }
+        // 3 same errors in 2 minutes → activate brake
+        if (count >= 3 && !_loopBrakeActive) {
+            _loopBrakeActive = true;
+            _loopBrakeUntil = now + LOOP_BRAKE_DURATION;
+            log('[SMART-PAUSE] Same error "' + errorType + '" x' + count + ' in 2min → brake activated');
+        }
     }
 
     function isRetryOrContinue(text) {
@@ -838,12 +1069,19 @@
             if (isCommandBanned(nearbyText)) return false;
         }
 
+        // Token overflow — block ALL clicks immediately
+        if (_tokenOverflowDetected) {
+            log('[TOKEN-OVERFLOW] 🚫 All clicks blocked — token limit exceeded');
+            return false;
+        }
+
         // Error loop guard: for Continue/Retry, check nearby error context
         if (isRetryOrContinue(text)) {
             const errorKw = findNearbyErrorContext(el);
             if (errorKw) {
                 log(`[ERROR GUARD] 🚫 Blocked "${text}" — nearby error: "${errorKw}"`);
                 _stats.blocked++;
+                recordError(errorKw);
                 return false;
             }
             // Cooldown check
@@ -1232,7 +1470,14 @@
             document.removeEventListener('wheel', _wheelHandler, { passive: true });
             document.removeEventListener('keydown', _keydownHandler);
         } catch (e) { }
-        log('Background loop FULLY stopped (loop + scroll + sync + worker).');
+        // 7. Stop MutationObserver
+        if (_mutationObserver) {
+            try { _mutationObserver.disconnect(); } catch (e) { }
+            _mutationObserver = null;
+        }
+        if (_moRetryTimer) { clearInterval(_moRetryTimer); _moRetryTimer = null; }
+        if (_mutationScrollTimer) { clearTimeout(_mutationScrollTimer); _mutationScrollTimer = null; }
+        log('Background loop FULLY stopped (loop + scroll + sync + worker + observer).');
     };
 
     log('✅ Script initialized (Pro). Ready to start.');

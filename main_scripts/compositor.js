@@ -312,10 +312,16 @@ function _getSimplePollScript(config) {
     // --- Error Loop Detection ---
     var ERROR_KEYWORDS = ['error', 'failed', 'failure', 'exception', 'timed out', 'timeout',
         'could not', 'unable to', 'cannot', 'fatal', 'crashed', 'aborted', 'terminated',
-        'not found', 'refused', 'denied', 'rejected', 'invalid', 'unexpected'];
+        'not found', 'refused', 'denied', 'rejected', 'invalid', 'unexpected',
+        'rate limit', 'too many requests', 'quota exceeded', 'service unavailable',
+        'internal server error', 'bad gateway', 'connection reset', 'network error'];
+    var TOKEN_OVERFLOW_PATTERNS = ['prompt is too long', 'token limit', 'too long.*token',
+        'exceeded.*maximum', 'context.*too.*large', 'maximum.*token', '400 bad request'];
+    var _tokenOverflowDetected = false;
     var _clickCooldown = {};
     var _loopBrakeActive = false;
     var _loopBrakeUntil = 0;
+    var _errorHistory = [];
     var COOLDOWN_MAX_CLICKS = 3;
     var COOLDOWN_WINDOW_MS = 30000;
     var LOOP_BRAKE_DURATION = 60000;
@@ -324,36 +330,46 @@ function _getSimplePollScript(config) {
         var container = el.parentElement;
         var depth = 0;
         while (container && depth < 8) {
-            // Check PREVIOUS siblings (above)
             var sibling = container.previousElementSibling;
             var sibCount = 0;
             while (sibling && sibCount < 3) {
                 var text = (sibling.textContent || '').toLowerCase().substring(0, 500);
+                for (var t = 0; t < TOKEN_OVERFLOW_PATTERNS.length; t++) {
+                    if (text.indexOf(TOKEN_OVERFLOW_PATTERNS[t]) >= 0) {
+                        _tokenOverflowDetected = true;
+                        _spLog('[TOKEN-OVERFLOW] Detected — auto-pausing');
+                        return 'TOKEN_OVERFLOW';
+                    }
+                }
                 for (var k = 0; k < ERROR_KEYWORDS.length; k++) {
                     if (text.indexOf(ERROR_KEYWORDS[k]) !== -1) return ERROR_KEYWORDS[k];
                 }
                 sibling = sibling.previousElementSibling;
                 sibCount++;
             }
-            // Check NEXT siblings (below — error often appears here)
             sibling = container.nextElementSibling;
             sibCount = 0;
             while (sibling && sibCount < 3) {
                 var text = (sibling.textContent || '').toLowerCase().substring(0, 500);
+                for (var t = 0; t < TOKEN_OVERFLOW_PATTERNS.length; t++) {
+                    if (text.indexOf(TOKEN_OVERFLOW_PATTERNS[t]) >= 0) {
+                        _tokenOverflowDetected = true;
+                        _spLog('[TOKEN-OVERFLOW] Detected — auto-pausing');
+                        return 'TOKEN_OVERFLOW';
+                    }
+                }
                 for (var k = 0; k < ERROR_KEYWORDS.length; k++) {
                     if (text.indexOf(ERROR_KEYWORDS[k]) !== -1) return ERROR_KEYWORDS[k];
                 }
                 sibling = sibling.nextElementSibling;
                 sibCount++;
             }
-            // Check container's own text
             try {
                 var ownText = (container.textContent || '').toLowerCase().substring(0, 300);
                 for (var k = 0; k < ERROR_KEYWORDS.length; k++) {
                     if (ownText.indexOf(ERROR_KEYWORDS[k]) !== -1 && ownText.length > 50) return ERROR_KEYWORDS[k];
                 }
             } catch(e) {}
-            // Check container class
             if (container.className && typeof container.className === 'string') {
                 var cls = container.className.toLowerCase();
                 if (cls.indexOf('error') !== -1 || cls.indexOf('warning') !== -1 || cls.indexOf('alert') !== -1) {
@@ -364,6 +380,21 @@ function _getSimplePollScript(config) {
             depth++;
         }
         return null;
+    }
+
+    function recordError(errorType) {
+        var now = Date.now();
+        _errorHistory.push({ type: errorType, time: now });
+        _errorHistory = _errorHistory.filter(function(e) { return now - e.time < 120000; });
+        var count = 0;
+        for (var i = 0; i < _errorHistory.length; i++) {
+            if (_errorHistory[i].type === errorType) count++;
+        }
+        if (count >= 3 && !_loopBrakeActive) {
+            _loopBrakeActive = true;
+            _loopBrakeUntil = now + LOOP_BRAKE_DURATION;
+            _spLog('[SMART-PAUSE] Same error "' + errorType + '" x' + count + ' — brake activated');
+        }
     }
 
     function isRetryOrContinue(text) {
@@ -430,12 +461,19 @@ function _getSimplePollScript(config) {
             if (isCommandBanned(nearbyText)) return false;
         }
 
-        // Error loop guard: for Continue/Retry, check nearby error context
+        // Token overflow — block ALL clicks
+        if (_tokenOverflowDetected) {
+            _spLog('[TOKEN-OVERFLOW] All clicks blocked');
+            return false;
+        }
+
+        // Error loop guard
         if (isRetryOrContinue(text)) {
             var errorKw = findNearbyErrorContext(el);
             if (errorKw) {
                 _spLog('[ERROR GUARD] Blocked "' + text + '" — nearby error: "' + errorKw + '"');
                 stats.blocked++;
+                recordError(errorKw);
                 return false;
             }
             if (checkClickCooldown(text)) {
@@ -507,9 +545,17 @@ function _getSimplePollScript(config) {
     }
     var _syncConfigTimer = setInterval(syncConfig, 2000);
 
-    // --- Auto Scroll (smart: multi-strategy, Web Worker timer) ---
+    // --- Auto Scroll (smart: verified, self-healing, 3-level audit) ---
     var lastUserScroll = 0;
     var _scrollCache = { panel: null, target: null, cacheTime: 0 };
+    // Feature 4: Health tracker
+    var _scrollHealth = { success: 0, fail: 0, recoveries: 0, strategySwitch: 0, mutationScrolls: 0, buttonScans: 0 };
+    window.__autoAcceptScrollHealth = function() { return _scrollHealth; };
+    // Feature 2-3: Fail counter + strategy rotation
+    var _scrollFailCount = 0;
+    var _scrollStrategy = 0;
+    var _scrollSlowMode = false;
+
     var _wheelHandler = function() { lastUserScroll = Date.now(); };
     var _keydownHandler = function(e) {
         if (e.key === 'PageDown' || e.key === 'PageUp' || e.key === 'ArrowDown' || e.key === 'ArrowUp' ||
@@ -529,17 +575,13 @@ function _getSimplePollScript(config) {
             } catch(e) {}
         }
         var panelSelectors = [
-            '.chat-widget',
-            '.inline-chat',
-            '[class*="agentic"]',
-            '[class*="conversation"]',
-            '[class*="chat-panel"]',
-            '[class*="agent-panel"]',
+            '.chat-widget', '.inline-chat',
+            '[class*="agentic"]', '[class*="conversation"]',
+            '[class*="chat-panel"]', '[class*="agent-panel"]',
             '.auxiliary-bar-content',
             '#workbench\\\\.parts\\\\.auxiliarybar .content',
             '#workbench\\\\.parts\\\\.auxiliarybar',
-            '[class*="chat-view"]',
-            '[class*="copilot"]',
+            '[class*="chat-view"]', '[class*="copilot"]',
             '.interactive-session'
         ];
         for (var i = 0; i < panelSelectors.length; i++) {
@@ -553,8 +595,27 @@ function _getSimplePollScript(config) {
 
     function findDeepestScrollable(root) {
         var best = null;
-        var bestDepth = -1;
-        var bestScrollGap = 0;
+        var bestScore = -1;
+        var excludeTags = ['CODE', 'PRE', 'TEXTAREA'];
+        var excludeClassPatterns = ['monaco-editor', 'code-block', 'highlight', 'prism', 'syntax', 'markup-cell'];
+        var preferClassPatterns = ['chat', 'conversation', 'agentic', 'message-list', 'session', 'response'];
+
+        function isCodeBlock(el) {
+            if (excludeTags.indexOf(el.tagName) >= 0) return true;
+            var cls = (el.className || '').toLowerCase();
+            for (var i = 0; i < excludeClassPatterns.length; i++) {
+                if (cls.indexOf(excludeClassPatterns[i]) >= 0) return true;
+            }
+            return false;
+        }
+        function isConversationContainer(el) {
+            var cls = (el.className || '').toLowerCase();
+            for (var i = 0; i < preferClassPatterns.length; i++) {
+                if (cls.indexOf(preferClassPatterns[i]) >= 0) return true;
+            }
+            return false;
+        }
+
         try {
             var all = root.querySelectorAll('*');
             for (var i = 0; i < all.length; i++) {
@@ -565,34 +626,100 @@ function _getSimplePollScript(config) {
                 var style = window.getComputedStyle(el);
                 var ov = style.overflowY;
                 if (ov !== 'auto' && ov !== 'scroll' && ov !== 'overlay') continue;
+                if (isCodeBlock(el)) continue;
                 var depth = 0;
                 var p = el;
                 while (p && p !== root) { depth++; p = p.parentElement; }
-                if (depth > bestDepth || (depth === bestDepth && scrollGap > bestScrollGap)) {
-                    bestDepth = depth;
-                    bestScrollGap = scrollGap;
-                    best = el;
-                }
+                var score = depth * 10 + (scrollGap > 200 ? 5 : 0);
+                if (isConversationContainer(el)) score += 50;
+                if (score > bestScore) { bestScore = score; best = el; }
             }
         } catch(e) {}
         return best;
     }
 
     function isAtBottom(el) {
-        return el.scrollTop >= el.scrollHeight - el.clientHeight - 5;
+        return el.scrollHeight - el.scrollTop - el.clientHeight < 30;
+    }
+
+    // Feature 3: Strategy-based scroll
+    function strategyScroll(target, strategy) {
+        switch (strategy) {
+            case 0: target.scrollTop = target.scrollHeight; break;
+            case 1: try { target.scrollTo({ top: target.scrollHeight, behavior: 'instant' }); } catch(e) {} break;
+            case 2:
+                try {
+                    var lastChild = target.lastElementChild;
+                    if (lastChild) lastChild.scrollIntoView({ block: 'end', behavior: 'instant' });
+                } catch(e) {}
+                break;
+        }
     }
 
     function multiStrategyScroll(target) {
-        target.scrollTop = target.scrollHeight;
-        if (!isAtBottom(target)) {
-            try { target.scrollTo({ top: target.scrollHeight, behavior: 'instant' }); } catch(e) {}
+        strategyScroll(target, 0);
+        if (!isAtBottom(target)) strategyScroll(target, 1);
+        if (!isAtBottom(target)) strategyScroll(target, 2);
+    }
+
+    // Feature 7: Post-scroll button scan for Alt+Enter
+    function scanForPendingButtons() {
+        try {
+            var buttons = queryAll('button, [role="button"]');
+            for (var i = 0; i < buttons.length; i++) {
+                var text = (buttons[i].textContent || '').trim();
+                if (/alt\+[↵⏎\u21b5]/i.test(text) || /alt\+enter/i.test(text)) {
+                    if (isAcceptButton(buttons[i])) {
+                        var btnText = getButtonOwnText(buttons[i]);
+                        _spLog('[POST-SCROLL] Found pending Alt+Enter button: "' + btnText + '"');
+                        buttons[i].dispatchEvent(new MouseEvent('click', { view: window, bubbles: true, cancelable: true }));
+                        _scrollHealth.buttonScans++;
+                        return true;
+                    }
+                }
+            }
+        } catch(e) {}
+        return false;
+    }
+
+    // Feature 8: Scroll nested containers (Progress Updates, Ran command)
+    var _nestedExcludeTags = ['CODE', 'PRE', 'TEXTAREA'];
+    var _nestedExcludeClass = ['monaco-editor', 'code-block', 'highlight', 'prism', 'syntax', 'markup-cell'];
+    function isExcludedNested(el) {
+        if (_nestedExcludeTags.indexOf(el.tagName) >= 0) return true;
+        var cls = (el.className || '').toLowerCase();
+        for (var i = 0; i < _nestedExcludeClass.length; i++) {
+            if (cls.indexOf(_nestedExcludeClass[i]) >= 0) return true;
         }
-        if (!isAtBottom(target)) {
-            try {
-                var lastChild = target.lastElementChild;
-                if (lastChild) lastChild.scrollIntoView({ block: 'end', behavior: 'instant' });
-            } catch(e) {}
-        }
+        return false;
+    }
+    var _lastNestedScroll = 0;
+    function scrollNestedContainers() {
+        var now = Date.now();
+        if (now - _lastNestedScroll < 2000) return;
+        _lastNestedScroll = now;
+        try {
+            var panel = _scrollCache.panel || findAgentPanel();
+            if (!panel && _isWebviewContext) panel = document.body;
+            if (!panel) return;
+            var all = panel.querySelectorAll('*');
+            var scrolled = 0;
+            for (var i = 0; i < all.length; i++) {
+                var el = all[i];
+                var gap = el.scrollHeight - el.scrollTop - el.clientHeight;
+                if (gap <= 20) continue;
+                if (el.offsetHeight < 30 || el.offsetWidth < 50) continue;
+                var style = window.getComputedStyle(el);
+                if (style.overflowY !== 'auto' && style.overflowY !== 'scroll' && style.overflowY !== 'overlay') continue;
+                if (el === _scrollCache.target) continue;
+                if (isExcludedNested(el)) continue;
+                el.scrollTop = el.scrollHeight;
+                scrolled++;
+            }
+            if (scrolled > 0) {
+                _scrollHealth.nestedScrolls = (_scrollHealth.nestedScrolls || 0) + scrolled;
+            }
+        } catch(e) {}
     }
 
     function autoScroll() {
@@ -617,58 +744,100 @@ function _getSimplePollScript(config) {
             _scrollCache = { panel: panel, target: target, cacheTime: now };
         }
 
-        if (target) {
-            if (!isAtBottom(target)) {
-                multiStrategyScroll(target);
+        var el = target || panel;
+        if (!el || el.scrollHeight <= el.clientHeight + 20) return;
+
+        // Feature 1: Scroll Verify
+        if (isAtBottom(el)) {
+            if (_scrollFailCount > 0) { _scrollFailCount = 0; _scrollSlowMode = false; }
+            _scrollHealth.success++;
+            scrollNestedContainers();
+            scanForPendingButtons();
+            return;
+        }
+
+        // Always scroll nested containers each tick
+        scrollNestedContainers();
+
+        var beforeScroll = el.scrollTop;
+        strategyScroll(el, _scrollStrategy);
+        if (!isAtBottom(el)) multiStrategyScroll(el);
+        var afterScroll = el.scrollTop;
+
+        if (afterScroll > beforeScroll || isAtBottom(el)) {
+            _scrollHealth.success++;
+            _scrollFailCount = 0;
+            _scrollSlowMode = false;
+            if (isAtBottom(el)) {
+                scrollNestedContainers();
+                scanForPendingButtons();
             }
-        } else if (panel.scrollHeight > panel.clientHeight + 20) {
-            panel.scrollTop = panel.scrollHeight;
+        } else {
+            _scrollHealth.fail++;
+            _scrollFailCount++;
+
+            if (_scrollFailCount === 3) {
+                _scrollStrategy = (_scrollStrategy + 1) % 3;
+                _scrollHealth.strategySwitch++;
+                _scrollCache.cacheTime = 0;
+                _spLog('[SCROLL] Strategy switch to ' + _scrollStrategy + ' after 3 fails');
+            } else if (_scrollFailCount === 6) {
+                _scrollStrategy = 0;
+                _scrollCache = { panel: null, target: null, cacheTime: 0 };
+                _scrollHealth.recoveries++;
+                _spLog('[SCROLL] Full DOM re-scan after 6 fails');
+            } else if (_scrollFailCount >= 9 && !_scrollSlowMode) {
+                _scrollSlowMode = true;
+                _spLog('[SCROLL] Slow mode after 9+ fails');
+            }
         }
     }
 
+    // Feature 6 L3: MutationObserver — scroll on new content
+    var _mutationObserver = null;
+    var _mutationScrollTimer = null;
+    function setupMutationObserver() {
+        var panel = findAgentPanel();
+        if (!panel && _isWebviewContext) panel = document.body;
+        if (!panel || _mutationObserver) return;
 
-    // --- Web Worker Timer (bypasses browser throttling in background tabs) ---
-    var _twCode = 'self.onmessage=function(e){setTimeout(function(){self.postMessage({id:e.data.id});},e.data.ms);};';
-    var _tw = null;
-    var _twCbs = {};
-    var _twId = 0;
-
-    function _getTW() {
-        if (!_tw && typeof Worker !== 'undefined' && typeof Blob !== 'undefined') {
-            try {
-                var blob = new Blob([_twCode], { type: 'application/javascript' });
-                _tw = new Worker(URL.createObjectURL(blob));
-                _tw.onmessage = function(e) {
-                    var cb = _twCbs[e.data.id];
-                    if (cb) { delete _twCbs[e.data.id]; cb(); }
-                };
-                _tw.onerror = function() { _tw = null; };
-                _spLog('[Timer] Web Worker initialized');
-            } catch(e) { _spLog('[Timer] Web Worker not available'); }
-        }
-        return _tw;
-    }
-
-    function workerDelay(ms) {
-        return new Promise(function(resolve) {
-            var worker = _getTW();
-            if (worker) {
-                var id = ++_twId;
-                _twCbs[id] = resolve;
-                worker.postMessage({ id: id, ms: ms });
-            } else {
-                setTimeout(resolve, ms);
+        _mutationObserver = new MutationObserver(function(mutations) {
+            if (!config.scrollEnabled || _scrollStopped) return;
+            var hasNewContent = false;
+            for (var i = 0; i < mutations.length; i++) {
+                if (mutations[i].addedNodes.length > 0) { hasNewContent = true; break; }
             }
+            if (!hasNewContent) return;
+            if (Date.now() - lastUserScroll < config.scrollPauseMs) return;
+
+            if (_mutationScrollTimer) clearTimeout(_mutationScrollTimer);
+            _mutationScrollTimer = setTimeout(function() {
+                autoScroll();
+                _scrollHealth.mutationScrolls++;
+            }, 100);
         });
+
+        _mutationObserver.observe(panel, { childList: true, subtree: true });
+        _spLog('[SCROLL] MutationObserver attached');
     }
 
-    // Web Worker-based scroll timer — bypasses browser throttling
     var _scrollStopped = false;
+    var _moRetry = 0;
+    var _moRetryTimer = setInterval(function() {
+        if (_scrollStopped) { clearInterval(_moRetryTimer); return; }
+        if (_mutationObserver) { clearInterval(_moRetryTimer); return; }
+        setupMutationObserver();
+        _moRetry++;
+        if (_moRetry > 20) clearInterval(_moRetryTimer);
+    }, 2000);
+
+    // Web Worker-based scroll timer
     (function startScrollLoop() {
         function tick() {
-            if (_scrollStopped) return;  // Exit loop when stopped
+            if (_scrollStopped) return;
             autoScroll();
-            workerDelay(config.scrollIntervalMs || 500).then(tick);
+            var delay = _scrollSlowMode ? 5000 : (config.scrollIntervalMs || 500);
+            workerDelay(delay).then(tick);
         }
         tick();
     })();
@@ -736,7 +905,14 @@ function _getSimplePollScript(config) {
             document.removeEventListener('wheel', _wheelHandler, { passive: true });
             document.removeEventListener('keydown', _keydownHandler);
         } catch(e) {}
-        _spLog('FULLY stopped (poll + scroll + sync + worker)');
+        // 7. Stop MutationObserver
+        if (_mutationObserver) {
+            try { _mutationObserver.disconnect(); } catch(e) {}
+            _mutationObserver = null;
+        }
+        if (_moRetryTimer) { clearInterval(_moRetryTimer); _moRetryTimer = null; }
+        if (_mutationScrollTimer) { clearTimeout(_mutationScrollTimer); _mutationScrollTimer = null; }
+        _spLog('FULLY stopped (poll + scroll + sync + worker + observer)');
     };
 
     poll();

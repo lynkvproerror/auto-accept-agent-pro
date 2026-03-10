@@ -945,14 +945,16 @@ function stopHttpServer() {
 async function startPolling(context) {
     startCommandPolling(context);
     startPermissionPolling();
+    startScrollHealthCheck();
     // Each window independently starts its own CDP session
     await startCDPSession(context);
-    log('Polling started (commands + CDP + permission)');
+    log('Polling started (commands + CDP + permission + scroll-health)');
 }
 
 async function stopPolling() {
     stopCommandPolling();
     stopPermissionPolling();
+    stopScrollHealthCheck();
     await stopCDPSession();
     log('Polling stopped');
 }
@@ -1373,6 +1375,67 @@ function stopPermissionPolling() {
     }
 }
 
+// ─── CDP Scroll Health Check (Feature 5 + L2 Audit) ─────────────────
+let cdpScrollHealthTimer = null;
+
+function startScrollHealthCheck() {
+    if (cdpScrollHealthTimer) return;
+    cdpScrollHealthTimer = setInterval(checkScrollHealth, 30000);
+    log('CDP Scroll health check started (30s)');
+}
+
+function stopScrollHealthCheck() {
+    if (cdpScrollHealthTimer) {
+        clearInterval(cdpScrollHealthTimer);
+        cdpScrollHealthTimer = null;
+    }
+}
+
+async function checkScrollHealth() {
+    if (!isEnabled || !cdpHandler || !cdpHandler.isConnected()) return;
+    try {
+        // Feature 5: Query scroll health stats
+        const healthResult = await cdpHandler.evaluateOnAllPages(`(function() {
+            if (typeof window.__autoAcceptScrollHealth === 'function') return JSON.stringify(window.__autoAcceptScrollHealth());
+            return 'no-health';
+        })()`);
+
+        if (healthResult && healthResult !== 'no-health') {
+            try {
+                const h = JSON.parse(healthResult);
+                const total = (h.success || 0) + (h.fail || 0);
+                if (total > 10) {
+                    const failRate = (h.fail || 0) / total;
+                    if (failRate > 0.9) {
+                        log(`[SCROLL-HEALTH] ⚠ Critical: ${Math.round(failRate * 100)}% fail (${h.fail}/${total})`);
+                        vscode.window.showWarningMessage(`Auto Accept: Scroll fail rate ${Math.round(failRate * 100)}%`);
+                    } else if (failRate > 0.7) {
+                        log(`[SCROLL-HEALTH] High fail rate: ${Math.round(failRate * 100)}%`);
+                    }
+                }
+            } catch (e) { /* parse error */ }
+        }
+
+        // Feature 6 L2: Force scroll if not at bottom
+        const auditResult = await cdpHandler.evaluateOnAllPages(`(function() {
+            var el = document.getElementById('antigravity.agentPanel');
+            if (!el) { var s = ['.chat-widget','[class*="agentic"]','[class*="conversation"]','.auxiliary-bar-content'];
+                for (var i=0;i<s.length;i++){el=document.querySelector(s[i]);if(el&&el.offsetHeight>50)break;el=null;}}
+            if (!el) return 'no-panel';
+            var best=null,bestD=-1,all=el.querySelectorAll('*');
+            for(var i=0;i<all.length;i++){var c=all[i];if(c.scrollHeight-c.clientHeight<=20||c.offsetHeight<50)continue;
+                var st=window.getComputedStyle(c);if(st.overflowY!=='auto'&&st.overflowY!=='scroll')continue;
+                var d=0,p=c;while(p&&p!==el){d++;p=p.parentElement;}if(d>bestD){bestD=d;best=c;}}
+            var t=best||el,gap=t.scrollHeight-t.scrollTop-t.clientHeight;
+            if(gap>30){t.scrollTop=t.scrollHeight;return 'forced:'+gap;}
+            return 'ok';
+        })()`);
+
+        if (auditResult && auditResult.startsWith('forced:')) {
+            log(`[SCROLL-L2] Force scrolled (gap: ${auditResult.split(':')[1]}px)`);
+        }
+    } catch (e) { /* silent */ }
+}
 
 // ─── Accept Commands ─────────────────────────────────────────────────
 let isAccepting = false; // Async lock — prevents double-accepts

@@ -1,5 +1,24 @@
 # Changelog
 
+## v1.7.1 — 2026-03-11
+### Fix — Smart Scroll Target + Error Reduction
+- **Smart scroll target**: Loại trừ code blocks/editors, ưu tiên conversation containers (scoring system)
+- **Nested container scroll**: Scroll các vùng Progress Updates, Ran command có nút cần duyệt
+- **Token overflow detection**: Phát hiện "prompt is too long" → block ALL clicks ngay lập tức
+- **Expanded error patterns**: +8 patterns (rate limit, 500, 503, timeout, quota exceeded, etc.)
+- **Smart auto-pause**: 3 lần cùng lỗi trong 2 phút → brake 1 phút
+- **recordError tracking**: Theo dõi lịch sử lỗi để phát hiện loop
+
+## v1.7.0 — 2026-03-09
+### Major — Scroll Auto-Review & Self-Recovery (7 Features)
+1. **Scroll Verify**: So sánh `scrollTop` trước/sau — phát hiện scroll fail
+2. **Fail Counter + Auto-Recovery**: 3 fail → switch strategy, 6 → full DOM re-scan, 9+ → slow mode
+3. **Strategy Rotation**: `scrollTop` → `scrollTo` → `scrollIntoView` tự động xoay vòng
+4. **Health Tracker**: `window.__autoAcceptScrollHealth()` expose stats để debug
+5. **CDP Health Check**: Extension mỗi 30s query scroll stats, cảnh báo nếu fail rate > 70%
+6. **3-Level Audit**: L1 self-check mỗi tick, L2 CDP force-scroll mỗi 30s, L3 MutationObserver on new content
+7. **Post-Scroll Button Scan**: Sau khi ở cuối → scan nút Alt+Enter chưa click → auto-click
+
 ## v1.6.1 — 2026-03-03
 ### Fix — Stop Not Killing Background Processes
 - **Root cause**: `stopBackgroundLoop()` chỉ set `isRunning=false` — scroll loop, Web Worker, HTTP sync timer, event listeners vẫn chạy ngầm
